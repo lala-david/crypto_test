@@ -1,6 +1,6 @@
 # 가상자산 해킹·범죄 지갑 동향 일일 리포트 — 2026-09-15
 
-생성 시각: 2026-09-15 15:17  
+생성 시각: 2026-09-15 17:21  
 신규 수집 39건 중 관련 사건 26건, 참고(무관) 13건
 
 ## 오늘의 브리핑
@@ -32,11 +32,6 @@
 | TRM Labs | 1 | 0 |
 | rss:blockmedia | 1 | 0 |
 | DeFiLlama Hacks | 0 | 0 |
-| ScamSniffer | 0 | 0 |
-| OFAC Recent Actions | 0 | 0 |
-| OFAC SDN (diff) | 0 | 0 |
-| rss:cointelegraph_hacks | 0 | 0 |
-| rss:sec_litigation | 0 | 0 |
 
 ## 사건 요약
 

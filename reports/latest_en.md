@@ -1,6 +1,6 @@
 # Crypto Hack & Illicit Wallet Daily Report — 2026-09-15
 
-Generated: 2026-09-15 15:17  
+Generated: 2026-09-15 17:21  
 39 new items collected: 26 relevant incidents, 13 not relevant
 
 ## Today's Briefing
@@ -32,11 +32,6 @@ Generated: 2026-09-15 15:17
 | TRM Labs | 1 | 0 |
 | rss:blockmedia | 1 | 0 |
 | DeFiLlama Hacks | 0 | 0 |
-| ScamSniffer | 0 | 0 |
-| OFAC Recent Actions | 0 | 0 |
-| OFAC SDN (diff) | 0 | 0 |
-| rss:cointelegraph_hacks | 0 | 0 |
-| rss:sec_litigation | 0 | 0 |
 
 ## Incident Summary
 
