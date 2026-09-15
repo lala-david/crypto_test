@@ -1,0 +1,48 @@
+# GitHub Actions 로 수집 → 리포트 커밋. (로컬 Ollama 대신 OpenRouter 사용)
+# 기본은 수동 실행(workflow_dispatch)만. 로컬 PC 스케줄러가 매시간 push 하는 동안 Actions 도 커밋하면 충돌하므로,
+# Actions 로 돌리려면 (1) 로컬 config.yaml github.push 를 false 로, (2) 저장소 Secrets 에 OPENROUTER_API_KEY 등록,
+# (3) 아래 schedule 주석을 해제하세요.
+name: collect
+
+on:
+  # schedule:
+  #   - cron: "5 * * * *"      # 매시 5분 (UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Collect & brief
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          PYTHONUTF8: "1"
+          TZ: Asia/Seoul
+        run: python run.py --provider openrouter --no-push
+
+      - name: Commit results
+        run: |
+          git config user.name "crypto-incident-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A README.md reports data/state.json data/incidents.jsonl data/addresses.csv data/ofac_sdn_addresses.csv data/briefings
+          if git diff --cached --quiet; then echo "no changes"; else
+            git commit -m "collect $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M KST')"
+            git push
+          fi

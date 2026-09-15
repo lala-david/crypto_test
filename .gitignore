@@ -1,0 +1,9 @@
+# 로컬 캐시/로그 (상태는 data/state.json, 사건은 data/incidents.jsonl 로 보존)
+data/collector.db
+data/cache/
+data/logs/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.txt.key

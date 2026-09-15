@@ -1,0 +1,410 @@
+# 가상자산 해킹·범죄 지갑 동향 수집기 설정
+
+lookback_days: 7          # 처음/강제 실행 시 며칠 전 게시물까지 볼지
+data_dir: data
+report_dir: reports
+
+# ---------------------------------------------------------------------------
+# 소스별 수집 주기(시간). run.py 를 매시간 돌리면 주기가 된 소스만 수집한다.
+schedule:
+  default_interval_hours: 6
+  intervals:
+    rekt: 1
+    defillama: 1
+    slowmist: 2
+    zachxbt: 2
+    defihacklabs: 3
+    doj: 3
+    ofac: 6
+    ofac_sdn: 24        # SDN 전체 XML(≈30MB) diff
+    scamsniffer: 12
+    trm: 12
+    chainalysis: 12
+
+# ---------------------------------------------------------------------------
+# LLM (사건 카드 한/영 + 일일 브리핑)
+llm:
+  enabled: true
+  provider: ollama            # ollama | openrouter | claude   (run.py --provider 로 덮어쓰기 가능)
+  fallback_provider: openrouter   # 1순위 공급자 연결 실패 시
+  prompt_style: few_shot      # few_shot(예시 2개 포함, 기본) | zero_shot(규칙만)
+  max_chars: 60000            # 본문 전달 상한(문자)
+  max_tokens: 8000
+  workers: 2                  # 동시 요청 수 (Ollama는 1~2 권장)
+
+  ollama:                     # 사내 LAN Ollama 서버
+    base_url: http://192.168.150.225:11434
+    model: gpt-oss:120b       # 대안: qwen3-30b-rag:latest, gemma4:26b, gpt-oss:20b
+    num_ctx: 32768
+    think: false
+    timeout: 900
+
+  openrouter:                 # OpenAI 호환. 키는 OPENROUTER_API_KEY 환경변수 또는 아래 파일
+    base_url: https://openrouter.ai/api/v1
+    model: google/gemini-3.8-flash
+    api_key_env: OPENROUTER_API_KEY
+    api_key_file: ../vllm/openrouter.txt
+    timeout: 300
+
+  claude:                     # ANTHROPIC_API_KEY 필요
+    model: claude-opus-5
+    effort: medium
+
+# ---------------------------------------------------------------------------
+# GitHub 전달: 실행 후 결과물을 commit & push (git init + remote 설정 후 push: true)
+github:
+  push: false
+  remote: origin
+  paths:
+    - README.md
+    - reports
+    - data/state.json
+    - data/incidents.jsonl
+    - data/addresses.csv
+    - data/ofac_sdn_addresses.csv
+    - data/briefings
+
+# ---------------------------------------------------------------------------
+# crimial_hunter(scam-address-data) 연동: 기존 블랙리스트 대조 + 표준 스키마 CSV 내보내기
+crimial_hunter:
+  enabled: true
+  repo_dir: ../experience/scam-address-data
+  lookup_files: [master_all.csv, sources/ofac_sanctions_all.csv, sources/gov_law_enforcement_all.csv]
+  export_file: sources/news_collector.csv          # 저장소 안 경로 (build_master.py 목록에 추가하면 마스터 편입)
+  export_copy: data/export/crimial_hunter_news_collector.csv
+  roles: [attacker, laundering, sanctioned]        # 내보낼 역할 (victim/unknown 제외)
+  exclude_sources: [scamsniffer, ofac_sdn]         # 이미 그쪽 소스에 있는 것
+
+# ---------------------------------------------------------------------------
+sources:
+  rekt:
+    enabled: true
+    max_articles: 20
+  lumos:
+    enabled: false            # ChainLight Lumos — 갱신 정체(최신 2025-10)로 제외
+  defillama:
+    enabled: true
+  trm:
+    enabled: true
+  chainalysis:
+    enabled: true
+  ofac:
+    enabled: true
+    sdn_diff: true
+  doj:
+    enabled: true
+    max_pages: 10
+  slowmist:                   # hacked.slowmist.io — 가장 촘촘한 사고 목록(소액·CEX·지갑 포함)
+    enabled: true
+    max_pages: 2
+  zachxbt:                    # t.me/s/investigations — 공격자/세탁 주소가 자주 포함
+    enabled: true
+    channel: investigations
+    max_pages: 2
+  scamsniffer:                # 피싱/드레이너 주소 블랙리스트 diff
+    enabled: true
+  defihacklabs:               # README 사고 목록 + PoC 헤더의 공격자 EOA
+    enabled: true
+  # 임의 RSS. 옵션: require_keywords(기본 true), fetch_article(기본 true), user_agent, selectors, enabled
+  extra_rss:
+    - name: cointelegraph_hacks
+      url: https://cointelegraph.com/rss/tag/hacks
+      fetch_article: false
+    - name: cointelegraph_scams
+      url: https://cointelegraph.com/rss/tag/scams
+      fetch_article: false
+    - name: boannews            # 보안뉴스 사건·사고
+      url: https://www.boannews.com/rss/S1N2.xml
+      fetch_article: false
+    - name: blockmedia
+      url: https://www.blockmedia.co.kr/feed
+      fetch_article: false
+    - name: tokenpost
+      url: https://www.tokenpost.kr/rss
+      fetch_article: false
+    - name: sec_litigation      # SEC는 연락처가 든 UA 필요
+      url: https://www.sec.gov/enforcement-litigation/litigation-releases/rss
+      user_agent: "crypto-incident-collector wnswns1946@kloint.team"
+      fetch_article: false
+    - name: slowmist_medium
+      url: https://medium.com/feed/@slowmist
+      enabled: false
+
+# 사건 주소로 취급하지 않을 주소 (사이트 후원 지갑 등). 반드시 따옴표 (0x… 는 YAML이 숫자로 읽음)
+ignore_addresses:
+  - "0x3C5c2F4bCeC51a36494682f91Dbc6cA7c63B514C"   # rekt.news donate (ETH/ERC20)
+
+# 블로그/보도자료 1차 필터: crypto 계열 1개 이상 AND crime 계열 1개 이상
+# 단어 전체 일치(어미 s/ed/ing/er 허용). 끝에 * 를 붙이면 접두 일치.
+keywords:
+  crypto:
+    - crypto
+    - cryptocurrency
+    - cryptocurrencies
+    - bitcoin
+    - btc
+    - ethereum
+    - ether
+    - stablecoin
+    - usdt
+    - tether
+    - usdc
+    - "virtual currency"
+    - "virtual asset"
+    - "digital asset"
+    - "digital currency"
+    - blockchain
+    - defi
+    - web3
+    - token
+    - wallet
+    - exchange
+    - bridge
+    - solana
+    - tron
+    - nft
+    # 한국어 (조사가 붙으므로 접두 일치)
+    - 가상자산*
+    - 암호화폐*
+    - 코인*
+    - 비트코인*
+    - 이더리움*
+    - 스테이블코인*
+    - 지갑*
+    - 거래소*
+    - 토큰*
+    - 디파이*
+    - 블록체인*
+    - 레이어2*
+    - 브리지*
+    - 덱스*
+    - 밈코인*
+    - 에어드랍*
+    - dex
+    - cex
+    - "layer 2"
+    - l2
+    - rollup
+    - "liquid staking"
+    - memecoin
+    - airdrop
+    - drainer
+    - "smart contract"
+  # 체인 이름 (crypto 그룹으로 합산). 일반 단어와 겹치는 이름(near, base, flow, core, ton, mode, ink, blast, sonic …)은 두 단어 형태로.
+  chains:
+    - ethereum
+    - "bnb chain"
+    - "bnb smart chain"
+    - "binance smart chain"
+    - bsc
+    - opbnb
+    - tron
+    - solana
+    - bitcoin
+    - polygon
+    - "polygon zkevm"
+    - arbitrum
+    - optimism
+    - "op mainnet"
+    - "base chain"
+    - "base network"
+    - "on base"
+    - coinbase
+    - avalanche
+    - fantom
+    - "sonic labs"
+    - "sonic chain"
+    - cronos
+    - zksync
+    - "zk sync"
+    - linea
+    - scroll
+    - "blast l2"
+    - "blast network"
+    - "mantle network"
+    - starknet
+    - "starkware"
+    - aptos
+    - sui
+    - "sei network"
+    - "near protocol"
+    - cosmos
+    - osmosis
+    - injective
+    - celestia
+    - kava
+    - polkadot
+    - kusama
+    - cardano
+    - algorand
+    - hedera
+    - stellar
+    - "xrp ledger"
+    - ripple
+    - litecoin
+    - "bitcoin cash"
+    - dogecoin
+    - monero
+    - zcash
+    - "dash coin"
+    - "ton blockchain"
+    - "the open network"
+    - toncoin
+    - tezos
+    - eos
+    - klaytn
+    - kaia
+    - wemix
+    - xpla
+    - finschia
+    - harmony
+    - moonbeam
+    - moonriver
+    - "gnosis chain"
+    - celo
+    - aurora
+    - metis
+    - "boba network"
+    - "manta pacific"
+    - "mode network"
+    - zora
+    - berachain
+    - hyperliquid
+    - hyperevm
+    - monad
+    - ronin
+    - immutable
+    - "flow blockchain"
+    - "internet computer"
+    - dfinity
+    - filecoin
+    - arweave
+    - chiliz
+    - "core dao"
+    - conflux
+    - nervos
+    - kaspa
+    - thorchain
+    - "terra classic"
+    - "terra luna"
+    - "secret network"
+    - akash
+    - multiversx
+    - elrond
+    - vechain
+    - "waves platform"
+    - zilliqa
+    - "theta network"
+    - iota
+    - "neo blockchain"
+    - ontology
+    - qtum
+    - ravencoin
+    - "bitcoin sv"
+    - horizen
+    - decred
+    - stacks
+    - rootstock
+    - "liquid network"
+    - "lightning network"
+    - bittensor
+    - "abstract chain"
+    - unichain
+    - soneium
+    - "ink chain"
+    - sophon
+    - taiko
+    - fraxtal
+    - "cyber network"
+    - "lisk"
+    - kroma
+    - "bob network"
+    - "world chain"
+    - "worldcoin"
+    - "plume network"
+    - "morph l2"
+    - "zetachain"
+    - "layerzero"
+    - wormhole
+    - axelar
+    - "across protocol"
+    - stargate
+    - "symbiosis"
+    - "chainflip"
+    - "nomic"
+    - "citrea"
+    - "botanix"
+    - "merlin chain"
+    - "bitlayer"
+    - "b2 network"
+    - "bevm"
+    - "bouncebit"
+    - "babylon chain"
+    - "mantra chain"
+    - "dymension"
+    - "saga chain"
+    - "kiichain"
+    - "nesa"
+  crime:
+    - 해킹*
+    - 해커*
+    - 탈취*
+    - 피싱*
+    - 사기*
+    - 스캠*
+    - 드레이너*
+    - 러그풀*
+    - 제재*
+    - 압수*
+    - 몰수*
+    - 세탁*
+    - 랜섬웨어*
+    - 라자루스*
+    - 북한*
+    - 기소*
+    - 체포*
+    - 구속*
+    - 유출*
+    - 익스플로잇*
+    - hack
+    - exploit
+    - drain
+    - stolen
+    - steal
+    - theft
+    - attack
+    - breach
+    - "rug pull"
+    - rugpull
+    - phishing
+    - scam
+    - fraud
+    - launder*
+    - mixer
+    - "tornado cash"
+    - sanction
+    - ofac
+    - designat*
+    - seize
+    - seizure
+    - forfeit*
+    - indict*
+    - arrest
+    - extradit*
+    - sentenced
+    - "pleaded guilty"
+    - "pleads guilty"
+    - ransomware
+    - lazarus
+    - dprk
+    - "north korea*"
+    - "pig butchering"
+    - "romance scam"
+    - "investment scheme"
+    - "private key"
+    - compromise
+    - "flash loan"
+    - "wash trading"
+    - darknet
+    - "dark web"
+    - "scam center*"
