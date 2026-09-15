@@ -205,7 +205,8 @@ def main() -> int:
 
     # 7) GitHub push
     gh = cfg.get("github") or {}
-    if gh.get("push") and not args.no_push:
+    # 신규 항목이 있을 때만 커밋 (생성 시각만 바뀐 리포트로 매시간 커밋이 쌓이는 것 방지)
+    if gh.get("push") and not args.no_push and (new_items or args.force):
         msg = f"collect {datetime.now().strftime('%Y-%m-%d %H:%M')} (+{len(new_relevant)} incidents)"
         commit_and_push(ROOT, msg, gh.get("paths") or ["reports", "data", "README.md"], remote=gh.get("remote", "origin"))
 
