@@ -16,7 +16,7 @@ from collector.keywords import any_keyword, keyword_hit  # noqa: E402
 from collector.llm import parse_json_text  # noqa: E402
 from collector.models import Address, RawItem  # noqa: E402
 from collector.prompts import CARD_FEWSHOT, briefing_system_prompt, card_system_prompt  # noqa: E402
-from collector.report import build_markdown, update_readme_briefing  # noqa: E402
+from collector.report import build_markdown  # noqa: E402
 
 SAMPLE = """
 The attacker (0x085f3115ca368aa262246d22f9476e1e2c87e8be) borrowed $120.4 million and bridged
@@ -120,14 +120,22 @@ def test_merge_addresses_prefers_known_role():
     assert len(m) == 1 and m[0].role == "attacker" and m[0].note == "n"
 
 
-def test_readme_briefing_block_is_replaced(tmp_path):
-    p = tmp_path / "README.md"
-    p.write_text("# 제목\n\n본문\n", encoding="utf-8")
+def test_briefing_pages_are_organized_by_date(tmp_path):
+    from collector.report import build_briefing_page, write_briefing_index, write_briefing_page, write_report
+
     b = {"headline_ko": "h1", "headline_en": "h2", "briefing_ko": "- a", "briefing_en": "- b"}
-    update_readme_briefing(str(p), "2026-09-15", b, [])
-    update_readme_briefing(str(p), "2026-09-16", {**b, "headline_ko": "h1-new"}, [])
-    t = p.read_text(encoding="utf-8")
-    assert t.count("<!-- BRIEFING:START -->") == 1 and "h1-new" in t and "h1\n" not in t and "본문" in t
+    page = build_briefing_page("2026-09-15", b, [])
+    assert "🇰🇷 브리핑" in page and "h1" in page and "reports/2026-09/2026-09-15.ko.md" in page
+    p = write_briefing_page(str(tmp_path / "briefings"), "2026-09-15", page)
+    assert p.replace("\\", "/").endswith("briefings/2026-09/2026-09-15.md")
+    r = write_report(str(tmp_path / "reports"), "2026-09-15", "x", "ko")
+    assert r.replace("\\", "/").endswith("reports/2026-09/2026-09-15.ko.md")
+    idx = write_briefing_index(str(tmp_path / "briefings"), [
+        {"day": "2026-09-15", "headline_ko": "h1", "headline_en": "h2", "total": 3, "relevant": 2},
+        {"day": "2026-08-31", "headline_ko": "old", "headline_en": "old", "total": 1, "relevant": 1},
+    ])
+    t = open(idx, encoding="utf-8").read()
+    assert t.index("## 2026-09") < t.index("## 2026-08") and "[2026-09-15](2026-09/2026-09-15.md)" in t and "최신 / Latest" in t
 
 
 if __name__ == "__main__":

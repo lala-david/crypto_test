@@ -2,7 +2,8 @@
 
 lookback_days: 7          # 처음/강제 실행 시 며칠 전 게시물까지 볼지
 data_dir: data
-report_dir: reports
+report_dir: reports          # reports/YYYY-MM/YYYY-MM-DD.ko.md / .en.md
+briefing_dir: briefings      # briefings/YYYY-MM/YYYY-MM-DD.md + briefings/README.md(날짜 인덱스)
 
 # ---------------------------------------------------------------------------
 # 소스별 수집 주기(시간). run.py 를 매시간 돌리면 주기가 된 소스만 수집한다.
@@ -56,8 +57,8 @@ github:
   push: true                # https://github.com/lala-david/crypto_test — 매 실행 후 변경분 commit & push
   remote: origin
   paths:
-    - README.md
     - reports
+    - briefings
     - data/state.json
     - data/incidents.jsonl
     - data/addresses.csv

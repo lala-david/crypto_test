@@ -260,14 +260,71 @@ def build_markdown(day: str, incidents: List[Incident], stats: Dict[str, int], e
     return "\n".join(L)
 
 
+def report_path(report_dir: str, day: str, lang: str) -> str:
+    return os.path.join(report_dir, day[:7], f"{day}.{lang}.md")
+
+
 def write_report(report_dir: str, day: str, content: str, lang: str) -> str:
-    d = os.path.join(report_dir, lang)
-    os.makedirs(d, exist_ok=True)
-    path = os.path.join(d, f"{day}.md")
+    path = report_path(report_dir, day, lang)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
-    with open(os.path.join(report_dir, f"latest_{lang}.md"), "w", encoding="utf-8") as f:
+    return path
+
+
+# ---------------------------------------------------------------------------
+# 날짜별 브리핑 페이지 + 인덱스
+# ---------------------------------------------------------------------------
+def build_briefing_page(day: str, briefing: Optional[dict], incidents: List[Incident], report_dir_rel: str = "../../reports") -> str:
+    relevant = sorted([i for i in incidents if i.relevant], key=lambda i: (i.incident_date or i.published_at or ""), reverse=True)
+    L: List[str] = [f"# {day} 가상자산 해킹·범죄 브리핑 / Crypto Hack Briefing", ""]
+    L.append(f"수집 {len(incidents)}건 → 사건 {len(relevant)}건 · 생성 {datetime.now().strftime('%Y-%m-%d %H:%M')}  ")
+    L.append(f"상세 리포트 / Full report: [한국어]({report_dir_rel}/{day[:7]}/{day}.ko.md) · [English]({report_dir_rel}/{day[:7]}/{day}.en.md) · [주소 CSV](../../data/addresses.csv)")
+    L.append("")
+    if briefing:
+        L += ["## 🇰🇷 브리핑", "", f"**{briefing.get('headline_ko', '')}**", "", briefing.get("briefing_ko", ""), ""]
+        L += ["## 🇺🇸 Briefing", "", f"**{briefing.get('headline_en', '')}**", "", briefing.get("briefing_en", ""), ""]
+    else:
+        L += ["_브리핑 없음 (LLM 비활성 또는 신규 사건 없음)_", ""]
+    if relevant:
+        L += ["## 사건 목록 / Incidents", ""] + summary_table(relevant, "ko", link=False) + [""]
+    return "\n".join(L)
+
+
+def briefing_page_path(brief_dir: str, day: str) -> str:
+    return os.path.join(brief_dir, day[:7], f"{day}.md")
+
+
+def write_briefing_page(brief_dir: str, day: str, content: str) -> str:
+    path = briefing_page_path(brief_dir, day)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
         f.write(content)
+    return path
+
+
+def write_briefing_index(brief_dir: str, entries: List[dict]) -> str:
+    """entries: [{day, headline_ko, headline_en, total, relevant}] → briefings/README.md (월별 섹션, 최신 먼저)."""
+    entries = sorted(entries, key=lambda e: e["day"], reverse=True)
+    L: List[str] = ["# 일일 브리핑 아카이브 / Daily Briefing Archive", ""]
+    if entries:
+        e = entries[0]
+        L.append(f"최신 / Latest: **[{e['day']}]({e['day'][:7]}/{e['day']}.md)** — {e.get('headline_ko', '')}")
+        L.append("")
+    months: Dict[str, List[dict]] = defaultdict(list)
+    for e in entries:
+        months[e["day"][:7]].append(e)
+    for month in sorted(months, reverse=True):
+        L += [f"## {month}", "", "| 날짜 | 헤드라인 (KO) | Headline (EN) | 사건 | 리포트 |", "|---|---|---|---:|---|"]
+        for e in months[month]:
+            d = e["day"]
+            L.append(f"| [{d}]({month}/{d}.md) | {_esc(e.get('headline_ko', ''))} | {_esc(e.get('headline_en', ''))} | "
+                     f"{e.get('relevant', 0)}/{e.get('total', 0)} | [KO](../reports/{month}/{d}.ko.md) · [EN](../reports/{month}/{d}.en.md) |")
+        L.append("")
+    path = os.path.join(brief_dir, "README.md")
+    os.makedirs(brief_dir, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(L))
     return path
 
 

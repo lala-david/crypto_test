@@ -32,7 +32,8 @@ from collector.llm import build_provider
 from collector.merge import merge_incidents
 from collector.models import Incident, RawItem
 from collector.publish import commit_and_push
-from collector.report import build_markdown, update_readme_briefing, write_report
+from collector.report import (build_briefing_page, build_markdown, write_briefing_index, write_briefing_page,
+                              write_report)
 from collector.sources import SourceContext, build_sources
 from collector.store import Store
 
@@ -195,7 +196,20 @@ def main() -> int:
         md = build_markdown(today, incidents, stats, errors, address_hits=address_hits, llm_note=llm_note,
                             briefing=briefing, lang=lang)
         paths.append(write_report(report_dir, today, md, lang))
-    update_readme_briefing(os.path.join(ROOT, "README.md"), today, briefing, incidents)
+    # 날짜별 브리핑 페이지 + 인덱스 (briefings/YYYY-MM/YYYY-MM-DD.md, briefings/README.md)
+    briefing_dir = os.path.join(ROOT, cfg.get("briefing_dir", "briefings"))
+    write_briefing_page(briefing_dir, today, build_briefing_page(today, briefing, incidents))
+    entries = []
+    for fn in sorted(os.listdir(brief_dir)):
+        if not fn.endswith(".json"):
+            continue
+        d = fn[:-5]
+        with open(os.path.join(brief_dir, fn), encoding="utf-8") as f:
+            b = json.load(f)
+        day_inc = merge_incidents(store.incidents_collected_on(d)) if d != today else incidents
+        entries.append({"day": d, "headline_ko": b.get("headline_ko", ""), "headline_en": b.get("headline_en", ""),
+                        "total": len(day_inc), "relevant": sum(1 for i in day_inc if i.relevant)})
+    write_briefing_index(briefing_dir, entries)
     store.export_jsonl()
     store.export_addresses_csv()
     store.export_sdn_csv()
