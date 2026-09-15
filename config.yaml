@@ -53,7 +53,7 @@ llm:
 # ---------------------------------------------------------------------------
 # GitHub 전달: 실행 후 결과물을 commit & push (git init + remote 설정 후 push: true)
 github:
-  push: false
+  push: true                # https://github.com/lala-david/crypto_test — 매 실행 후 변경분 commit & push
   remote: origin
   paths:
     - README.md
