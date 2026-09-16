@@ -70,6 +70,20 @@ github:
     - data/briefings
 
 # ---------------------------------------------------------------------------
+# Teams 알림 (Workflows 웹훅, Adaptive Card): 새 사건 카드마다 1회 + 그날 첫 브리핑 1회 + 수집 오류
+#   채널 → … → Workflows → "웹훅 요청을 받으면 채널에 게시" → URL 을 teams_webhook.txt(git 제외) 또는 TEAMS_WEBHOOK_URL 에
+#   → python -m collector.notify --test --channel teams
+teams:
+  enabled: true
+  webhook_env: TEAMS_WEBHOOK_URL
+  webhook_file: teams_webhook.txt
+  min_amount_usd: 0            # 이 금액 미만 사건은 생략 (제재·수사 건은 항상). 0 = 전부
+  max_per_run: 10
+  daily_briefing: true
+  alert_on_errors: true
+  github_url: https://github.com/lala-david/crypto_test
+
+# ---------------------------------------------------------------------------
 # Telegram 알림: 새 사건 카드마다 1회 + 그날 첫 브리핑 1회. 토큰/채팅이 없으면 조용히 건너뜀.
 #   1) @BotFather 로 봇 생성 → 토큰을 telegram_bot_token.txt(git 제외) 또는 환경변수 TELEGRAM_BOT_TOKEN 에
 #   2) 봇에게 메시지를 보내거나 채널 관리자로 추가 → python -m collector.notify --setup 으로 chat id 확인

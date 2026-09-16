@@ -32,7 +32,7 @@ from collector.llm import build_provider
 from collector.dedupe import LLMJudge
 from collector.merge import mark_followups, merge_incidents
 from collector.models import Incident, RawItem
-from collector.notify import TelegramNotifier
+from collector.notify import build_notifiers
 from collector.publish import commit_and_push
 from collector.report import (build_briefing_page, build_markdown, write_briefing_index, write_briefing_page,
                               write_report)
@@ -233,12 +233,12 @@ def main() -> int:
     crimial.export(store)
     store.log_run(since.isoformat(), len(collected), len(new_items), sum(1 for i in run_incidents if i.enriched), errors)
 
-    # 7) Telegram 알림 (사건별 1회 + 그날 첫 브리핑 1회 + 수집 오류)
+    # 7) 알림 (Teams / Telegram): 사건별 1회 + 그날 첫 브리핑 1회 + 수집 오류
     if not args.no_alert and not args.rebuild_day:
-        notifier = TelegramNotifier(cfg.get("telegram") or {}, ROOT)
-        notifier.alert_incidents(store, incidents, today)
-        notifier.alert_briefing(store, today, briefing, incidents)
-        notifier.alert_errors(errors)
+        for notifier in build_notifiers(cfg, ROOT):
+            notifier.alert_incidents(store, incidents, today)
+            notifier.alert_briefing(store, today, briefing, incidents)
+            notifier.alert_errors(errors)
         store.export_state()
 
     # 8) GitHub push

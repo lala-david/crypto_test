@@ -227,8 +227,9 @@ def test_to_date_str_handles_epoch_strings():
     assert to_date_str("garbage") == ""
 
 
-def test_telegram_formatting_and_dedupe(tmp_path):
-    from collector.notify import TelegramNotifier, format_briefing, format_incident
+def test_notifiers_format_and_dedupe_per_channel(tmp_path):
+    import json as _json
+    from collector.notify import TeamsNotifier, TelegramNotifier, format_briefing, format_incident, teams_briefing_card, teams_incident_card
     from collector.store import Store
 
     inc = _inc("t1", "rekt", "Tectonic <Cronos>", date="2026-08-30", pub="2026-09-14", addrs=("0xabc",), amount=120_400_000)
@@ -237,16 +238,25 @@ def test_telegram_formatting_and_dedupe(tmp_path):
     msg = format_incident(inc, "https://github.com/o/r", "2026-09-15")
     assert "🔴" in msg and "&lt;Cronos&gt;" in msg and "$120.4M" in msg and "세 번째" not in msg and "reports/2026-09/2026-09-15.ko.md" in msg
     b = {"headline_ko": "h", "briefing_ko": "- **[A](https://a)** — x\n- 시사점"}
-    bm = format_briefing("2026-09-15", b, 3, 1, "https://github.com/o/r")
-    assert '<a href="https://a">A</a>' in bm and "• <b>" in bm and "신규 3, 후속 1" in bm
+    assert '<a href="https://a">A</a>' in format_briefing("2026-09-15", b, 3, 1, "https://github.com/o/r")
 
-    # 토큰/채팅이 없으면 비활성, 발송 기록은 대표+병합 uid 모두 남아 재병합 시 재발송 안 됨
+    card = teams_incident_card(inc, "https://github.com/o/r", "2026-09-15")
+    content = card["attachments"][0]["content"]
+    assert card["type"] == "message" and content["type"] == "AdaptiveCard"
+    assert any(f["title"] == "금액" and f["value"] == "$120.4M" for f in content["body"][1]["facts"])
+    assert {a["title"] for a in content["actions"]} >= {"원문 (rekt)", "slowmist", "상세 리포트"}
+    _json.dumps(card); _json.dumps(teams_briefing_card("2026-09-15", b, 3, 1, "https://github.com/o/r"))  # 직렬화 가능
+
     st = Store(str(tmp_path))
-    n = TelegramNotifier({"enabled": True}, str(tmp_path))
-    assert not n.enabled and n.alert_incidents(st, [inc], "2026-09-15") == 0
-    n.enabled, n.token, n.chat = True, "x", "1"
-    n.send = lambda text: True  # 네트워크 대신
-    assert n.alert_incidents(st, [inc], "2026-09-15") == 1
-    assert st.alert_sent("t1") and st.alert_sent("t2")
-    assert n.alert_incidents(st, [inc], "2026-09-15") == 0          # 두 번째 실행: 중복 발송 없음
-    assert n.alert_briefing(st, "2026-09-15", b, [inc]) and not n.alert_briefing(st, "2026-09-15", b, [inc])
+    tg = TelegramNotifier({"enabled": True}, str(tmp_path))
+    tm = TeamsNotifier({"enabled": True}, str(tmp_path))
+    assert not tg.enabled and not tm.enabled                                   # 설정 없으면 비활성
+    tm.enabled, tm.url = True, "https://example.invalid/hook"
+    tm.post = lambda payload: True                                             # 네트워크 대신
+    assert tm.alert_incidents(st, [inc], "2026-09-15") == 1
+    assert st.alert_sent("teams:t1") and st.alert_sent("teams:t2")             # 대표+병합 uid 모두 기록
+    assert tm.alert_incidents(st, [inc], "2026-09-15") == 0                    # 같은 채널 재발송 없음
+    tg.enabled, tg.token, tg.chat = True, "x", "1"
+    tg.send = lambda text: True
+    assert tg.alert_incidents(st, [inc], "2026-09-15") == 1                    # 다른 채널은 별도 기록
+    assert tm.alert_briefing(st, "2026-09-15", b, [inc]) and not tm.alert_briefing(st, "2026-09-15", b, [inc])
