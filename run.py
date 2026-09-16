@@ -34,6 +34,7 @@ from collector.merge import mark_followups, merge_incidents
 from collector.models import Incident, RawItem
 from collector.notify import build_notifiers
 from collector.publish import commit_and_push
+from collector.site import export_site
 from collector.report import (build_briefing_page, build_markdown, write_briefing_index, write_briefing_page,
                               write_report)
 from collector.sources import SourceContext, build_sources
@@ -226,6 +227,12 @@ def main() -> int:
         entries.append({"day": d, "headline_ko": b.get("headline_ko", ""), "headline_en": b.get("headline_en", ""),
                         "total": len(day_inc), "relevant": sum(1 for i in day_inc if i.relevant)})
     write_briefing_index(briefing_dir, entries)
+    site_dir = os.path.join(ROOT, cfg.get("site_dir", "docs"))
+    try:
+        meta = export_site(store, site_dir, recent_days=int(cfg.get("site_recent_days", 90)), judge=judge, crimial=crimial)
+        log.info("사이트 데이터 내보내기: 사건 %d건, %d일 → %s/data", meta["incidents_total"], meta["days"], site_dir)
+    except Exception:
+        log.exception("사이트 데이터 내보내기 실패")
     store.export_jsonl()
     store.export_addresses_csv()
     store.export_sdn_csv()

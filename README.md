@@ -46,6 +46,12 @@ run.py  (매시간)
  └─ github.push: true 면 git commit & push
 ```
 
+### 홈페이지 (정적 대시보드, `docs/`)
+- `docs/index.html` + `app.js` + `style.css` 가 `docs/data/*.json`(매 실행 `collector/site.py` 가 생성)을 읽어 그립니다. 빌드 도구 없음.
+- 구성: KPI 타일(오늘/7일 사건, 7일 금액, 7일 주소, OFAC 주소) → 날짜별 브리핑(한/영 전환) → 필터(기간·유형·체인·소스·검색·후속 숨김) → 차트 3개(일별 신규, 유형별, 체인별 피해액; 표로 보기 제공) → 사건 표 → 행 클릭 시 상세 카드(배경·수법·요약·자금흐름·주소(탐색기 링크/복사)·출처·리포트 링크). 다크 모드 지원.
+- 데이터: `incidents.json`(최근 90일 병합 사건), `archive/YYYY-MM.json`(월별 전체), `briefings.json`, `meta.json`.
+- 호스팅: GitHub Pages(저장소 Settings > Pages > main `/docs`; Free 플랜은 공개 저장소만), Cloudflare Pages 등 정적 호스트 어디든. 로컬 확인은 `cd docs && python -m http.server 8765` 후 `http://localhost:8765`.
+
 ### 알림 — Teams / Telegram (`collector/notify.py`)
 - 새로 병합된 사건마다 카드 1개(심각도 이모지, 체인·일자·금액, 두 문장 요약, 수법, 주소 최대 3개, 블랙리스트 재등장, 출처·리포트 링크)를 보내고, 그날 첫 브리핑이 생기면 브리핑 1개를 보냅니다. 수집 오류도 알립니다. 두 채널을 동시에 켤 수 있습니다.
 - 중복 방지: 대표 카드와 병합된 카드의 uid 를 채널별로 `alerts_sent` 에 기록해, 다음 시간에 재병합되거나 다른 소스가 같은 사건을 다시 보도해도 다시 보내지 않습니다. 후속 보도는 "후속 (첫 보도 MM-DD)" 로 표시됩니다.
@@ -70,7 +76,8 @@ collector/
   prompts.py               사건 카드·브리핑 프롬프트 (few_shot | zero_shot)
   llm.py                   Ollama / OpenAI 호환(OpenRouter, vLLM) / Claude 공급자
   enrich.py, briefing.py   카드 생성·병합, 일일 브리핑
-  merge.py, crimial.py     소스 간 사건 병합, crimial_hunter 대조·내보내기
+  merge.py, dedupe.py      소스 간 사건 병합(규칙 + LLM 판정), 후속 보도 표시
+  crimial.py, site.py, notify.py   crimial_hunter 연동, 대시보드 데이터, Teams/Telegram 알림
   addresses.py, keywords.py  주소·tx 정규식+체크섬, 단어경계 키워드
   store.py, report.py, publish.py
 data/  state.json(본 항목·SDN·스냅샷)  incidents.jsonl  addresses.csv  ofac_sdn_addresses.csv  briefings/  (collector.db·cache·logs 는 git 제외)
