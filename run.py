@@ -67,6 +67,7 @@ def main() -> int:
     ap.add_argument("--reprocess", action="store_true", help="이미 처리한 항목도 다시 처리")
     ap.add_argument("--limit", type=int, default=0, help="처리할 신규 항목 상한(테스트)")
     ap.add_argument("--no-alert", action="store_true", help="Telegram 알림 생략")
+    ap.add_argument("--rebrief", action="store_true", help="브리핑을 다시 생성 (--rebuild-day 와 함께 과거 날짜도 가능)")
     ap.add_argument("--rebuild-day", help="YYYY-MM-DD: 수집 없이 그날의 병합/리포트/브리핑 페이지만 다시 생성")
     args = ap.parse_args()
 
@@ -196,7 +197,7 @@ def main() -> int:
         with open(brief_path, encoding="utf-8") as f:
             briefing = json.load(f)
     new_relevant = [i for i in run_incidents if i.relevant]
-    if not args.no_briefing and not args.rebuild_day and (briefing is None or new_relevant or args.force):
+    if not args.no_briefing and (args.rebrief or (not args.rebuild_day and (briefing is None or new_relevant or args.force))):
         b = write_briefing(provider, today, incidents, max_tokens=int(llm_cfg.get("max_tokens", 8000)),
                            prompt_style=llm_cfg.get("prompt_style", "few_shot"))
         if b:

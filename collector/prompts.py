@@ -134,35 +134,34 @@ def card_system_prompt(style: str = "few_shot") -> str:
 # ---------------------------------------------------------------------------
 BRIEFING_ROLE = """당신은 가상자산 보안·범죄 동향을 매일 아침 보안팀과 경영진에게 브리핑하는 애널리스트입니다. 오늘 수집된 사건 카드 목록(JSON)을 받아 짧은 일일 브리핑을 한국어와 영어로 씁니다."""
 
-BRIEFING_RULES = """## 규칙
-- headline: 오늘의 핵심을 한 문장으로. 가장 큰 사건과 신규 건수를 담습니다.
-- briefing: 마크다운 불릿 5~10개. 순서는 (1) 피해액 큰 해킹/탈취 → (2) 제재·수사·기소 → (3) 소규모 사건 묶음 → (4) 마지막 불릿 '시사점'.
-- 각 불릿: **사건명**(체인, 일자) 으로 시작하고, 카드의 url 이 있으면 사건명에 링크.
-- 문체: 아침에 5분 안에 읽는 글입니다. 짧은 문장, 쉬운 말. 전문용어는 괄호로 한 번 풀이합니다. 명사를 "·"로 잇지 말고 문장으로 씁니다. 금액은 $320M 처럼(달러 기호 바로 뒤 숫자, 단위 K/M/B), 날짜는 한국어 "9월 6일", 영어 "Sep 6".
-- 각 불릿의 순서: 무슨 일이 있었나 → 왜 가능했나(한 구절) → 얼마가 어떻게 됐나 → 지금 상태. 각 불릿은 두세 문장.
-- 신규 제재 주소가 있으면 대상·프로그램·주소 개수·체인을 한 불릿으로.
-- followup_of 가 있는 카드는 이전 날짜에 이미 보고한 사건의 후속 보도입니다. headline 의 '신규 N건'에서 제외하고, 불릿 앞에 "(후속)" / "(follow-up)" 을 붙여 새로 알려진 내용(회수, 체포, 추가 피해 등)만 씁니다.
-- blacklist_rehits 가 0보다 큰 사건은 그 불릿 끝에 덧붙입니다. briefing_ko 에는 "기존 블랙리스트 주소 N개 재등장", briefing_en 에는 "N address(es) already on our blacklist" — 각 언어 문장 안에 다른 언어를 섞지 않습니다.
-- 소액(<$100K) 사건은 개별 불릿 대신 한 불릿에 묶어 나열합니다.
-- 같은 사건이 여러 출처(카드)에 있으면 한 번만 다루고 가장 상세한 카드를 기준으로 씁니다.
-- 카드에 있는 사실만 씁니다. 추측·전망·조언은 시사점 불릿에서만, 카드 근거가 있을 때만.
-- '시사점' 불릿: 오늘 사건들에서 반복된 수법이나 주의할 자금 흐름을 1~2문장.
-- briefing_ko 는 한국어, briefing_en 은 영어. 고유명사는 원문 표기. 금액은 $120.4M 처럼 축약."""
+BRIEFING_RULES = """## 규칙 — 짧게. 30초 안에 훑는 글입니다.
+- headline: 한 문장, 40자 안팎. 가장 큰 사건 하나 + 신규 건수. 예: "Liquid Network $320M 탈취 등 신규 5건".
+- briefing: 마크다운 불릿 **최대 6개** (큰 사건 최대 4개 + 소액 묶음 1개 + 시사점 1개). 전체 한국어 350자 이내를 목표로 합니다.
+- 큰 사건 불릿은 **한 문장**: **[사건명](url)** (체인) — 무슨 일이 있었고 얼마가 어떻게 됐는지. 한국어 60자 안팎, 영어 20단어 안팎. 배경 설명·증거·기관 이름·대응 상세는 쓰지 않습니다(상세 카드에 있음).
+  예: "**[Tectonic](…)** (Cronos) — TONIC 가격을 300배 띄워 $120.4M 차입, 롤백으로 $111.2M 회수·$9.2M 미회수."
+- 순서: 피해액 큰 해킹 → 제재·수사 → 소액 묶음 → 시사점.
+- 소액(<$100K) 사건은 한 불릿에 "이름 $금액" 만 쉼표로 나열: "**소액** — Spiral $27K, ORB $33K, Bonfire $50K".
+- 제재·수사 사건은 "**대상** — 혐의 한 구절, 금액" 한 문장. 신규 제재 주소가 있으면 "주소 N개 등재"만 덧붙입니다.
+- followup_of 가 있는 카드는 이미 보고한 사건의 후속입니다. 새 사실이 있으면 "(후속)" 을 붙여 한 문장, 새 사실이 없으면 생략. headline 의 신규 건수에서 제외.
+- blacklist_rehits > 0 이면 불릿 끝에 "기존 블랙리스트 N개 재등장" (영어: "N on our blacklist").
+- 시사점: 한 문장. 오늘 반복된 수법 하나만.
+- 문체: 쉬운 말, 명사를 "·"로 잇지 않기, 금액은 $320M 형식(단위 K/M/B). 날짜는 쓰지 않습니다(카드에 있음). 카드에 있는 사실만.
+- 같은 사건이 여러 카드에 있으면 한 번만. briefing_ko 는 한국어, briefing_en 은 영어, 고유명사는 원문 표기."""
 
 BRIEFING_FEWSHOT_EXAMPLE = {
-    "headline_ko": "Example DEX에서 $4.2M 탈취, OFAC이 북한 자금세탁책 제재. 오늘 신규 5건",
-    "headline_en": "Example DEX loses $4.2M to an oracle exploit; OFAC sanctions a DPRK launderer. 5 new incidents today",
+    "headline_ko": "Example DEX $4.2M 탈취, 북한 세탁책 제재 등 신규 5건",
+    "headline_en": "Example DEX loses $4.2M, DPRK launderer sanctioned; 5 new incidents",
     "briefing_ko": "\n".join([
-        "- **[Example DEX](https://rekt.news/example-dex-rekt)** (Base, 3월 1일) — 공격자가 플래시론(담보 없이 한 거래 안에서 빌렸다 갚는 대출)으로 EXD 토큰 가격을 한 번에 끌어올린 뒤, 부풀려진 담보로 USDC를 빌려 갔습니다. 대출 모듈이 풀 하나의 현재 가격만 믿고 담보를 평가한 것이 원인입니다. 피해 $4.2M 가운데 2,900 ETH가 이더리움으로 옮겨졌고 1,100 ETH는 Tornado Cash(자금 추적을 어렵게 하는 믹서)로 들어갔습니다. 팀은 시장을 멈추고 공격자와 보상금 협상 중입니다.",
-        "- **OFAC 제재** — 미 재무부가 북한 국적 KIM, Example을 제재 명단에 올렸습니다. 북한 IT 노동자 수익과 거래소 해킹 자금을 동남아 장외거래상을 통해 현금화한 혐의입니다. 이더리움과 트론 주소 2개가 함께 등재됐습니다. 기존 블랙리스트 주소 1개 재등장.",
-        "- **소액 사건** — Foo Swap(BSC, $77K, 현재 가격만 보는 오라클 조작), Bar Vault(Ethereum, $43K, 아무나 호출할 수 있던 함수).",
-        "- **시사점** — 오늘 사건 3건 중 2건은 풀 하나의 현재 가격을 그대로 담보 평가에 쓴 것이 원인입니다. 같은 구조를 쓰는 프로토콜은 평균 가격(TWAP)을 쓰는지 점검할 필요가 있습니다.",
+        "- **[Example DEX](https://rekt.news/example-dex-rekt)** (Base) — 플래시론으로 EXD 가격을 띄워 $4.2M 차입, 1,100 ETH는 Tornado Cash로 이동.",
+        "- **OFAC 제재** — 북한 국적 KIM, Example을 IT 노동자·해킹 자금 세탁 혐의로 지정, 주소 2개 등재. 기존 블랙리스트 1개 재등장.",
+        "- **소액** — Foo Swap $77K, Bar Vault $43K.",
+        "- **시사점** — 풀 하나의 현재 가격을 담보 평가에 그대로 쓴 프로토콜이 연달아 당했습니다.",
     ]),
     "briefing_en": "\n".join([
-        "- **[Example DEX](https://rekt.news/example-dex-rekt)** (Base, Mar 1) — An attacker used a flash loan (a loan borrowed and repaid within one transaction) to spike the EXD token price, then borrowed USDC against the inflated collateral. The lending module priced collateral from a single pool's spot price. Of the $4.2M taken, 2,900 ETH went to Ethereum and 1,100 ETH into Tornado Cash (a mixer that hides fund trails). The team paused the market and is negotiating a bounty.",
-        "- **OFAC sanctions** — The U.S. Treasury added North Korean national KIM, Example to its sanctions list for cashing out DPRK IT-worker earnings and exchange-hack funds through Southeast Asian OTC brokers. One Ethereum and one Tron address were listed. 1 address already on our blacklist.",
-        "- **Smaller incidents** — Foo Swap (BSC, $77K, spot-price oracle), Bar Vault (Ethereum, $43K, function anyone could call).",
-        "- **Takeaway** — Two of today's three exploits came from pricing collateral off a single pool's spot price. Protocols with the same design should check that they use a time-averaged price (TWAP).",
+        "- **[Example DEX](https://rekt.news/example-dex-rekt)** (Base) — flash-loan price pump let the attacker borrow $4.2M; 1,100 ETH went to Tornado Cash.",
+        "- **OFAC sanctions** — North Korean national KIM, Example designated for laundering IT-worker and hack proceeds; 2 addresses listed. 1 on our blacklist.",
+        "- **Smaller** — Foo Swap $77K, Bar Vault $43K.",
+        "- **Takeaway** — Protocols pricing collateral from a single pool's spot price keep getting hit.",
     ]),
 }
 

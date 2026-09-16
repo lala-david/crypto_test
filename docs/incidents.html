@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사건 · Incident Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav" id="nav"></nav>
+<main class="page">
+  <h1 class="page-title" data-i18n="nav_incidents">사건</h1>
+  <section class="search">
+    <span class="search-ico">⌕</span>
+    <input id="q" type="search" placeholder="" data-i18n-ph="search_ph" aria-label="search">
+    <label class="chk"><input id="hideFollow" type="checkbox"> <span data-i18n="hide_follow">후속 보도 숨기기</span></label>
+  </section>
+  <section class="toolbar">
+    <div class="total"><span data-i18n="total">사건</span> <b id="incCount">0</b></div>
+    <div class="controls">
+      <label class="ctl"><select id="typeSel"></select></label>
+      <label class="ctl"><select id="chainSel"></select></label>
+      <label class="ctl"><select id="sourceSel"></select></label>
+      <label class="ctl"><select id="sortSel"></select></label>
+      <div class="ctl seg" id="rangeSeg" role="group">
+        <button data-range="7" type="button">7d</button><button data-range="30" type="button" class="on">30d</button>
+        <button data-range="90" type="button">90d</button><button data-range="all" type="button" data-i18n="all">전체</button>
+      </div>
+    </div>
+  </section>
+  <section class="panel table-panel">
+    <div class="table-wrap"><table class="inc" id="incTable"></table></div>
+    <div class="pager" id="pager"></div>
+  </section>
+</main>
+<div class="tooltip" id="tip" role="tooltip"></div>
+<footer class="foot" id="foot"></footer>
+<script src="common.js"></script><script src="incidents.js"></script>
+</body>
+</html>

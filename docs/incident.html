@@ -1,33 +1,17 @@
 <!doctype html>
-<html lang="ko" data-theme="dark">
+<html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Incident · Kloint Incident Monitor</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Incident · Incident Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="detail-page">
-<nav class="nav">
-  <div class="nav-l">
-    <a class="brand" href="./"><span class="mark">❋</span><span class="word">Kloint</span><span class="brand-sub" data-i18n="brand_sub">Threat Intelligence</span></a>
-    <a class="nav-link" href="./#hacks" data-i18n="back">사건 목록</a>
-  </div>
-  <div class="nav-r">
-    <button id="themeBtn" class="icon-btn" type="button" aria-label="theme">☀</button>
-    <button id="langBtn" class="btn-accent" type="button" aria-label="language">EN</button>
-  </div>
-</nav>
-
-<main class="detail" id="detail">
-  <div class="empty" id="loading">…</div>
-</main>
-
+<nav class="nav" id="nav"></nav>
+<main class="detail" id="detail"><div class="empty">…</div></main>
 <div class="tooltip" id="tip" role="tooltip"></div>
-<footer class="foot">
-  <span data-i18n="foot"></span> · <a href="https://github.com/lala-david/crypto_test" target="_blank" rel="noopener">GitHub</a>
-</footer>
-<script src="common.js"></script>
-<script src="incident.js"></script>
+<footer class="foot" id="foot"></footer>
+<script src="common.js"></script><script src="incident.js"></script>
 </body>
 </html>

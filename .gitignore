@@ -9,3 +9,4 @@ __pycache__/
 *.txt.key
 telegram_bot_token.txt
 teams_webhook.txt
+logs/

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>통계 · Incident Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav" id="nav"></nav>
+<main class="page">
+  <h1 class="page-title" data-i18n="nav_stats">통계</h1>
+  <section class="toolbar">
+    <div class="panel-kpi" id="panelKpi"></div>
+    <div class="controls">
+      <label class="ctl"><select id="typeSel"></select></label>
+      <label class="ctl"><select id="chainSel"></select></label>
+      <div class="ctl seg" id="rangeSeg" role="group">
+        <button data-range="7" type="button">7d</button><button data-range="30" type="button" class="on">30d</button>
+        <button data-range="90" type="button">90d</button><button data-range="all" type="button" data-i18n="all">전체</button>
+      </div>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="tabs" id="statTabs" role="tablist">
+      <button class="tab on" data-tab="value" type="button" data-i18n="tab_value">피해 금액</button>
+      <button class="tab" data-tab="type" type="button" data-i18n="tab_type">공격 유형</button>
+      <button class="tab" data-tab="chain" type="button" data-i18n="tab_chain">체인별</button>
+      <button class="tab" data-tab="legal" type="button" data-i18n="tab_legal">제재·수사·주소</button>
+    </div>
+    <div class="panel-body">
+      <div class="panel-top">
+        <div class="seg small" id="valueMode" role="group">
+          <button data-mode="amount" class="on" type="button" data-i18n="mode_amount">금액 (USD)</button>
+          <button data-mode="count" type="button" data-i18n="mode_count">건수</button>
+        </div>
+      </div>
+      <div class="panel-grid"><div class="plot main" id="mainPlot"></div><div class="side" id="sidePlot"></div></div>
+      <div class="table-wrap" style="margin-top:10px"><table class="stat-table" id="statTable"></table></div>
+    </div>
+  </section>
+</main>
+<div class="tooltip" id="tip" role="tooltip"></div>
+<footer class="foot" id="foot"></footer>
+<script src="common.js"></script><script src="stats.js"></script>
+</body>
+</html>

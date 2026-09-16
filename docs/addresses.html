@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>주소 조회 · Incident Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav" id="nav"></nav>
+<main class="page narrow">
+  <h1 class="page-title" data-i18n="addr_title">지갑 주소 조회</h1>
+  <p class="muted" data-i18n="addr_hint"></p>
+  <form class="search big" id="form">
+    <span class="search-ico">⌕</span>
+    <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="" data-i18n-ph="addr_ph" aria-label="address">
+    <button class="btn-accent" type="submit">⏎</button>
+  </form>
+  <section class="kpis four" id="addrKpis"></section>
+  <section id="result"></section>
+</main>
+<div class="tooltip" id="tip" role="tooltip"></div>
+<footer class="foot" id="foot"></footer>
+<script src="common.js"></script><script src="addresses.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>브리핑 · Incident Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav" id="nav"></nav>
+<main class="page">
+  <h1 class="page-title" data-i18n="nav_briefings">브리핑</h1>
+  <div class="brief-grid">
+    <aside class="panel brief-days">
+      <div class="panel-head"><h2 data-i18n="briefing_days">날짜</h2></div>
+      <ul class="day-list" id="dayList"></ul>
+    </aside>
+    <section>
+      <div class="panel">
+        <div class="panel-head"><h2 id="briefTitle"></h2><span class="muted small" id="briefMeta"></span></div>
+        <p class="headline" id="briefingHeadline"></p>
+        <div class="briefing-body" id="briefingBody"></div>
+      </div>
+      <div class="panel table-panel" style="margin-top:14px">
+        <div class="panel-head"><h2 data-i18n="briefing_incidents">이 날의 사건</h2></div>
+        <div class="table-wrap"><table class="inc" id="dayTable"></table></div>
+      </div>
+    </section>
+  </div>
+</main>
+<div class="tooltip" id="tip" role="tooltip"></div>
+<footer class="foot" id="foot"></footer>
+<script src="common.js"></script><script src="briefings.js"></script>
+</body>
+</html>
