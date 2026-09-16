@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,78 +8,103 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="top">
-  <div class="brand">
-    <span class="logo">◆</span>
-    <div>
-      <h1 data-i18n="title">가상자산 해킹·범죄 지갑 동향</h1>
-      <p class="sub"><span data-i18n="subtitle">rekt · SlowMist · DeFiLlama · DeFiHackLabs · ZachXBT · TRM · Chainalysis · OFAC · DOJ 등 12개 소스를 매시간 수집</span> · <span id="updated"></span></p>
-    </div>
+<nav class="nav">
+  <div class="nav-l">
+    <a class="wordmark" href="./">I N C I D E N T S</a>
+    <a class="nav-link on" href="#hacks" data-i18n="nav_hacks">사건</a>
+    <a class="nav-link" href="#briefing" data-i18n="nav_briefing">브리핑</a>
+    <a class="nav-link" href="#stats" data-i18n="nav_stats">통계</a>
   </div>
-  <div class="actions">
-    <button id="langBtn" class="pill" type="button" aria-label="language">EN</button>
-    <button id="themeBtn" class="pill" type="button" aria-label="theme">☾</button>
-    <a class="pill" id="repoLink" href="https://github.com/lala-david/crypto_test" target="_blank" rel="noopener">GitHub</a>
+  <div class="nav-r">
+    <button id="themeBtn" class="icon-btn" type="button" aria-label="theme">☀</button>
+    <span class="vsep"></span>
+    <button id="langBtn" class="btn-accent" type="button" aria-label="language">EN</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-l">
+    <h1 class="hero-title"><span data-i18n="hero_1">가상자산 해킹의</span><br><span data-i18n="hero_2">그림자를</span><br><span class="accent" data-i18n="hero_3">비춥니다</span></h1>
+    <p class="hero-sub"><span data-i18n="hero_sub">12개 소스 · 매시간 수집 · 한/영 사건 카드</span> · <span id="updated"></span></p>
+  </div>
+  <div class="hero-r" aria-hidden="true">
+    <div class="ticker" id="ticker"></div>
   </div>
 </header>
 
-<main>
+<main id="hacks">
+  <section class="toolbar">
+    <div class="total"><span data-i18n="total">Total</span> <b id="incCount">0</b></div>
+    <div class="controls">
+      <label class="ctl"><span class="ctl-ico">≡</span><select id="typeSel" aria-label="type"></select></label>
+      <label class="ctl"><span class="ctl-ico">≡</span><select id="chainSel" aria-label="chain"></select></label>
+      <label class="ctl"><span class="ctl-ico">≡</span><select id="sourceSel" aria-label="source"></select></label>
+      <div class="ctl seg" id="rangeSeg" role="group" aria-label="range">
+        <span class="ctl-ico">▦</span>
+        <button data-range="7" type="button">7d</button>
+        <button data-range="30" type="button" class="on">30d</button>
+        <button data-range="90" type="button">90d</button>
+        <button data-range="all" type="button" data-i18n="all">전체</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="stats">
+    <div class="tabs" id="statTabs" role="tablist">
+      <button class="tab on" data-tab="value" type="button" data-i18n="tab_value">총 피해 금액</button>
+      <button class="tab" data-tab="type" type="button" data-i18n="tab_type">공격 유형</button>
+      <button class="tab" data-tab="chain" type="button" data-i18n="tab_chain">체인별 피해</button>
+      <button class="tab" data-tab="legal" type="button" data-i18n="tab_legal">제재·수사·주소</button>
+    </div>
+    <div class="panel-body">
+      <div class="panel-top">
+        <div class="seg small" id="valueMode" role="group">
+          <button data-mode="amount" class="on" type="button" data-i18n="mode_amount">피해 금액 (USD)</button>
+          <button data-mode="count" type="button" data-i18n="mode_count">사건 수</button>
+        </div>
+        <div class="panel-kpi" id="panelKpi"></div>
+      </div>
+      <div class="panel-grid">
+        <div class="plot main" id="mainPlot"></div>
+        <div class="side" id="sidePlot"></div>
+      </div>
+      <button class="link" id="tableViewBtn" type="button" data-i18n="table_view">표로 보기</button>
+    </div>
+  </section>
+
   <section class="kpis" id="kpis" aria-label="summary"></section>
 
-  <section class="card briefing" id="briefingCard">
-    <div class="card-head">
-      <h2 data-i18n="latest_briefing">최신 브리핑</h2>
-      <div class="row gap">
-        <select id="briefingDay" aria-label="briefing day"></select>
-      </div>
+  <section class="panel" id="briefing">
+    <div class="panel-head">
+      <h2 data-i18n="latest_briefing">브리핑</h2>
+      <select id="briefingDay" aria-label="briefing day"></select>
     </div>
     <p class="headline" id="briefingHeadline"></p>
     <div class="briefing-body" id="briefingBody"></div>
   </section>
 
-  <section class="filters card" aria-label="filters">
-    <div class="seg" id="rangeSeg" role="group" aria-label="range">
-      <button data-range="7" type="button">7d</button>
-      <button data-range="30" type="button" class="on">30d</button>
-      <button data-range="90" type="button">90d</button>
-      <button data-range="all" type="button" data-i18n="all">전체</button>
-    </div>
-    <select id="typeSel" aria-label="type"></select>
-    <select id="chainSel" aria-label="chain"></select>
-    <select id="sourceSel" aria-label="source"></select>
-    <input id="q" type="search" placeholder="프로젝트 · 주소 · 키워드 검색" data-i18n-ph="search_ph" aria-label="search">
+  <section class="search">
+    <span class="search-ico">⌕</span>
+    <input id="q" type="search" placeholder="프로젝트 이름, 주소, 키워드 검색" data-i18n-ph="search_ph" aria-label="search">
     <label class="chk"><input id="hideFollow" type="checkbox"> <span data-i18n="hide_follow">후속 보도 숨기기</span></label>
   </section>
 
-  <section class="charts">
-    <div class="card chart" id="chartDaily">
-      <div class="card-head"><h3 data-i18n="chart_daily">일별 사건 수</h3><button class="link" data-table="daily" type="button" data-i18n="table_view">표로 보기</button></div>
-      <div class="plot" id="dailyPlot"></div>
-    </div>
-    <div class="card chart" id="chartType">
-      <div class="card-head"><h3 data-i18n="chart_type">유형별 사건 수</h3><button class="link" data-table="type" type="button" data-i18n="table_view">표로 보기</button></div>
-      <div class="plot" id="typePlot"></div>
-    </div>
-    <div class="card chart" id="chartChain">
-      <div class="card-head"><h3 data-i18n="chart_chain">체인별 피해액</h3><button class="link" data-table="chain" type="button" data-i18n="table_view">표로 보기</button></div>
-      <div class="plot" id="chainPlot"></div>
-    </div>
-  </section>
-
-  <section class="card">
-    <div class="card-head">
-      <h2><span data-i18n="incidents">사건 목록</span> <span class="count" id="incCount"></span></h2>
-      <span class="muted small" data-i18n="click_hint">행을 누르면 상세 카드가 열립니다</span>
-    </div>
+  <section class="panel table-panel">
     <div class="table-wrap">
       <table class="inc" id="incTable">
         <thead><tr>
-          <th data-i18n="th_date">사건일</th><th data-i18n="th_incident">사건</th><th data-i18n="th_type">유형</th>
-          <th data-i18n="th_chain">체인</th><th class="num" data-i18n="th_amount">금액</th><th class="num" data-i18n="th_addr">주소</th><th data-i18n="th_source">출처</th>
+          <th data-i18n="th_incident">사건</th>
+          <th data-i18n="th_amount">피해 금액</th>
+          <th data-i18n="th_date">사건일</th>
+          <th data-i18n="th_type">공격 유형</th>
+          <th data-i18n="th_chain">체인</th>
+          <th class="num" data-i18n="th_addr">주소</th>
+          <th class="center" data-i18n="th_conf">교차 검증</th>
         </tr></thead>
         <tbody></tbody>
       </table>
     </div>
+    <div class="pager" id="pager"></div>
   </section>
 </main>
 
@@ -97,11 +122,11 @@
     <div id="tableBody"></div>
   </div>
 </div>
-
 <div class="tooltip" id="tip" role="tooltip"></div>
 
 <footer class="foot">
   <span data-i18n="foot">데이터는 공개 소스에서 자동 수집·LLM 요약된 것으로 오류가 있을 수 있습니다. 주소는 반드시 원문으로 재확인하세요.</span>
+  · <a href="https://github.com/lala-david/crypto_test" target="_blank" rel="noopener">GitHub</a>
 </footer>
 <script src="app.js"></script>
 </body>
