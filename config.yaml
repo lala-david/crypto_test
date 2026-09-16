@@ -89,7 +89,7 @@ teams:
 #   2) 봇에게 메시지를 보내거나 채널 관리자로 추가 → python -m collector.notify --setup 으로 chat id 확인
 #   3) chat_id 기입 → python -m collector.notify --test
 telegram:
-  enabled: true
+  enabled: false               # Teams 로 대체 (사용자 지시)
   bot_token_env: TELEGRAM_BOT_TOKEN
   bot_token_file: telegram_bot_token.txt
   chat_env: TELEGRAM_ALERT_CHAT
