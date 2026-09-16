@@ -1,6 +1,6 @@
 {
- "headline_ko": "DCENT $6.57M 탈취 등 신규 1건",
- "headline_en": "DCENT loses $6.57M, 1 new incident",
- "briefing_ko": "- **[DCENT](https://x.com/DCENTWALLETS/status/2100076991798206573)** — DCENT App Wallet에서 $6.57M 자산이 탈취, 하드웨어 지갑은 영향 안받음.\n- **시사점** — 비정상적인 자산 전송을 감지하고 즉시 하드웨어 지갑으로 이동하도록 권고하는 것이 필요합니다.",
- "briefing_en": "- **[DCENT](https://x.com/DCENTWALLETS/status/2100076991798206573)** — $6.57M stolen from DCENT App Wallet; hardware wallets appear unaffected.\n- **Takeaway** — Detect abnormal asset transfers and urge users to move funds to hardware wallets promptly."
+ "headline_ko": "DCENT $6.57M 탈취 등 신규 2건",
+ "headline_en": "DCENT $6.57M stolen, plus other incidents; 2 new cases",
+ "briefing_ko": "- **[DCENT](https://x.com/DCENTWALLETS/status/2100076991798206573)** — $6.57M 규모 자산 탈취, 조사 진행 중.\n- **소액** — Startale $2.9K\n- **시사점** — 초기 접근 권한 확보 시도가 계속 나타나고 있습니다.",
+ "briefing_en": "- **[DCENT](https://x.com/DCENTWALLETS/status/2100076991798206573)** — $6.57M stolen from the app wallet; investigation ongoing.\n- **Smaller** — Startale $2.9K\n- **Takeaway** — Initial access exploits remain a common vector for asset theft."
 }
