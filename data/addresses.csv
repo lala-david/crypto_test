@@ -1,4 +1,7 @@
 ﻿chain,address,role,note,source,project,incident_date,first_seen_at,url
+BTC,bc1ql4mfu6aundtkksxklfajs2h3t9nzcd6gyqjlte,attacker,actor-controlled consolidation and on-chain-messaging address; received ~598.5 BTC,rekt,Liquid Network,2026-09-06,2026-09-16T22:02:54,https://rekt.news/liquid-network-rekt
+BTC,bc1qdlld6antmv4xug242ed83q7k4rqw50cwfns38szx4qu2f4jwaxxsuhwxxr,victim,"Liquid Federation peg wallet; received 3,400 BTC returned",rekt,Liquid Network,2026-09-06,2026-09-16T22:02:54,https://rekt.news/liquid-network-rekt
+BTC,Bc1ql4mfu6aundtkksxklfajs2h3t9nzcd6gyqjlte,unknown,,rekt,Liquid Network,2026-09-06,2026-09-16T22:02:54,https://rekt.news/liquid-network-rekt
 ETH,0x859E69A29244A10800A34eE66919426C02afa2F0,attacker,Attacker EOA,defihacklabs,SpiralHookV2,2026-09-12,2026-09-16T13:01:20,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
 ETH,0x0C23C8BC3b7C565f3f9F4aC691A4Dc4275086F86,unknown,Attack contract,defihacklabs,SpiralHookV2,2026-09-12,2026-09-16T13:01:20,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
 ETH,0x1725577dC9B1ee2D95dB49c2193226471594aacc,unknown,SpiralHookV2,defihacklabs,SpiralHookV2,2026-09-12,2026-09-16T13:01:20,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
