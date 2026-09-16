@@ -309,3 +309,25 @@ details.fold > p { margin: 0; font-size: 15px; line-height: 1.75; word-break: ke
 .chip:hover { border-color: var(--primary); color: var(--primary); }
 .chip.ghost { color: var(--muted-foreground); background: transparent; }
 .d-conf .small { color: rgba(255,255,255,.6); font-size: 11px; }
+
+/* ---- 모바일 손질 -------------------------------------------------------- */
+.nav-link { white-space: nowrap; }
+.nav-links { flex: none; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.nav-links::-webkit-scrollbar { display: none; }
+@media (max-width: 960px) {
+  .hero-kpis { grid-template-columns: repeat(2, 1fr); }
+  .tile .value { font-size: 24px; }
+  .hero-title { font-size: clamp(26px, 8vw, 36px); }
+  .nav-r .icon-btn, .nav-r .btn-ghost { width: 30px; height: 30px; padding: 0; justify-content: center; }
+}
+@media (max-width: 560px) {
+  .brand .word { display: none; }
+  .nav { gap: 8px; }
+  .nav-link { padding: 6px 10px; font-size: 12.5px; }
+  table.inc th:nth-child(4), table.inc td:nth-child(4) { display: none; }
+  .integration .copy.row { padding: 12px 16px; }
+}
+
+.addr-actions { white-space: nowrap; display: inline-flex; gap: 0; }
+.addr-actions .copy { margin-left: 6px; }
+table.addrs td:first-child { white-space: nowrap; }

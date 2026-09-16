@@ -22,7 +22,7 @@ window.KL = (() => {
       report_date: "보고일", tags: "태그", all_roles: "모두", not_found: "사건을 찾을 수 없습니다", cross_check: "교차 검증", cross_desc: "같은 사건을 다룬 출처 수",
       amount_unknown: "금액 미상", loss_label: "피해·관련 금액", recent: "최근 사건", see_all: "전체 보기 →", todays_briefing: "오늘의 브리핑", more_briefings: "지난 브리핑 →",
       home_stats: "최근 30일 통계 →", addr_title: "지갑 주소 조회", addr_ph: "0x… / T… / bc1… 주소 또는 일부 입력 (6자 이상)", addr_hint: "사건 카드 · OFAC SDN · 블랙리스트 동시 대조",
-      addr_found_in: "사건 카드에서 발견", addr_sdn: "OFAC SDN 제재 목록", addr_bl: "crimial_hunter 블랙리스트", addr_none: "일치하는 기록이 없습니다", addr_role: "역할", addr_incident: "사건",
+      addr_found_in: "사건 카드에서 발견", addr_sdn: "OFAC SDN 제재 목록", addr_bl: "crimial_hunter 블랙리스트", addr_none: "일치하는 기록이 없습니다", addr_role: "역할", addr_incident: "사건", show_more: "더 보기 {n}", show_less: "접기",
       known_addresses: "수집 주소", sanctioned_addresses: "제재 주소", incidents_total: "누적 사건", days_covered: "수집 일수", sort: "정렬", sort_day: "보고일", sort_amount: "금액", sort_date: "사건일",
       briefing_days: "날짜", briefing_incidents: "이 날의 사건", page: "페이지", legal: "제재·수사", new_label: "신규",
       types: { hack_exploit: "해킹/익스플로잇", private_key_compromise: "개인키 탈취", rug_pull: "러그풀", phishing_social_engineering: "피싱/드레이너",
@@ -46,7 +46,7 @@ window.KL = (() => {
       report_date: "Reported", tags: "Tags", all_roles: "All", not_found: "Incident not found", cross_check: "Cross-check", cross_desc: "number of sources covering this incident",
       amount_unknown: "amount unknown", loss_label: "Loss & related amount", recent: "Recent incidents", see_all: "See all →", todays_briefing: "Today's briefing", more_briefings: "Past briefings →",
       home_stats: "Last 30 days →", addr_title: "Wallet address lookup", addr_ph: "Enter an address or fragment (0x… / T… / bc1…, 6+ chars)", addr_hint: "Incident cards · OFAC SDN · blacklist, one lookup",
-      addr_found_in: "Found in incident cards", addr_sdn: "OFAC SDN sanctions list", addr_bl: "crimial_hunter blacklist", addr_none: "No matching records", addr_role: "Role", addr_incident: "Incident",
+      addr_found_in: "Found in incident cards", addr_sdn: "OFAC SDN sanctions list", addr_bl: "crimial_hunter blacklist", addr_none: "No matching records", addr_role: "Role", addr_incident: "Incident", show_more: "Show {n} more", show_less: "Show less",
       known_addresses: "Collected addresses", sanctioned_addresses: "Sanctioned addresses", incidents_total: "Incidents total", days_covered: "Days covered", sort: "Sort", sort_day: "Report date", sort_amount: "Amount", sort_date: "Incident date",
       briefing_days: "Days", briefing_incidents: "Incidents that day", page: "Page", legal: "Sanctions · Enforcement", new_label: "new",
       types: { hack_exploit: "Hack / Exploit", private_key_compromise: "Key compromise", rug_pull: "Rug pull", phishing_social_engineering: "Phishing / Drainer",
@@ -182,6 +182,7 @@ window.KL = (() => {
 
   // ---- 표 행 ----
   function incidentRow(i, compact = false) {
+    compact = compact === true;
     const d = dayOf(i);
     const badges = `${i.followup_of ? `<span class="tag" title="${esc(t("follow"))} · ${esc(i.followup_of.day || "")}">↩</span>` : ""}${i.blacklist_hits ? `<span class="tag warn" title="${esc(t("blacklist"))}">⚠ ${i.blacklist_hits}</span>` : ""}`;
     const name = `<td><div class="proj"><span class="swatch" style="--type:${TYPE_COLOR[i.type] || "var(--t-other)"}"></span><div><a class="pname" href="${detailUrl(i)}">${esc(i.project)}</a>${badges}</div></div></td>`;

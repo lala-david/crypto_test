@@ -4,7 +4,8 @@
   const { $, $$, t, typeName, roleName, srcLabel, esc, fmtInt, money, moneyFull, fmtDate, dayOf, txt, avatarColor, initials, explorer, pill, chainPills, gauge, detailUrl,
           api, renderNav, renderFoot, applyI18n, bindChrome, REPO, state } = KL;
   const id = new URLSearchParams(location.search).get("id");
-  let meta = null, inc = null, roleFilter = "";
+  let meta = null, inc = null, roleFilter = "", showAll = false;
+  const ADDR_LIMIT = 12;
 
   function render() {
     renderNav("incidents.html", meta); renderFoot(); applyI18n(); bindChrome(render);
@@ -15,9 +16,11 @@
     const sec = (title, body) => body ? `<section class="d-card"><h3>${esc(title)}</h3><p>${esc(body)}</p></section>` : "";
     const fold = (title, body) => body ? `<details class="d-card fold"><summary>${esc(title)}</summary><p>${esc(body)}</p></details>` : "";
     const roles = [...new Set(inc.addresses.map((a) => a.role))];
-    const addrRows = inc.addresses.filter((a) => !roleFilter || a.role === roleFilter).map((a) => {
+    const addrAll = inc.addresses.filter((a) => !roleFilter || a.role === roleFilter);
+    const addrShown = showAll ? addrAll : addrAll.slice(0, ADDR_LIMIT);
+    const addrRows = addrShown.map((a) => {
       const url = explorer(a.chain, a.address); const bl = inc.blacklist_detail && inc.blacklist_detail[a.address];
-      return `<tr><td class="muted mono">${esc(a.chain)}</td><td><span class="addr">${url ? `<a href="${url}" target="_blank" rel="noopener">${esc(a.address)}</a>` : esc(a.address)}</span><button class="copy" data-copy="${esc(a.address)}" type="button">${esc(t("copy"))}</button><a class="copy" href="addresses.html?q=${encodeURIComponent(a.address)}">⌕</a>${bl ? `<span class="tag warn">⚠ ${esc((bl.sources || []).slice(0, 2).join(", "))}</span>` : ""}</td><td><span class="role ${esc(a.role)}">${esc(roleName(a.role))}</span></td><td class="muted small">${esc(a.note || "")}</td></tr>`;
+      return `<tr><td class="muted mono">${esc(a.chain)}</td><td><span class="addr">${url ? `<a href="${url}" target="_blank" rel="noopener">${esc(a.address)}</a>` : esc(a.address)}</span><span class="addr-actions"><button class="copy" data-copy="${esc(a.address)}" type="button">${esc(t("copy"))}</button><a class="copy" href="addresses.html?q=${encodeURIComponent(a.address)}">⌕</a></span>${bl ? `<span class="tag warn">⚠ ${esc((bl.sources || []).slice(0, 2).join(", "))}</span>` : ""}</td><td><span class="role ${esc(a.role)}">${esc(roleName(a.role))}</span></td><td class="muted small">${esc(a.note || "")}</td></tr>`;
     }).join("");
     const rel = inc.related || [];
     root.innerHTML = `
@@ -37,7 +40,7 @@
           ${sec(t("summary"), txt(inc, "summary"))}${fold(t("method"), txt(inc, "attack_method"))}${fold(t("background"), txt(inc, "background"))}${fold(t("flow"), txt(inc, "fund_flow"))}
           ${inc.addresses.length ? `<section class="d-card"><div class="d-card-head"><h3>${esc(t("addresses"))} <span class="muted">(${inc.addresses.length})</span></h3>
             <div class="seg small" id="roleSeg"><button data-role="" class="${roleFilter ? "" : "on"}" type="button">${esc(t("all_roles"))}</button>${roles.map((r) => `<button data-role="${esc(r)}" class="${roleFilter === r ? "on" : ""}" type="button">${esc(roleName(r))} ${inc.addresses.filter((a) => a.role === r).length}</button>`).join("")}</div></div>
-            <div class="table-wrap"><table class="addrs">${addrRows}</table></div></section>` : ""}
+            <div class="table-wrap"><table class="addrs">${addrRows}</table></div>${addrAll.length > ADDR_LIMIT ? `<div class="center" style="padding-top:12px"><button class="btn-ghost sm" id="moreAddr" type="button">${esc(showAll ? t("show_less") : t("show_more").replace("{n}", addrAll.length - ADDR_LIMIT))}</button></div>` : ""}</section>` : ""}
           ${inc.tx_hashes && inc.tx_hashes.length ? `<section class="d-card"><h3>${esc(t("tx"))} <span class="muted">(${inc.tx_hashes.length})</span></h3><p class="addr small">${inc.tx_hashes.map((h) => `<a href="https://etherscan.io/tx/${esc(h)}" target="_blank" rel="noopener">${esc(h)}</a>`).join("<br>")}</p></section>` : ""}
         </div>
         <aside class="d-side">
@@ -53,7 +56,8 @@
     const tc = getComputedStyle(document.documentElement).getPropertyValue(tvar).trim() || "#34d399";
     KL.velaris(heroEl, { colors: KL.typeGradient(tc), speed: 1.1, grain: 0.22 });
     $$(".copy[data-copy]", root).forEach((b) => b.addEventListener("click", async () => { try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = t("copied"); setTimeout(() => (b.textContent = t("copy")), 1200); } catch (_) {} }));
-    $$("#roleSeg button", root).forEach((b) => b.addEventListener("click", () => { roleFilter = b.dataset.role; render(); }));
+    $$("#roleSeg button", root).forEach((b) => b.addEventListener("click", () => { roleFilter = b.dataset.role; showAll = false; render(); }));
+    const mb = $("#moreAddr", root); if (mb) mb.addEventListener("click", () => { showAll = !showAll; render(); });
   }
   (async () => { meta = await api("/api/meta"); try { inc = await api(`/api/incidents/${encodeURIComponent(id)}`); } catch (_) { inc = null; } render(); })()
     .catch((e) => { $("#detail").innerHTML = `<div class="panel empty">${esc(e.message)}</div>`; });

@@ -18,7 +18,7 @@
     $("#sortSel").innerHTML = [["day", t("sort_day")], ["date", t("sort_date")], ["amount", t("sort_amount")]].map(([v, l]) => `<option value="${v}"${S.sort === v ? " selected" : ""}>${esc(t("sort"))}: ${esc(l)}</option>`).join("");
     $("#incCount").textContent = res.total.toLocaleString();
     const tb = $("#incTable");
-    tb.innerHTML = TABLE_HEAD() + `<tbody>${res.items.length ? res.items.map(incidentRow).join("") : `<tr><td colspan="7" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
+    tb.innerHTML = TABLE_HEAD() + `<tbody>${res.items.length ? res.items.map((i) => incidentRow(i)).join("") : `<tr><td colspan="7" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
     bindRows(tb);
     const pages = Math.max(1, Math.ceil(res.total / S.size));
     $("#pager").innerHTML = `<span>${res.total ? (S.page - 1) * S.size + 1 : 0}-${Math.min(res.total, S.page * S.size)} / ${res.total}</span>
