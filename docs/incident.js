@@ -8,7 +8,7 @@
   const ADDR_LIMIT = 12;
 
   function render() {
-    renderNav("incidents.html", meta); renderFoot(); applyI18n(); bindChrome(render);
+    renderNav("incidents.html", meta, inc ? inc.project : t("nav_incidents")); renderFoot(); applyI18n(); bindChrome(render);
     const root = $("#detail");
     if (!inc) { root.innerHTML = `<div class="panel empty">${esc(t("not_found"))}</div>`; return; }
     document.title = `${inc.project} · Kloint Incident Monitor`;

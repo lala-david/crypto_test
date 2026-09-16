@@ -36,7 +36,7 @@ with open(os.path.join(ROOT, "config.yaml"), encoding="utf-8") as f:
     CFG = yaml.safe_load(f)
 svc = DataService(ROOT, CFG)
 
-LIGHT_DROP = {"background_ko", "background_en", "attack_method_en", "summary_en", "fund_flow_ko", "fund_flow_en", "tx_hashes", "blacklist_detail"}
+LIGHT_DROP = {"background_ko", "background_en", "attack_method_en", "fund_flow_ko", "fund_flow_en", "tx_hashes", "blacklist_detail"}
 
 
 def J(data, status=200):

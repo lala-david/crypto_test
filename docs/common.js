@@ -60,7 +60,14 @@ window.KL = (() => {
   const SOURCE_LABEL = { rekt: "rekt.news", slowmist: "SlowMist", defillama: "DeFiLlama", defihacklabs: "DeFiHackLabs", zachxbt: "ZachXBT", trm: "TRM Labs",
     chainalysis: "Chainalysis", ofac: "OFAC", ofac_sdn: "OFAC SDN", doj: "US DOJ", scamsniffer: "ScamSniffer", "rss:cointelegraph_hacks": "Cointelegraph", "rss:cointelegraph_scams": "Cointelegraph", "rss:boannews": "보안뉴스", "rss:blockmedia": "블록미디어", "rss:tokenpost": "토큰포스트", "rss:sec_litigation": "SEC" };
   const REPO = "https://github.com/lala-david/crypto_test";
-  const PAGES = [["index.html", "nav_home"], ["incidents.html", "nav_incidents"], ["briefings.html", "nav_briefings"], ["stats.html", "nav_stats"], ["addresses.html", "nav_addresses"]];
+  const ICON = {
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
+    list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg>',
+    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>',
+    chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+  };
+  const PAGES = [["index.html", "nav_home", "home"], ["incidents.html", "nav_incidents", "list"], ["briefings.html", "nav_briefings", "doc"], ["stats.html", "nav_stats", "chart"], ["addresses.html", "nav_addresses", "search"]];
 
   const state = { lang: localStorage.getItem("lang") || "ko" };
   const t = (k) => (I18N[state.lang][k] ?? I18N.ko[k] ?? k);
@@ -100,7 +107,7 @@ window.KL = (() => {
   const mdToHtml = (md, max = 99) => {
     const items = (md || "").split(/\n/).map((l) => l.trim()).filter(Boolean).map((l) => l.replace(/^[-•]\s*/, "")).slice(0, max);
     const inline = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return `<ul>${items.map((l) => `<li>${inline(l)}</li>`).join("")}</ul>`;
+    return `<ul>${items.map((l) => `<li><span>${inline(l)}</span></li>`).join("")}</ul>`;
   };
 
   // ---- API ----
@@ -113,12 +120,17 @@ window.KL = (() => {
   };
 
   // ---- 공통 UI ----
-  function renderNav(active, meta) {
+  function renderNav(active, meta, title) {
     const nav = $("#nav"); if (!nav) return;
-    nav.innerHTML = `<div class="nav-l"><a class="brand" href="index.html"><span class="mark">${MARK}</span><span class="word">Incident Ledger</span></a>
-      <div class="nav-links">${PAGES.map(([href, key]) => `<a class="nav-link ${active === href ? "on" : ""}" href="${href}">${esc(t(key))}</a>`).join("")}</div></div>
-      <div class="nav-r"><span class="updated" title="${meta && meta.generated_at ? esc(meta.generated_at.replace("T", " ")) : ""}">${meta && meta.generated_at ? "● " + esc(meta.generated_at.slice(11, 16)) : ""}</span>
-      <button id="themeBtn" class="icon-btn" type="button" aria-label="theme">◐</button><button id="langBtn" class="btn-ghost" type="button" aria-label="language">${state.lang === "ko" ? "EN" : "한국어"}</button></div>`;
+    const upd = meta && meta.generated_at ? meta.generated_at : "";
+    nav.innerHTML = `<a class="brand" href="index.html"><span class="mark">${MARK}</span><span class="word">Incident Ledger</span></a>
+      <div class="side-links">${PAGES.map(([href, key, ic]) => `<a class="side-link ${active === href ? "on" : ""}" href="${href}">${ICON[ic]}<span>${esc(t(key))}</span></a>`).join("")}</div>
+      <div class="side-foot">
+        <div class="side-status" title="${esc(upd.replace("T", " "))}"><span class="dot"></span><span>${upd ? esc(upd.slice(11, 16)) : ""}</span></div>
+        <div class="side-btns"><button id="themeBtn" class="icon-btn" type="button" aria-label="theme">☾</button><button id="langBtn" class="icon-btn lang" type="button" aria-label="language">${state.lang === "ko" ? "EN" : "KO"}</button></div>
+      </div>`;
+    const tb = $("#topbar");
+    if (tb) { const page = PAGES.find((p) => p[0] === active); tb.innerHTML = `<h1 class="top-title">${esc(title || (page ? t(page[1]) : ""))}</h1><div class="top-right" id="topRight"></div>`; }
   }
   function renderFoot() { const f = $("#foot"); if (f) f.innerHTML = `<span>${esc(t("foot"))}</span><span><a href="${REPO}" target="_blank" rel="noopener">GitHub</a> · <a href="/api" target="_blank" rel="noopener">API</a></span>`; }
   function applyI18n() {

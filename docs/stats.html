@@ -8,9 +8,8 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav class="nav" id="nav"></nav>
+<div class="shell"><aside class="side" id="nav"></aside><div class="main"><header class="topbar" id="topbar"></header>
 <main class="page">
-  <h1 class="page-title" data-i18n="nav_stats">통계</h1>
   <section class="toolbar">
     <div class="panel-kpi" id="panelKpi"></div>
     <div class="controls">
@@ -36,13 +35,13 @@
           <button data-mode="count" type="button" data-i18n="mode_count">건수</button>
         </div>
       </div>
-      <div class="panel-grid"><div class="plot main" id="mainPlot"></div><div class="side" id="sidePlot"></div></div>
+      <div class="panel-grid"><div class="plot main" id="mainPlot"></div><div class="hb" id="sidePlot"></div></div>
       <div class="table-wrap" style="margin-top:10px"><table class="stat-table" id="statTable"></table></div>
     </div>
   </section>
 </main>
 <div class="tooltip" id="tip" role="tooltip"></div>
-<footer class="foot" id="foot"></footer>
+<footer class="foot" id="foot"></footer></div></div>
 <script src="common.js"></script><script src="stats.js"></script>
 </body>
 </html>

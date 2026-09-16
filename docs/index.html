@@ -8,49 +8,32 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav class="nav" id="nav"></nav>
-<main class="home">
-  <section class="hero" id="hero">
-    <div class="hero-content">
-      <div><span class="pill-glass" id="heroPill"><span class="dot"></span><span id="heroPillText"></span></span></div>
-      <h1 class="hero-title" id="briefingHeadline"></h1>
-      <div class="hero-cta">
-        <a class="btn-accent" href="incidents.html" data-i18n="cta_incidents">사건 보기</a>
-        <a class="btn-ghost" href="addresses.html" data-i18n="cta_addresses">주소 조회</a>
-      </div>
-    </div>
-    <div class="hero-kpis" id="kpis"></div>
+<div class="shell"><aside class="side" id="nav"></aside><div class="main"><header class="topbar" id="topbar"></header>
+<main class="ledger">
+  <section class="feed">
+    <div class="hero slim" id="hero"><div class="slim-l"><div class="slim-date" id="slimDate"></div><span class="pill-glass"><span class="dot"></span><span id="heroPillText"></span></span></div></div>
+    <div id="feed"></div>
+    <div class="feed-more"><a class="btn-ghost sm" href="incidents.html" data-i18n="see_all">전체 보기 →</a></div>
   </section>
-
-  <section class="home-duo">
-    <article class="panel integration">
-      <div class="visual" id="network"></div>
-      <div class="copy row">
-        <h3 id="netTitle"></h3>
-        <a class="btn-ghost sm" href="stats.html" data-i18n="nav_stats">통계</a>
-      </div>
-    </article>
-    <article class="panel brief-card">
+  <aside class="rail">
+    <section class="panel brief-card">
       <div class="panel-head"><h2 data-i18n="todays_briefing">오늘의 브리핑</h2><a class="more" href="briefings.html" data-i18n="see_all">전체 보기 →</a></div>
+      <p class="headline" id="briefHeadline"></p>
       <div class="briefing-body compact" id="briefingBody"></div>
-    </article>
-  </section>
-
-  <section class="panel table-panel">
-    <div class="panel-head"><h2 data-i18n="recent">최근 사건</h2><a class="more" href="incidents.html" data-i18n="see_all">전체 보기 →</a></div>
-    <div class="table-wrap"><table class="inc" id="recentTable"></table></div>
-  </section>
-
-  <section class="home-grid">
-    <div class="panel">
+    </section>
+    <section class="panel">
       <div class="panel-head"><h2 data-i18n="tab_value">피해 금액</h2><a class="more" href="stats.html" data-i18n="see_all">전체 보기 →</a></div>
       <div class="panel-body"><div class="plot" id="homePlot"></div></div>
-    </div>
-    <div class="panel"><div class="panel-head"><h2 data-i18n="top_projects">피해액 상위 5</h2></div><div class="panel-body side" id="homeTop"></div></div>
-  </section>
+    </section>
+    <section class="panel"><div class="panel-head"><h2 data-i18n="by_type">유형별 건수</h2></div><div class="panel-body side-plot hb" id="homeTypes"></div></section>
+    <article class="panel integration">
+      <div class="visual" id="network"></div>
+      <div class="copy row"><h3 id="netTitle"></h3></div>
+    </article>
+  </aside>
 </main>
+<footer class="foot" id="foot"></footer></div></div>
 <div class="tooltip" id="tip" role="tooltip"></div>
-<footer class="foot" id="foot"></footer>
 <script src="common.js"></script><script src="home.js"></script>
 </body>
 </html>
