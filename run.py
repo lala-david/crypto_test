@@ -29,7 +29,8 @@ from collector.crimial import CrimialHunter
 from collector.enrich import Enricher, build_incident
 from collector.http import Http
 from collector.llm import build_provider
-from collector.merge import merge_incidents
+from collector.dedupe import LLMJudge
+from collector.merge import mark_followups, merge_incidents
 from collector.models import Incident, RawItem
 from collector.publish import commit_and_push
 from collector.report import (build_briefing_page, build_markdown, write_briefing_index, write_briefing_page,
@@ -63,6 +64,7 @@ def main() -> int:
     ap.add_argument("--no-push", action="store_true")
     ap.add_argument("--reprocess", action="store_true", help="이미 처리한 항목도 다시 처리")
     ap.add_argument("--limit", type=int, default=0, help="처리할 신규 항목 상한(테스트)")
+    ap.add_argument("--rebuild-day", help="YYYY-MM-DD: 수집 없이 그날의 병합/리포트/브리핑 페이지만 다시 생성")
     args = ap.parse_args()
 
     with open(args.config, encoding="utf-8") as f:
@@ -73,8 +75,9 @@ def main() -> int:
     log = setup_logging(os.path.join(data_dir, "logs"))
 
     since = date.fromisoformat(args.since) if args.since else date.today() - timedelta(days=int(cfg.get("lookback_days", 7)))
-    today = date.today().isoformat()
-    log.info("=== 수집 시작: since=%s ===", since)
+    today = args.rebuild_day or date.today().isoformat()
+    today_date = date.fromisoformat(today)
+    log.info("=== %s: since=%s ===", "리포트 재생성 " + today if args.rebuild_day else "수집 시작", since)
 
     store = Store(data_dir)
     http = Http(os.path.join(data_dir, "cache"))
@@ -85,7 +88,9 @@ def main() -> int:
     intervals: Dict[str, float] = sched.get("intervals") or {}
     default_iv = float(sched.get("default_interval_hours", 6))
     sources = build_sources(cfg)
-    if args.sources:
+    if args.rebuild_day:
+        sources = []
+    elif args.sources:
         wanted = {s.strip() for s in args.sources.split(",")}
         sources = [s for s in sources if s.name in wanted or s.name.split(":")[0] in wanted]
     elif not args.force:
@@ -93,7 +98,7 @@ def main() -> int:
         sources = [s for s in sources if s.name not in skipped]
         if skipped:
             log.info("주기 미도래로 건너뜀: %s", ", ".join(skipped))
-    if not sources:
+    if not sources and not args.rebuild_day:
         log.info("이번 시간에 수집할 소스 없음")
         return 0
 
@@ -152,9 +157,18 @@ def main() -> int:
             log.info("[%s] %s | relevant=%s enriched=%s addrs=%d", inc.source, inc.title[:60], inc.relevant,
                      inc.enriched, len(inc.addresses))
 
-    # 4) 오늘 누적 사건 → 소스 간 같은 사건 병합 → 주소 재등장·블랙리스트 대조
-    incidents = merge_incidents(store.incidents_collected_on(today) or run_incidents)
-    log.info("리포트 대상: 카드 %d건 → 병합 후 %d건", len(store.incidents_collected_on(today) or run_incidents), len(incidents))
+    # 4) 오늘 누적 사건 → 소스 간 같은 사건 병합(규칙 + LLM 판정) → 이전 14일 사건의 후속 보도 표시 → 주소 대조
+    # 같은-사건 판정은 가벼운 모델로 (config.llm.<provider>.dedupe_model), 없으면 본 모델
+    dedupe_model = (llm_cfg.get(args.provider or llm_cfg.get("provider") or "ollama") or {}).get("dedupe_model")
+    judge_provider = build_provider(llm_cfg, args.provider, model_override=dedupe_model) if (provider and dedupe_model) else provider
+    judge = LLMJudge(judge_provider, store, max_calls=int(llm_cfg.get("dedupe_max_calls", 20)))
+    todays_cards = store.incidents_collected_on(today) or run_incidents
+    incidents = merge_incidents(todays_cards, judge)
+    hist_start = (today_date - timedelta(days=int(cfg.get("followup_days", 14)))).isoformat()
+    hist_end = (today_date - timedelta(days=1)).isoformat()
+    history = merge_incidents(store.incidents_collected_between(hist_start, hist_end))
+    n_follow = mark_followups(incidents, [h for h in history if h.relevant], judge)
+    log.info("리포트 대상: 카드 %d건 → 병합 후 %d건 (후속 보도 %d, LLM 판정 호출 %d)", len(todays_cards), len(incidents), n_follow, judge.calls)
     crimial = CrimialHunter(cfg.get("crimial_hunter") or {}, ROOT)
     for inc in incidents:
         inc.blacklist_hits = crimial.hits(inc.addresses)
@@ -179,7 +193,7 @@ def main() -> int:
         with open(brief_path, encoding="utf-8") as f:
             briefing = json.load(f)
     new_relevant = [i for i in run_incidents if i.relevant]
-    if not args.no_briefing and (briefing is None or new_relevant or args.force):
+    if not args.no_briefing and not args.rebuild_day and (briefing is None or new_relevant or args.force):
         b = write_briefing(provider, today, incidents, max_tokens=int(llm_cfg.get("max_tokens", 8000)),
                            prompt_style=llm_cfg.get("prompt_style", "few_shot"))
         if b:

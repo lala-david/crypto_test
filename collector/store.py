@@ -42,6 +42,9 @@ CREATE TABLE IF NOT EXISTS list_snapshot (
 CREATE TABLE IF NOT EXISTS source_runs (
   name TEXT PRIMARY KEY, last_run_at TEXT, last_count INTEGER
 );
+CREATE TABLE IF NOT EXISTS merge_decisions (
+  uid_a TEXT, uid_b TEXT, same INTEGER, reason TEXT, decided_at TEXT, PRIMARY KEY (uid_a, uid_b)
+);
 CREATE TABLE IF NOT EXISTS runs (
   run_at TEXT, since TEXT, collected INTEGER, new_items INTEGER, enriched INTEGER, errors TEXT
 );
@@ -73,6 +76,7 @@ class Store:
             self.conn.executemany("INSERT OR IGNORE INTO sdn_snapshot VALUES (?,?,?,?,?,?)", st.get("sdn", []))
             self.conn.executemany("INSERT OR IGNORE INTO source_runs VALUES (?,?,?)", st.get("source_runs", []))
             self.conn.executemany("INSERT OR IGNORE INTO list_snapshot VALUES (?,?,?)", st.get("lists", []))
+            self.conn.executemany("INSERT OR IGNORE INTO merge_decisions VALUES (?,?,?,?,?)", st.get("merge_decisions", []))
             self.conn.commit()
         n_inc = self.conn.execute("SELECT COUNT(*) FROM incidents").fetchone()[0]
         if n_inc == 0 and os.path.exists(self.jsonl_path):
@@ -94,6 +98,7 @@ class Store:
             "sdn": [list(r) for r in self.conn.execute("SELECT chain, address, entity_uid, entity_name, programs, first_seen_at FROM sdn_snapshot")],
             "source_runs": [list(r) for r in self.conn.execute("SELECT name, last_run_at, last_count FROM source_runs")],
             "lists": [list(r) for r in self.conn.execute("SELECT name, value, first_seen_at FROM list_snapshot")],
+            "merge_decisions": [list(r) for r in self.conn.execute("SELECT uid_a, uid_b, same, reason, decided_at FROM merge_decisions")],
         }
         with open(self.state_path, "w", encoding="utf-8") as f:
             json.dump(st, f, ensure_ascii=False)
@@ -147,6 +152,24 @@ class Store:
             )
         if commit:
             self.conn.commit()
+
+    def incidents_collected_between(self, start_day: str, end_day: str) -> List[Incident]:
+        """start_day ≤ collected_at 날짜 ≤ end_day 인 카드."""
+        rows = self.conn.execute(
+            "SELECT json FROM incidents WHERE substr(collected_at,1,10) BETWEEN ? AND ? ORDER BY collected_at",
+            (start_day, end_day),
+        ).fetchall()
+        return [incident_from_dict(json.loads(r[0])) for r in rows]
+
+    # ---- 같은 사건 판정 캐시 -------------------------------------------
+    def merge_decision(self, uid_a: str, uid_b: str) -> Optional[bool]:
+        r = self.conn.execute("SELECT same FROM merge_decisions WHERE uid_a=? AND uid_b=?", (uid_a, uid_b)).fetchone()
+        return None if r is None else bool(r[0])
+
+    def set_merge_decision(self, uid_a: str, uid_b: str, same: bool, reason: str = "") -> None:
+        self.conn.execute("INSERT OR REPLACE INTO merge_decisions VALUES (?,?,?,?,?)",
+                          (uid_a, uid_b, int(same), reason, datetime.now().isoformat(timespec="seconds")))
+        self.conn.commit()
 
     def incidents_collected_on(self, day: str) -> List[Incident]:
         rows = self.conn.execute(

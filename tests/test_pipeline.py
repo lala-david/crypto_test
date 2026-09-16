@@ -195,3 +195,33 @@ def test_crimial_mapping():
     assert category_for("sanctioned", "sanctions_designation") == "sanctions"
     assert category_for("laundering", "hack_exploit") == "laundering"
     assert category_for("attacker", "phishing_social_engineering") == "phishing_drainer"
+
+
+def test_merge_rules_for_leftover_duplicates():
+    from collector.merge import mark_followups, plausible_pair
+
+    # 법집행 계열: LLM이 사건일을 범행일로 잡아도 게시일이 가까우면 같은 사건 (Malone Lam 사례)
+    a = _inc("a", "doj", "Malone Lam", itype="law_enforcement_action", date="2025-09-18", pub="2026-09-09")
+    b = _inc("b", "rss:cointelegraph_scams", "Malone Lam", itype="law_enforcement_action", date="2026-09-09", pub="2026-09-09")
+    assert same_incident(a, b)
+    # 붙어 쓴 접미사: ORBToken ↔ ORB, YamFinance ↔ Yam
+    assert names_match("ORBToken", "ORB") and names_match("YamFinance", "Yam") and not names_match("ORB", "Orbit Bridge")
+    # 이름이 전혀 달라 규칙으로는 못 묶지만 LLM에 물어볼 만한 쌍
+    c = _inc("c", "slowmist", "Unknown Gnosis Safe Wallet", date="2026-09-15", pub="2026-09-15", amount=7_700_000)
+    d = _inc("d", "rss:cointelegraph_hacks", "custom Safe module", date="2026-09-15", pub="2026-09-16", amount=7_700_000)
+    c.chains, d.chains = ["Ethereum"], ["Ethereum"]
+    assert not same_incident(c, d) and plausible_pair(c, d)
+    merged = merge_incidents([c, d], judge=lambda x, y: True)
+    assert len(merged) == 1 and merged[0].merged_from
+    # 후속 보도 표시: 어제 사건과 같은 사건이면 followup_of 채움
+    yesterday = _inc("y", "chainalysis", "Liquid Network", date="2026-09-06", pub="2026-09-09")
+    today = _inc("t", "rss:cointelegraph_hacks", "Liquid Network", date="2026-09-06", pub="2026-09-16")
+    assert mark_followups([today], [yesterday]) == 1 and today.followup_of["uid"] == "y"
+
+
+def test_to_date_str_handles_epoch_strings():
+    from collector.sources.base import to_date_str
+
+    assert to_date_str("1788912000") == "2026-09-09" and to_date_str(1788912000) == "2026-09-09"
+    assert to_date_str("2026-09-09T12:00:00Z") == "2026-09-09" and to_date_str("$D2024-03-21T00:00:00.000Z") == "2024-03-21"
+    assert to_date_str("garbage") == ""

@@ -118,6 +118,7 @@ class Incident:
     # 리포트 단계에서만 채워지는 필드 (DB 카드에는 비어 있음)
     merged_from: List[dict] = field(default_factory=list)   # 병합된 다른 소스 카드 [{uid, source, url, title, published_at}]
     blacklist_hits: dict = field(default_factory=dict)      # address → {sources, categories, labels} (crimial_hunter 대조)
+    followup_of: Optional[dict] = None                      # 이전 날짜 사건의 후속 보도면 {uid, day, project, url, incident_date}
 
     def to_dict(self) -> dict:
         return asdict(self)

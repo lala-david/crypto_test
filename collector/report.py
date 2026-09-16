@@ -136,6 +136,8 @@ def summary_table(relevant: List[Incident], lang: str, link: bool = True) -> Lis
     for n, i in enumerate(relevant, 1):
         name = _esc(i.project or i.title)
         cell = f"[{name}](#{n})" if link else f"[{name}]({i.url})"
+        if i.followup_of:
+            cell += f" ↩ {'후속' if lang == 'ko' else 'follow-up'} ({i.followup_of.get('day', '')[5:]})"
         src = _src(i.source, lang) + (f" +{len(i.merged_from)}" if i.merged_from else "")
         L.append(f"| {n} | {cell} | {_type(i.incident_type, lang)} | {i.incident_date or '-'} | {_esc(', '.join(i.chains)) or '-'} | "
                  f"{_esc(_money(i.amount_usd, i.amount_text))} | {len(i.addresses)} | {src} |")
@@ -154,7 +156,9 @@ def build_markdown(day: str, incidents: List[Incident], stats: Dict[str, int], e
     L.append(f"# {t['title']} — {day}")
     L.append("")
     L.append(f"{t['generated']}: {datetime.now().strftime('%Y-%m-%d %H:%M')}  ")
-    L.append(t["counts"].format(n=len(incidents), r=len(relevant), x=len(irrelevant)))
+    n_follow = sum(1 for i in relevant if i.followup_of)
+    L.append(t["counts"].format(n=len(incidents), r=len(relevant), x=len(irrelevant))
+             + (f" ({'후속 보도' if lang == 'ko' else 'follow-ups'} {n_follow})" if n_follow else ""))
     if llm_note:
         L.append(f"  \n> {llm_note}")
     L.append("")
@@ -202,6 +206,10 @@ def build_markdown(day: str, incidents: List[Incident], stats: Dict[str, int], e
             L.append(f"- **{t['actors']}**: {', '.join(i.actors)}")
         if i.tags:
             L.append(f"- **{t['tags']}**: {', '.join(i.tags)}")
+        if i.followup_of:
+            fo = i.followup_of
+            label = "후속 보도 — 첫 보도" if lang == "ko" else "Follow-up — first reported"
+            L.append(f"- **{label}**: [{fo.get('day', '')} · {_esc(fo.get('project', ''))}]({fo.get('url', '')})")
         if i.merged_from:
             L.append(f"- **{t['also']}**: " + ", ".join(f"[{_src(o['source'], lang)}]({o['url']})" for o in i.merged_from))
         if i.blacklist_hits:
@@ -278,7 +286,8 @@ def write_report(report_dir: str, day: str, content: str, lang: str) -> str:
 def build_briefing_page(day: str, briefing: Optional[dict], incidents: List[Incident], report_dir_rel: str = "../../reports") -> str:
     relevant = sorted([i for i in incidents if i.relevant], key=lambda i: (i.incident_date or i.published_at or ""), reverse=True)
     L: List[str] = [f"# {day} 가상자산 해킹·범죄 브리핑 / Crypto Hack Briefing", ""]
-    L.append(f"수집 {len(incidents)}건 → 사건 {len(relevant)}건 · 생성 {datetime.now().strftime('%Y-%m-%d %H:%M')}  ")
+    n_follow = sum(1 for i in relevant if i.followup_of)
+    L.append(f"수집 {len(incidents)}건 → 사건 {len(relevant)}건 (신규 {len(relevant) - n_follow}, 후속 {n_follow}) · 생성 {datetime.now().strftime('%Y-%m-%d %H:%M')}  ")
     L.append(f"상세 리포트 / Full report: [한국어]({report_dir_rel}/{day[:7]}/{day}.ko.md) · [English]({report_dir_rel}/{day[:7]}/{day}.en.md) · [주소 CSV](../../data/addresses.csv)")
     L.append("")
     if briefing:

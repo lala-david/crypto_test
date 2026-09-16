@@ -43,6 +43,11 @@ def to_date_str(value) -> str:
         s = str(value).strip()
         if s.startswith("$D"):
             s = s[2:]
+        if s.isdigit() and len(s) in (10, 13):  # epoch 초/밀리초 문자열 (DOJ API 등)
+            from datetime import datetime, timezone
+
+            ts = int(s) / (1000 if len(s) == 13 else 1)
+            return datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y-%m-%d")
         return dtparser.parse(s).strftime("%Y-%m-%d")
     except Exception:
         return ""

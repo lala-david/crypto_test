@@ -264,12 +264,14 @@ class ClaudeProvider(LLMProvider):
 
 
 # ---------------------------------------------------------------------------
-def build_provider(llm_cfg: dict, override: Optional[str] = None) -> Optional[LLMProvider]:
-    """config.llm 에서 공급자 생성. 실패하면 None (규칙 기반 폴백)."""
+def build_provider(llm_cfg: dict, override: Optional[str] = None, model_override: Optional[str] = None) -> Optional[LLMProvider]:
+    """config.llm 에서 공급자 생성. 실패하면 None (규칙 기반 폴백). model_override 로 같은 공급자의 다른 모델 사용."""
     if not llm_cfg or not llm_cfg.get("enabled", True):
         return None
     name = override or llm_cfg.get("provider") or "ollama"
-    sub = llm_cfg.get(name) or {}
+    sub = dict(llm_cfg.get(name) or {})
+    if model_override:
+        sub["model"] = model_override
     try:
         if name == "ollama":
             p = OllamaProvider(sub)
@@ -283,5 +285,6 @@ def build_provider(llm_cfg: dict, override: Optional[str] = None) -> Optional[LL
         fallback = llm_cfg.get("fallback_provider")
         if fallback and fallback != name:
             log.warning("→ 대체 공급자 %s 시도", fallback)
-            return build_provider({**llm_cfg, "fallback_provider": None}, override=fallback)
+            return build_provider({**llm_cfg, "fallback_provider": None}, override=fallback,
+                                  model_override=(llm_cfg.get(fallback) or {}).get("dedupe_model") if model_override else None)
         return None

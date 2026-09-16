@@ -36,6 +36,7 @@ def _digest(incidents: List[Incident]) -> str:
             "addresses": len(i.addresses), "source": i.source, "url": i.url,
             "other_sources": [m.get("source") for m in i.merged_from],
             "blacklist_rehits": len(i.blacklist_hits),
+            "followup_of": (f"{i.followup_of.get('day')} {i.followup_of.get('project')}" if i.followup_of else None),
         })
     return json.dumps(rows, ensure_ascii=False)
 

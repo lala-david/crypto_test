@@ -141,6 +141,7 @@ BRIEFING_RULES = """## 규칙
 - 문체: 아침에 5분 안에 읽는 글입니다. 짧은 문장, 쉬운 말. 전문용어는 괄호로 한 번 풀이합니다. 명사를 "·"로 잇지 말고 문장으로 씁니다. 금액은 $320M 처럼(달러 기호 바로 뒤 숫자, 단위 K/M/B), 날짜는 한국어 "9월 6일", 영어 "Sep 6".
 - 각 불릿의 순서: 무슨 일이 있었나 → 왜 가능했나(한 구절) → 얼마가 어떻게 됐나 → 지금 상태. 각 불릿은 두세 문장.
 - 신규 제재 주소가 있으면 대상·프로그램·주소 개수·체인을 한 불릿으로.
+- followup_of 가 있는 카드는 이전 날짜에 이미 보고한 사건의 후속 보도입니다. headline 의 '신규 N건'에서 제외하고, 불릿 앞에 "(후속)" / "(follow-up)" 을 붙여 새로 알려진 내용(회수, 체포, 추가 피해 등)만 씁니다.
 - blacklist_rehits 가 0보다 큰 사건은 그 불릿 끝에 덧붙입니다. briefing_ko 에는 "기존 블랙리스트 주소 N개 재등장", briefing_en 에는 "N address(es) already on our blacklist" — 각 언어 문장 안에 다른 언어를 섞지 않습니다.
 - 소액(<$100K) 사건은 개별 불릿 대신 한 불릿에 묶어 나열합니다.
 - 같은 사건이 여러 출처(카드)에 있으면 한 번만 다루고 가장 상세한 카드를 기준으로 씁니다.
@@ -166,6 +167,16 @@ BRIEFING_FEWSHOT_EXAMPLE = {
 }
 
 BRIEFING_FEWSHOT = "## 예시 출력 (형식·문체 기준. 내용은 가상)\n" + json.dumps(BRIEFING_FEWSHOT_EXAMPLE, ensure_ascii=False)
+
+
+DEDUPE_SYSTEM = """두 개의 가상자산 사건 카드(A, B)가 '같은 사건'을 다루는지 판정합니다.
+
+같은 사건 = 같은 피해 대상(프로젝트/거래소/개인)에게 일어난 같은 공격 또는 같은 법적 조치를, 다른 매체나 다른 시점에 보도한 것. 예: "Chainflip"과 "Chainflip AMM", "Unknown Gnosis Safe Wallet 해킹 $7.7M rsETH"와 "custom Safe module로 rsETH $7.7M 탈취".
+다른 사건 = 피해 대상이 다르면 거의 항상 다른 사건입니다. 같은 날, 같은 체인, 비슷한 금액, 비슷한 수법이라도 대상이 다르면 다른 사건입니다 (같은 날 BSC에서 두 프로젝트가 각각 해킹당하는 일은 흔합니다). 같은 대상이라도 별개의 공격/조치면 다른 사건입니다.
+
+절차: 1) A와 B의 피해 대상 이름이 같은가, 또는 한쪽이 다른 쪽의 별칭·축약·설명형 표현인가(예: 이름 미상 지갑 ↔ 특정 지갑 사건)? 2) 사건일·금액·주소·수법이 그 판단을 뒷받침하는가? 3) 대상이 같다고 확인되지 않으면 same=false.
+confidence 는 0~1. same=true 는 대상 동일성을 확인했을 때만, confidence 0.8 이상으로.
+JSON 객체 하나만 출력: {"same": true|false, "confidence": 0.0~1.0, "evidence": "대상 동일성을 보여주는 구체 근거(이름/별칭/주소/금액)", "reason": "한 문장"}"""
 
 
 def briefing_system_prompt(style: str = "few_shot") -> str:

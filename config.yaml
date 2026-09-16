@@ -1,6 +1,7 @@
 # 가상자산 해킹·범죄 지갑 동향 수집기 설정
 
 lookback_days: 7          # 처음/강제 실행 시 며칠 전 게시물까지 볼지
+followup_days: 14         # 오늘 사건이 최근 며칠 내 사건의 후속 보도인지 대조할 범위
 data_dir: data
 report_dir: reports          # reports/YYYY-MM/YYYY-MM-DD.ko.md / .en.md
 briefing_dir: briefings      # briefings/YYYY-MM/YYYY-MM-DD.md + briefings/README.md(날짜 인덱스)
@@ -33,9 +34,12 @@ llm:
   max_tokens: 8000
   workers: 2                  # 동시 요청 수 (Ollama는 1~2 권장)
 
+  dedupe_max_calls: 20        # 실행 1회당 '같은 사건인가' LLM 판정 최대 호출 수 (결과는 캐시됨)
+
   ollama:                     # 사내 LAN Ollama 서버
     base_url: http://192.168.150.225:11434
     model: gpt-oss:120b       # 대안: qwen3-30b-rag:latest, gemma4:26b, gpt-oss:20b
+    # dedupe_model: gpt-oss:20b   # 같은-사건 판정에 다른 모델을 쓰려면 지정 (qwen3-30b-rag 는 '같다'고 남발해서 제외)
     num_ctx: 32768
     think: false
     timeout: 900
