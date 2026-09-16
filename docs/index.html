@@ -14,7 +14,7 @@
     <div class="hero-content">
       <div><span class="pill-glass" id="heroPill"><span class="dot"></span><span id="heroPillText"></span></span></div>
       <h1 class="hero-title" id="briefingHeadline"></h1>
-      <p class="hero-sub" id="heroSub"></p>
+      <p class="hero-sub" id="heroSub" hidden></p>
       <div class="hero-cta">
         <a class="btn-accent" href="incidents.html" data-i18n="cta_incidents">사건 보기</a>
         <a class="btn-ghost" href="addresses.html" data-i18n="cta_addresses">주소 조회</a>
@@ -26,17 +26,14 @@
   <section class="home-duo">
     <article class="panel integration">
       <div class="visual" id="network"></div>
-      <div class="copy">
+      <div class="copy row">
         <h3 id="netTitle"></h3>
-        <p id="netDesc"></p>
-        <div><a class="btn-ghost sm" href="stats.html" data-i18n="home_stats">최근 30일 통계 →</a></div>
+        <a class="btn-ghost sm" href="stats.html" data-i18n="nav_stats">통계</a>
       </div>
     </article>
     <article class="panel brief-card">
-      <div class="panel-head"><h2 data-i18n="todays_briefing">오늘의 브리핑</h2><span class="kicker" id="briefDay"></span></div>
-      <p class="headline" id="briefHeadline"></p>
-      <div class="briefing-body" id="briefingBody"></div>
-      <div class="copy-foot"><a class="btn-ghost sm" href="briefings.html" data-i18n="more_briefings">지난 브리핑 →</a></div>
+      <div class="panel-head"><h2 data-i18n="todays_briefing">오늘의 브리핑</h2><a class="more" href="briefings.html" data-i18n="see_all">전체 보기 →</a></div>
+      <div class="briefing-body compact" id="briefingBody"></div>
     </article>
   </section>
 
@@ -47,7 +44,7 @@
 
   <section class="home-grid">
     <div class="panel">
-      <div class="panel-head"><h2 data-i18n="tab_value">피해 금액</h2><a class="more" href="stats.html" data-i18n="home_stats">최근 30일 통계 →</a></div>
+      <div class="panel-head"><h2 data-i18n="tab_value">피해 금액</h2><a class="more" href="stats.html" data-i18n="see_all">전체 보기 →</a></div>
       <div class="panel-body"><div class="plot" id="homePlot"></div></div>
     </div>
     <div class="panel"><div class="panel-head"><h2 data-i18n="top_projects">피해액 상위 5</h2></div><div class="panel-body side" id="homeTop"></div></div>

@@ -6,22 +6,22 @@ window.KL = (() => {
 
   const I18N = {
     ko: {
-      nav_home: "홈", nav_incidents: "사건", nav_briefings: "브리핑", nav_stats: "통계", nav_addresses: "주소 조회", brand_sub: "가상자산 해킹·범죄 주소 일일 원장", hero_pill: "{n}개 소스 · 매시간 자동 수집", hero_sub: "공개 소스를 매시간 모아 LLM이 한국어·영어로 요약하고, 지갑 주소는 OFAC·블랙리스트와 대조합니다.", hero_fallback: "가상자산 해킹·범죄 주소 일일 원장", cta_incidents: "사건 보기", cta_addresses: "주소 조회", net_title: "{n}개 소스가 매시간 원장으로 모입니다", net_desc: "{list} 외 {m}개 소스를 각자 다른 주기로 수집하고, 같은 사건은 하나로 합쳐 교차 검증 수를 보여줍니다.",
+      nav_home: "홈", nav_incidents: "사건", nav_briefings: "브리핑", nav_stats: "통계", nav_addresses: "주소 조회", brand_sub: "가상자산 해킹·범죄 주소 일일 원장", hero_pill: "{n}개 소스 · 매시간 수집", hero_sub: "", hero_fallback: "가상자산 해킹·범죄 주소 일일 원장", cta_incidents: "사건 보기", cta_addresses: "주소 조회", net_title: "{n}개 소스 · 매시간 수집", net_desc: "같은 사건은 하나로 합칩니다.",
       hero_phrases: ["가상자산 해킹을 추적합니다", "범죄 지갑 주소를 모읍니다", "제재·수사 동향을 매시간 갱신합니다", "한국어와 영어로 브리핑합니다"],
       hero_sub_prefix: "소스", updated: "갱신", sources_word: "개 소스 · 매시간 수집",
       total: "사건", all: "전체", tab_value: "피해 금액", tab_type: "공격 유형", tab_chain: "체인별", tab_legal: "제재·수사·주소",
-      mode_amount: "금액 (USD)", mode_count: "건수", table_view: "표로 보기", latest_briefing: "일일 브리핑", search_ph: "프로젝트 이름, 주소, 키워드 검색",
-      hide_follow: "후속 보도 숨기기", th_incident: "사건", th_amount: "피해 금액", th_date: "사건일", th_type: "공격 유형", th_chain: "체인", th_addr: "주소", th_conf: "교차 검증",
-      foot: "Incident Ledger · 공개 소스에서 매시간 자동 수집하고 LLM이 요약합니다. 오류가 있을 수 있으니 주소는 반드시 원문으로 재확인하세요.",
-      kpi_today: "오늘 신규", kpi_7d: "7일 사건", kpi_loss: "7일 피해·관련 금액", kpi_addr: "7일 수집 주소", kpi_sdn: "OFAC 제재 주소", vs_prev: "지난 7일 대비",
+      mode_amount: "금액 (USD)", mode_count: "건수", table_view: "표로 보기", latest_briefing: "일일 브리핑", search_ph: "검색",
+      hide_follow: "후속 보도 숨기기", th_incident: "사건", th_amount: "금액", th_date: "날짜", th_type: "유형", th_chain: "체인", th_addr: "주소", th_conf: "출처",
+      foot: "자동 수집 · LLM 요약 · 주소는 원문으로 재확인",
+      kpi_today: "오늘", kpi_7d: "7일 사건", kpi_loss: "7일 피해액", kpi_addr: "7일 주소", kpi_sdn: "제재 주소", vs_prev: "지난 7일 대비",
       total_value: "기간 내 금액", total_count: "기간 내 사건", top_projects: "피해액 상위 5", by_type: "유형별 건수", by_chain: "체인별 건수", legal_side: "역할별 주소",
-      follow: "후속", first_reported: "첫 보도", background: "사건 배경", method: "공격 / 범죄 수법", summary: "요약", flow: "자금 흐름", addresses: "지갑 주소",
+      follow: "후속", first_reported: "첫 보도", background: "배경", method: "수법", summary: "요약", flow: "자금 흐름", addresses: "지갑 주소",
       sources: "출처", actors: "관련 주체", tx: "트랜잭션", blacklist: "기존 블랙리스트 재등장", copy: "복사", copied: "복사됨", no_data: "해당 조건의 사건이 없습니다",
-      day: "날짜", count: "건수", type: "유형", chain: "체인", amount: "금액", report: "상세 리포트 (GitHub)", all_types: "모든 유형", all_chains: "모든 체인", all_sources: "모든 소스",
+      day: "날짜", count: "건수", type: "유형", chain: "체인", amount: "금액", report: "GitHub 리포트", all_types: "모든 유형", all_chains: "모든 체인", all_sources: "모든 소스",
       reported: "보고", sources_n: "출처 {n}개", unit: "건", back: "사건 목록", facts: "개요", related: "관련 사건", incident_date: "사건일",
       report_date: "보고일", tags: "태그", all_roles: "모두", not_found: "사건을 찾을 수 없습니다", cross_check: "교차 검증", cross_desc: "같은 사건을 다룬 출처 수",
       amount_unknown: "금액 미상", loss_label: "피해·관련 금액", recent: "최근 사건", see_all: "전체 보기 →", todays_briefing: "오늘의 브리핑", more_briefings: "지난 브리핑 →",
-      home_stats: "최근 30일 통계 →", addr_title: "지갑 주소 조회", addr_ph: "0x… / T… / bc1… 주소 또는 일부 입력 (6자 이상)", addr_hint: "수집된 사건 카드, OFAC SDN 목록, crimial_hunter 블랙리스트를 한 번에 대조합니다.",
+      home_stats: "최근 30일 통계 →", addr_title: "지갑 주소 조회", addr_ph: "0x… / T… / bc1… 주소 또는 일부 입력 (6자 이상)", addr_hint: "사건 카드 · OFAC SDN · 블랙리스트 동시 대조",
       addr_found_in: "사건 카드에서 발견", addr_sdn: "OFAC SDN 제재 목록", addr_bl: "crimial_hunter 블랙리스트", addr_none: "일치하는 기록이 없습니다", addr_role: "역할", addr_incident: "사건",
       known_addresses: "수집 주소", sanctioned_addresses: "제재 주소", incidents_total: "누적 사건", days_covered: "수집 일수", sort: "정렬", sort_day: "보고일", sort_amount: "금액", sort_date: "사건일",
       briefing_days: "날짜", briefing_incidents: "이 날의 사건", page: "페이지", legal: "제재·수사", new_label: "신규",
@@ -30,22 +30,22 @@ window.KL = (() => {
       roles: { attacker: "공격자", laundering: "세탁/경유", victim: "피해자", sanctioned: "제재 대상", unknown: "미분류" },
     },
     en: {
-      nav_home: "Home", nav_incidents: "Incidents", nav_briefings: "Briefings", nav_stats: "Stats", nav_addresses: "Address lookup", brand_sub: "crypto hack & illicit address daily ledger", hero_pill: "{n} sources · collected hourly", hero_sub: "Public sources are collected hourly, summarized in Korean and English by an LLM, and every wallet address is checked against OFAC and blacklists.", hero_fallback: "Crypto hack & illicit address daily ledger", cta_incidents: "Browse incidents", cta_addresses: "Look up an address", net_title: "{n} sources flow into one ledger every hour", net_desc: "{list} and {m} more, each on its own schedule. Duplicate reports are merged into one incident with a cross-check count.",
+      nav_home: "Home", nav_incidents: "Incidents", nav_briefings: "Briefings", nav_stats: "Stats", nav_addresses: "Address lookup", brand_sub: "crypto hack & illicit address daily ledger", hero_pill: "{n} sources · hourly", hero_sub: "", hero_fallback: "Crypto hack & illicit address daily ledger", cta_incidents: "Browse incidents", cta_addresses: "Look up an address", net_title: "{n} sources · hourly", net_desc: "Duplicate reports are merged.",
       hero_phrases: ["We track crypto hacks", "We collect illicit wallet addresses", "We refresh sanctions & enforcement hourly", "We brief in Korean and English"],
       hero_sub_prefix: "Sources", updated: "Updated", sources_word: " sources · hourly",
       total: "Incidents", all: "All", tab_value: "Exploited Value", tab_type: "Attack Vector", tab_chain: "By Chain", tab_legal: "Sanctions · Enforcement · Addresses",
-      mode_amount: "Value (USD)", mode_count: "Count", table_view: "Table view", latest_briefing: "Daily Briefing", search_ph: "Search project, address, keyword",
-      hide_follow: "Hide follow-ups", th_incident: "Incident", th_amount: "Amount", th_date: "Date", th_type: "Attack Vector", th_chain: "Chain", th_addr: "Addr.", th_conf: "Cross-check",
-      foot: "Incident Ledger · collected hourly from public sources and summarized by an LLM. Errors are possible; always re-verify addresses against the original source.",
-      kpi_today: "New today", kpi_7d: "Incidents (7d)", kpi_loss: "Loss & related (7d)", kpi_addr: "Addresses (7d)", kpi_sdn: "OFAC sanctioned addresses", vs_prev: "vs previous 7d",
+      mode_amount: "Value (USD)", mode_count: "Count", table_view: "Table view", latest_briefing: "Daily Briefing", search_ph: "Search",
+      hide_follow: "Hide follow-ups", th_incident: "Incident", th_amount: "Amount", th_date: "Date", th_type: "Type", th_chain: "Chain", th_addr: "Addr.", th_conf: "Sources",
+      foot: "Auto-collected · LLM summaries · re-verify addresses at the source",
+      kpi_today: "Today", kpi_7d: "7d incidents", kpi_loss: "7d losses", kpi_addr: "7d addresses", kpi_sdn: "Sanctioned", vs_prev: "vs previous 7d",
       total_value: "Value (period)", total_count: "Incidents (period)", top_projects: "Top 5 by loss", by_type: "Count by type", by_chain: "Count by chain", legal_side: "Addresses by role",
-      follow: "follow-up", first_reported: "first reported", background: "Background", method: "Attack / Modus operandi", summary: "Summary", flow: "Fund flow", addresses: "Wallet addresses",
+      follow: "follow-up", first_reported: "first reported", background: "Background", method: "Method", summary: "Summary", flow: "Fund flow", addresses: "Wallet addresses",
       sources: "Sources", actors: "Actors", tx: "Transactions", blacklist: "Known blacklist re-hits", copy: "Copy", copied: "Copied", no_data: "No incidents match the filters",
-      day: "Day", count: "Count", type: "Type", chain: "Chain", amount: "Amount", report: "Full report (GitHub)", all_types: "All types", all_chains: "All chains", all_sources: "All sources",
+      day: "Day", count: "Count", type: "Type", chain: "Chain", amount: "Amount", report: "GitHub report", all_types: "All types", all_chains: "All chains", all_sources: "All sources",
       reported: "reported", sources_n: "{n} sources", unit: "", back: "All incidents", facts: "Overview", related: "Related incidents", incident_date: "Incident date",
       report_date: "Reported", tags: "Tags", all_roles: "All", not_found: "Incident not found", cross_check: "Cross-check", cross_desc: "number of sources covering this incident",
       amount_unknown: "amount unknown", loss_label: "Loss & related amount", recent: "Recent incidents", see_all: "See all →", todays_briefing: "Today's briefing", more_briefings: "Past briefings →",
-      home_stats: "Last 30 days →", addr_title: "Wallet address lookup", addr_ph: "Enter an address or fragment (0x… / T… / bc1…, 6+ chars)", addr_hint: "Checks collected incident cards, the OFAC SDN list and the crimial_hunter blacklist at once.",
+      home_stats: "Last 30 days →", addr_title: "Wallet address lookup", addr_ph: "Enter an address or fragment (0x… / T… / bc1…, 6+ chars)", addr_hint: "Incident cards · OFAC SDN · blacklist, one lookup",
       addr_found_in: "Found in incident cards", addr_sdn: "OFAC SDN sanctions list", addr_bl: "crimial_hunter blacklist", addr_none: "No matching records", addr_role: "Role", addr_incident: "Incident",
       known_addresses: "Collected addresses", sanctioned_addresses: "Sanctioned addresses", incidents_total: "Incidents total", days_covered: "Days covered", sort: "Sort", sort_day: "Report date", sort_amount: "Amount", sort_date: "Incident date",
       briefing_days: "Days", briefing_incidents: "Incidents that day", page: "Page", legal: "Sanctions · Enforcement", new_label: "new",
@@ -58,7 +58,7 @@ window.KL = (() => {
     scam_fraud: "var(--t-scam)", ransomware: "var(--t-ransom)", sanctions_designation: "var(--t-sanction)", law_enforcement_action: "var(--t-law)", laundering_report: "var(--t-launder)", other: "var(--t-other)" };
   const AVATAR = ["#2f6bff", "#0ea5e9", "#14b8a6", "#22c55e", "#f59e0b", "#ef4444", "#ec4899", "#8b5cf6", "#06b6d4", "#84cc16"];
   const SOURCE_LABEL = { rekt: "rekt.news", slowmist: "SlowMist", defillama: "DeFiLlama", defihacklabs: "DeFiHackLabs", zachxbt: "ZachXBT", trm: "TRM Labs",
-    chainalysis: "Chainalysis", ofac: "OFAC", ofac_sdn: "OFAC SDN", doj: "US DOJ", scamsniffer: "ScamSniffer" };
+    chainalysis: "Chainalysis", ofac: "OFAC", ofac_sdn: "OFAC SDN", doj: "US DOJ", scamsniffer: "ScamSniffer", "rss:cointelegraph_hacks": "Cointelegraph", "rss:cointelegraph_scams": "Cointelegraph", "rss:boannews": "보안뉴스", "rss:blockmedia": "블록미디어", "rss:tokenpost": "토큰포스트", "rss:sec_litigation": "SEC" };
   const REPO = "https://github.com/lala-david/crypto_test";
   const PAGES = [["index.html", "nav_home"], ["incidents.html", "nav_incidents"], ["briefings.html", "nav_briefings"], ["stats.html", "nav_stats"], ["addresses.html", "nav_addresses"]];
 
@@ -97,8 +97,8 @@ window.KL = (() => {
     return `<svg class="gauge" viewBox="0 0 60 40"><path d="M${cx - r} ${cy} A${r} ${r} 0 0 1 ${cx + r} ${cy}" stroke="var(--raised)" stroke-width="3" fill="none"/>${arc}<text x="30" y="30" text-anchor="middle">${n}</text></svg>`;
   };
   const detailUrl = (i) => `incident.html?id=${encodeURIComponent(i.uid)}`;
-  const mdToHtml = (md) => {
-    const items = (md || "").split(/\n/).map((l) => l.trim()).filter(Boolean).map((l) => l.replace(/^[-•]\s*/, ""));
+  const mdToHtml = (md, max = 99) => {
+    const items = (md || "").split(/\n/).map((l) => l.trim()).filter(Boolean).map((l) => l.replace(/^[-•]\s*/, "")).slice(0, max);
     const inline = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
     return `<ul>${items.map((l) => `<li>${inline(l)}</li>`).join("")}</ul>`;
   };
@@ -115,12 +115,12 @@ window.KL = (() => {
   // ---- 공통 UI ----
   function renderNav(active, meta) {
     const nav = $("#nav"); if (!nav) return;
-    nav.innerHTML = `<div class="nav-l"><a class="brand" href="index.html"><span class="mark">${MARK}</span><span class="word">Incident Ledger</span><span class="brand-sub">${esc(t("brand_sub"))}</span></a>
+    nav.innerHTML = `<div class="nav-l"><a class="brand" href="index.html"><span class="mark">${MARK}</span><span class="word">Incident Ledger</span></a>
       <div class="nav-links">${PAGES.map(([href, key]) => `<a class="nav-link ${active === href ? "on" : ""}" href="${href}">${esc(t(key))}</a>`).join("")}</div></div>
-      <div class="nav-r"><span class="updated">${meta && meta.generated_at ? esc(t("updated")) + " " + esc(meta.generated_at.replace("T", " ").slice(0, 16)) : ""}</span>
+      <div class="nav-r"><span class="updated" title="${meta && meta.generated_at ? esc(meta.generated_at.replace("T", " ")) : ""}">${meta && meta.generated_at ? "● " + esc(meta.generated_at.slice(11, 16)) : ""}</span>
       <button id="themeBtn" class="icon-btn" type="button" aria-label="theme">◐</button><button id="langBtn" class="btn-ghost" type="button" aria-label="language">${state.lang === "ko" ? "EN" : "한국어"}</button></div>`;
   }
-  function renderFoot() { const f = $("#foot"); if (f) f.innerHTML = `${esc(t("foot"))} · <a href="${REPO}" target="_blank" rel="noopener">GitHub</a> · <a href="/api" target="_blank" rel="noopener">API</a>`; }
+  function renderFoot() { const f = $("#foot"); if (f) f.innerHTML = `<span>${esc(t("foot"))}</span><span><a href="${REPO}" target="_blank" rel="noopener">GitHub</a> · <a href="/api" target="_blank" rel="noopener">API</a></span>`; }
   function applyI18n() {
     document.documentElement.lang = state.lang;
     $$("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); });
@@ -181,18 +181,18 @@ window.KL = (() => {
   }
 
   // ---- 표 행 ----
-  function incidentRow(i) {
-    const d = dayOf(i); const rep = i.day !== d && Math.abs((new Date(i.day) - new Date(d)) / 864e5) > 3 ? `<div class="psub">${esc(t("reported"))} ${i.day}</div>` : "";
-    return `<tr data-href="${detailUrl(i)}">
-      <td><div class="proj"><span class="swatch" style="--type:${TYPE_COLOR[i.type] || "var(--t-other)"}"></span><div><a class="pname" href="${detailUrl(i)}">${esc(i.project)}</a><div>${i.followup_of ? `<span class="tag">↩ ${esc(t("follow"))} ${esc((i.followup_of.day || "").slice(5))}</span>` : ""}${i.blacklist_hits ? `<span class="tag warn">⚠ ${i.blacklist_hits}</span>` : ""}</div>${rep}</div></div></td>
-      <td>${i.amount_usd != null ? moneyFull(i.amount_usd) : `<span class="muted">${esc(shortText(i.amount_text))}</span>`}</td>
-      <td><span class="date">${esc(fmtDate(d))}</span></td>
-      <td>${pill(i)}</td>
-      <td>${chainPills(i.chains)}</td>
-      <td class="num mono">${i.addresses.length}</td>
-      <td class="center" title="${esc(t("sources_n").replace("{n}", i.sources.length))}">${gauge(i.sources.length)}</td></tr>`;
+  function incidentRow(i, compact = false) {
+    const d = dayOf(i);
+    const badges = `${i.followup_of ? `<span class="tag" title="${esc(t("follow"))} · ${esc(i.followup_of.day || "")}">↩</span>` : ""}${i.blacklist_hits ? `<span class="tag warn" title="${esc(t("blacklist"))}">⚠ ${i.blacklist_hits}</span>` : ""}`;
+    const name = `<td><div class="proj"><span class="swatch" style="--type:${TYPE_COLOR[i.type] || "var(--t-other)"}"></span><div><a class="pname" href="${detailUrl(i)}">${esc(i.project)}</a>${badges}</div></div></td>`;
+    const amount = `<td>${i.amount_usd != null ? moneyFull(i.amount_usd) : `<span class="muted small">${esc(shortText(i.amount_text, 14))}</span>`}</td>`;
+    if (compact) return `<tr data-href="${detailUrl(i)}">${name}${amount}<td>${pill(i)}</td><td><span class="date">${esc(fmtDate(d))}</span></td></tr>`;
+    return `<tr data-href="${detailUrl(i)}">${name}${amount}<td><span class="date">${esc(fmtDate(d))}</span></td><td>${pill(i)}</td><td>${chainPills(i.chains, 1)}</td>
+      <td class="num mono">${i.addresses.length}</td><td class="center" title="${esc(t("sources_n").replace("{n}", i.sources.length))}">${gauge(i.sources.length)}</td></tr>`;
   }
-  const TABLE_HEAD = () => `<thead><tr><th>${esc(t("th_incident"))}</th><th>${esc(t("th_amount"))}</th><th>${esc(t("th_date"))}</th><th>${esc(t("th_type"))}</th><th>${esc(t("th_chain"))}</th><th class="num">${esc(t("th_addr"))}</th><th class="center">${esc(t("th_conf"))}</th></tr></thead>`;
+  const TABLE_HEAD = (compact = false) => compact
+    ? `<thead><tr><th>${esc(t("th_incident"))}</th><th>${esc(t("th_amount"))}</th><th>${esc(t("th_type"))}</th><th>${esc(t("th_date"))}</th></tr></thead>`
+    : `<thead><tr><th>${esc(t("th_incident"))}</th><th>${esc(t("th_amount"))}</th><th>${esc(t("th_date"))}</th><th>${esc(t("th_type"))}</th><th>${esc(t("th_chain"))}</th><th class="num">${esc(t("th_addr"))}</th><th class="center">${esc(t("th_conf"))}</th></tr></thead>`;
   function bindRows(root) { $$("tr[data-href]", root).forEach((tr) => tr.addEventListener("click", (e) => { if (e.target.closest("a")) return; location.href = tr.dataset.href; })); }
   function fillSelect(sel, values, allLabel, current) { sel.innerHTML = `<option value="">${esc(allLabel)}</option>` + values.map((v) => `<option value="${esc(v.value)}"${v.value === current ? " selected" : ""}>${esc(v.label)}</option>`).join(""); }
 
@@ -260,7 +260,7 @@ void main(){ vec2 uv = vUv; float ratio = u_resolution.x / u_resolution.y; vec2 
     const paths = NET_SLOTS.slice(0, nodes.length).map((s, k) => `<path class="base" d="${s.d}"/><path class="flow" d="${s.d}" stroke="url(#${id}-${k})" style="animation-delay:-${(k * 0.7) % 4}s"/>
       <defs><linearGradient id="${id}-${k}" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="transparent"/><stop offset="50%" stop-color="var(--primary)" stop-opacity="0.75"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs>`).join("");
     const coreMark = `<span class="mark" style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#34d399,#059669 60%,#064e3b)">${MARK.replace("<svg ", '<svg width="18" height="18" ')}</span>`;
-    el.innerHTML = `<div class="dots"></div><div class="fade"></div><svg class="lines" viewBox="0 0 564 410" fill="none" xmlns="http://www.w3.org/2000/svg">${paths}</svg>
+    el.innerHTML = `<div class="dots"></div><div class="fade"></div><svg class="lines" viewBox="0 0 564 410" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">${paths}</svg>
       <div class="node core" style="left:50%;top:50%"><div class="inner">${coreMark}</div><div class="ring"></div></div>
       ${nodes.map((n, k) => { const s = NET_SLOTS[k]; return `<div class="node" title="${esc(n.title || n.sub || "")}" style="left:${(s.x / 564) * 100}%;top:${(s.y / 410) * 100}%;animation-delay:${0.1 + k * 0.1}s">${esc(n.label)}<small>${esc(n.sub || "")}</small></div>`; }).join("")}`;
   }
