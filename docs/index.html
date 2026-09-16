@@ -3,44 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Crypto Incident Monitor</title>
+<title>Kloint Incident Monitor</title>
 <meta name="description" content="가상자산 해킹·범죄 지갑 동향 — 매시간 수집, 한/영 사건 카드와 일일 브리핑">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <nav class="nav">
   <div class="nav-l">
-    <a class="wordmark" href="./">I N C I D E N T S</a>
+    <a class="brand" href="./"><span class="mark">❋</span><span class="word">Kloint</span><span class="brand-sub" data-i18n="brand_sub">Threat Intelligence</span></a>
     <a class="nav-link on" href="#hacks" data-i18n="nav_hacks">사건</a>
     <a class="nav-link" href="#briefing" data-i18n="nav_briefing">브리핑</a>
     <a class="nav-link" href="#stats" data-i18n="nav_stats">통계</a>
   </div>
   <div class="nav-r">
+    <span id="updated" class="updated"></span>
     <button id="themeBtn" class="icon-btn" type="button" aria-label="theme">☀</button>
-    <span class="vsep"></span>
     <button id="langBtn" class="btn-accent" type="button" aria-label="language">EN</button>
   </div>
 </nav>
 
 <header class="hero">
-  <div class="hero-l">
-    <h1 class="hero-title"><span data-i18n="hero_1">가상자산 해킹의</span><br><span data-i18n="hero_2">그림자를</span><br><span class="accent" data-i18n="hero_3">비춥니다</span></h1>
-    <p class="hero-sub"><span data-i18n="hero_sub">12개 소스 · 매시간 수집 · 한/영 사건 카드</span> · <span id="updated"></span></p>
-  </div>
-  <div class="hero-r" aria-hidden="true">
-    <div class="ticker" id="ticker"></div>
+  <div class="stars" id="stars"></div>
+  <div class="hero-inner">
+    <div class="hero-l">
+      <h1 class="hero-title"><span id="typed"></span><span class="cursor"></span></h1>
+      <p class="hero-sub" data-i18n="hero_sub"></p>
+    </div>
+    <div class="hero-kpis" id="kpis" aria-label="summary"></div>
   </div>
 </header>
+<div class="strip"><div class="marquee" id="ticker"></div></div>
 
 <main id="hacks">
   <section class="toolbar">
-    <div class="total"><span data-i18n="total">Total</span> <b id="incCount">0</b></div>
+    <div class="total"><span data-i18n="total">사건</span> <b id="incCount">0</b></div>
     <div class="controls">
-      <label class="ctl"><span class="ctl-ico">≡</span><select id="typeSel" aria-label="type"></select></label>
-      <label class="ctl"><span class="ctl-ico">≡</span><select id="chainSel" aria-label="chain"></select></label>
-      <label class="ctl"><span class="ctl-ico">≡</span><select id="sourceSel" aria-label="source"></select></label>
+      <label class="ctl"><select id="typeSel" aria-label="type"></select></label>
+      <label class="ctl"><select id="chainSel" aria-label="chain"></select></label>
+      <label class="ctl"><select id="sourceSel" aria-label="source"></select></label>
       <div class="ctl seg" id="rangeSeg" role="group" aria-label="range">
-        <span class="ctl-ico">▦</span>
         <button data-range="7" type="button">7d</button>
         <button data-range="30" type="button" class="on">30d</button>
         <button data-range="90" type="button">90d</button>
@@ -51,16 +53,16 @@
 
   <section class="panel" id="stats">
     <div class="tabs" id="statTabs" role="tablist">
-      <button class="tab on" data-tab="value" type="button" data-i18n="tab_value">총 피해 금액</button>
+      <button class="tab on" data-tab="value" type="button" data-i18n="tab_value">피해 금액</button>
       <button class="tab" data-tab="type" type="button" data-i18n="tab_type">공격 유형</button>
-      <button class="tab" data-tab="chain" type="button" data-i18n="tab_chain">체인별 피해</button>
+      <button class="tab" data-tab="chain" type="button" data-i18n="tab_chain">체인별</button>
       <button class="tab" data-tab="legal" type="button" data-i18n="tab_legal">제재·수사·주소</button>
     </div>
     <div class="panel-body">
       <div class="panel-top">
         <div class="seg small" id="valueMode" role="group">
-          <button data-mode="amount" class="on" type="button" data-i18n="mode_amount">피해 금액 (USD)</button>
-          <button data-mode="count" type="button" data-i18n="mode_count">사건 수</button>
+          <button data-mode="amount" class="on" type="button" data-i18n="mode_amount">금액 (USD)</button>
+          <button data-mode="count" type="button" data-i18n="mode_count">건수</button>
         </div>
         <div class="panel-kpi" id="panelKpi"></div>
       </div>
@@ -72,11 +74,9 @@
     </div>
   </section>
 
-  <section class="kpis" id="kpis" aria-label="summary"></section>
-
   <section class="panel" id="briefing">
     <div class="panel-head">
-      <h2 data-i18n="latest_briefing">브리핑</h2>
+      <h2 data-i18n="latest_briefing">일일 브리핑</h2>
       <select id="briefingDay" aria-label="briefing day"></select>
     </div>
     <p class="headline" id="briefingHeadline"></p>
@@ -108,14 +108,6 @@
   </section>
 </main>
 
-<aside class="drawer" id="drawer" aria-hidden="true">
-  <div class="drawer-inner">
-    <button class="close" id="drawerClose" type="button" aria-label="close">✕</button>
-    <div id="drawerBody"></div>
-  </div>
-</aside>
-<div class="backdrop" id="backdrop"></div>
-
 <div class="modal" id="tableModal" aria-hidden="true">
   <div class="modal-inner">
     <button class="close" id="tableClose" type="button" aria-label="close">✕</button>
@@ -125,9 +117,9 @@
 <div class="tooltip" id="tip" role="tooltip"></div>
 
 <footer class="foot">
-  <span data-i18n="foot">데이터는 공개 소스에서 자동 수집·LLM 요약된 것으로 오류가 있을 수 있습니다. 주소는 반드시 원문으로 재확인하세요.</span>
-  · <a href="https://github.com/lala-david/crypto_test" target="_blank" rel="noopener">GitHub</a>
+  <span data-i18n="foot"></span> · <a href="https://github.com/lala-david/crypto_test" target="_blank" rel="noopener">GitHub</a>
 </footer>
+<script src="common.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
