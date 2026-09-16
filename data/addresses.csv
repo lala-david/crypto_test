@@ -1,4 +1,9 @@
 ﻿chain,address,role,note,source,project,incident_date,first_seen_at,url
+ETH,0x859E69A29244A10800A34eE66919426C02afa2F0,attacker,Attacker EOA,defihacklabs,SpiralHookV2,2026-09-12,2026-09-16T13:01:20,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
+ETH,0x0C23C8BC3b7C565f3f9F4aC691A4Dc4275086F86,unknown,Attack contract,defihacklabs,SpiralHookV2,2026-09-12,2026-09-16T13:01:20,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
+ETH,0x1725577dC9B1ee2D95dB49c2193226471594aacc,unknown,SpiralHookV2,defihacklabs,SpiralHookV2,2026-09-12,2026-09-16T13:01:20,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
+ETH,0x6a77E39240dA69Ea788e4cF93663D2c41EA4b12b,unknown,SPIRAL token,defihacklabs,SpiralHookV2,2026-09-12,2026-09-16T13:01:20,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
+ETH,0x000000000004444c5dc75cB358380D2e3dE08A90,unknown,V4 PoolManager,defihacklabs,SpiralHookV2,2026-09-12,2026-09-16T13:01:20,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
 ETH,0x201c7a9b4114c76fcda2b5de5d765505f4c5f7c1,unknown,Attack tx,defihacklabs,OrderFactory,2026-09-08,2026-09-15T15:15:30,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/OrderFactory_exp.sol
 ETH,0x77071d2bbd8f3c296c8cd7d0abd21bc172420cda,attacker,Attacker,defihacklabs,OrderFactory,2026-09-08,2026-09-15T15:15:30,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/OrderFactory_exp.sol
 ETH,0xa27bcd590195b2a9bdc29379de4f040b2d8066e0,victim,Factory,defihacklabs,OrderFactory,2026-09-08,2026-09-15T15:15:30,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/OrderFactory_exp.sol
