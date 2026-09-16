@@ -46,6 +46,12 @@ run.py  (매시간)
  └─ github.push: true 면 git commit & push
 ```
 
+### Telegram 알림 (`collector/notify.py`)
+- 새로 병합된 사건마다 카드 1개(심각도 이모지, 체인·일자·금액, 두 문장 요약, 수법, 주소 최대 3개, 블랙리스트 재등장, 출처 링크, 리포트 링크)를 보내고, 그날 첫 브리핑이 생기면 브리핑 1개를 보냅니다. 수집 오류도 알립니다.
+- 중복 방지: 대표 카드와 병합된 카드의 uid 를 모두 `alerts_sent` 에 기록해, 다음 시간에 재병합되거나 다른 소스가 같은 사건을 다시 보도해도 다시 보내지 않습니다. 후속 보도는 "후속 (첫 보도 MM-DD)" 로 표시됩니다.
+- 설정: `@BotFather` 에서 봇 생성 → 토큰을 `telegram_bot_token.txt`(git 제외) 또는 `TELEGRAM_BOT_TOKEN` 에 → 봇에게 메시지를 보내거나 채널 관리자로 추가 → `python -m collector.notify --setup` 으로 chat id 확인 → `config.yaml > telegram.chat_id` → `python -m collector.notify --test`.
+- 옵션: `min_amount_usd`(소액 사건 생략, 제재·수사는 항상), `max_per_run`, `daily_briefing`, `alert_on_errors`. `--no-alert` 로 실행 시 생략.
+
 ### crimial_hunter(scam-address-data) 연동
 - 대조: `config.yaml > crimial_hunter.lookup_files` (기본 master_all.csv + OFAC·법집행 소스)를 읽어, 새 사건 주소가 이미 블랙리스트에 있으면 리포트 주소 표 "이전 등장" 열과 카드의 "기존 블랙리스트 재등장" 줄, 브리핑 불릿에 표시.
 - 내보내기: 공격자·세탁·제재 역할 주소를 `address, chain, category, source, label, detail, ref_date` 스키마로 `sources/news_collector.csv` 에 씀 (EVM 계열은 ETH, TRX→TRON; category는 exploit / rugpull / phishing_drainer / scam_scamming / laundering / sanctions / enforcement; source는 `news_<소스>`).

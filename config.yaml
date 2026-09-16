@@ -70,6 +70,23 @@ github:
     - data/briefings
 
 # ---------------------------------------------------------------------------
+# Telegram 알림: 새 사건 카드마다 1회 + 그날 첫 브리핑 1회. 토큰/채팅이 없으면 조용히 건너뜀.
+#   1) @BotFather 로 봇 생성 → 토큰을 telegram_bot_token.txt(git 제외) 또는 환경변수 TELEGRAM_BOT_TOKEN 에
+#   2) 봇에게 메시지를 보내거나 채널 관리자로 추가 → python -m collector.notify --setup 으로 chat id 확인
+#   3) chat_id 기입 → python -m collector.notify --test
+telegram:
+  enabled: true
+  bot_token_env: TELEGRAM_BOT_TOKEN
+  bot_token_file: telegram_bot_token.txt
+  chat_env: TELEGRAM_ALERT_CHAT
+  chat_id: ""                  # 예: "-1001234567890" 또는 "@channel"
+  min_amount_usd: 0            # 이 금액 미만 사건은 알림 생략 (제재·수사 건은 항상 발송). 0 = 전부
+  max_per_run: 10
+  daily_briefing: true
+  alert_on_errors: true
+  github_url: https://github.com/lala-david/crypto_test
+
+# ---------------------------------------------------------------------------
 # crimial_hunter(scam-address-data) 연동: 기존 블랙리스트 대조 + 표준 스키마 CSV 내보내기
 crimial_hunter:
   enabled: true

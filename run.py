@@ -32,6 +32,7 @@ from collector.llm import build_provider
 from collector.dedupe import LLMJudge
 from collector.merge import mark_followups, merge_incidents
 from collector.models import Incident, RawItem
+from collector.notify import TelegramNotifier
 from collector.publish import commit_and_push
 from collector.report import (build_briefing_page, build_markdown, write_briefing_index, write_briefing_page,
                               write_report)
@@ -64,6 +65,7 @@ def main() -> int:
     ap.add_argument("--no-push", action="store_true")
     ap.add_argument("--reprocess", action="store_true", help="이미 처리한 항목도 다시 처리")
     ap.add_argument("--limit", type=int, default=0, help="처리할 신규 항목 상한(테스트)")
+    ap.add_argument("--no-alert", action="store_true", help="Telegram 알림 생략")
     ap.add_argument("--rebuild-day", help="YYYY-MM-DD: 수집 없이 그날의 병합/리포트/브리핑 페이지만 다시 생성")
     args = ap.parse_args()
 
@@ -231,7 +233,15 @@ def main() -> int:
     crimial.export(store)
     store.log_run(since.isoformat(), len(collected), len(new_items), sum(1 for i in run_incidents if i.enriched), errors)
 
-    # 7) GitHub push
+    # 7) Telegram 알림 (사건별 1회 + 그날 첫 브리핑 1회 + 수집 오류)
+    if not args.no_alert and not args.rebuild_day:
+        notifier = TelegramNotifier(cfg.get("telegram") or {}, ROOT)
+        notifier.alert_incidents(store, incidents, today)
+        notifier.alert_briefing(store, today, briefing, incidents)
+        notifier.alert_errors(errors)
+        store.export_state()
+
+    # 8) GitHub push
     gh = cfg.get("github") or {}
     # 신규 항목이 있을 때만 커밋 (생성 시각만 바뀐 리포트로 매시간 커밋이 쌓이는 것 방지)
     if gh.get("push") and not args.no_push and (new_items or args.force):

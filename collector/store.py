@@ -42,6 +42,9 @@ CREATE TABLE IF NOT EXISTS list_snapshot (
 CREATE TABLE IF NOT EXISTS source_runs (
   name TEXT PRIMARY KEY, last_run_at TEXT, last_count INTEGER
 );
+CREATE TABLE IF NOT EXISTS alerts_sent (
+  key TEXT PRIMARY KEY, kind TEXT, sent_at TEXT
+);
 CREATE TABLE IF NOT EXISTS merge_decisions (
   uid_a TEXT, uid_b TEXT, same INTEGER, reason TEXT, decided_at TEXT, PRIMARY KEY (uid_a, uid_b)
 );
@@ -77,6 +80,7 @@ class Store:
             self.conn.executemany("INSERT OR IGNORE INTO source_runs VALUES (?,?,?)", st.get("source_runs", []))
             self.conn.executemany("INSERT OR IGNORE INTO list_snapshot VALUES (?,?,?)", st.get("lists", []))
             self.conn.executemany("INSERT OR IGNORE INTO merge_decisions VALUES (?,?,?,?,?)", st.get("merge_decisions", []))
+            self.conn.executemany("INSERT OR IGNORE INTO alerts_sent VALUES (?,?,?)", st.get("alerts_sent", []))
             self.conn.commit()
         n_inc = self.conn.execute("SELECT COUNT(*) FROM incidents").fetchone()[0]
         if n_inc == 0 and os.path.exists(self.jsonl_path):
@@ -99,6 +103,7 @@ class Store:
             "source_runs": [list(r) for r in self.conn.execute("SELECT name, last_run_at, last_count FROM source_runs")],
             "lists": [list(r) for r in self.conn.execute("SELECT name, value, first_seen_at FROM list_snapshot")],
             "merge_decisions": [list(r) for r in self.conn.execute("SELECT uid_a, uid_b, same, reason, decided_at FROM merge_decisions")],
+            "alerts_sent": [list(r) for r in self.conn.execute("SELECT key, kind, sent_at FROM alerts_sent")],
         }
         with open(self.state_path, "w", encoding="utf-8") as f:
             json.dump(st, f, ensure_ascii=False)
@@ -160,6 +165,14 @@ class Store:
             (start_day, end_day),
         ).fetchall()
         return [incident_from_dict(json.loads(r[0])) for r in rows]
+
+    # ---- 알림 발송 기록 -------------------------------------------------
+    def alert_sent(self, key: str) -> bool:
+        return self.conn.execute("SELECT 1 FROM alerts_sent WHERE key=?", (key,)).fetchone() is not None
+
+    def mark_alert_sent(self, key: str, kind: str) -> None:
+        self.conn.execute("INSERT OR IGNORE INTO alerts_sent VALUES (?,?,?)", (key, kind, datetime.now().isoformat(timespec="seconds")))
+        self.conn.commit()
 
     # ---- 같은 사건 판정 캐시 -------------------------------------------
     def merge_decision(self, uid_a: str, uid_b: str) -> Optional[bool]:

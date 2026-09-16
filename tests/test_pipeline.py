@@ -225,3 +225,28 @@ def test_to_date_str_handles_epoch_strings():
     assert to_date_str("1788912000") == "2026-09-09" and to_date_str(1788912000) == "2026-09-09"
     assert to_date_str("2026-09-09T12:00:00Z") == "2026-09-09" and to_date_str("$D2024-03-21T00:00:00.000Z") == "2024-03-21"
     assert to_date_str("garbage") == ""
+
+
+def test_telegram_formatting_and_dedupe(tmp_path):
+    from collector.notify import TelegramNotifier, format_briefing, format_incident
+    from collector.store import Store
+
+    inc = _inc("t1", "rekt", "Tectonic <Cronos>", date="2026-08-30", pub="2026-09-14", addrs=("0xabc",), amount=120_400_000)
+    inc.summary_ko = "공격자가 TONIC 가격을 300배 올렸다. Cronos가 롤백했다. 세 번째 문장."
+    inc.merged_from = [{"uid": "t2", "source": "slowmist", "url": "https://x/2"}]
+    msg = format_incident(inc, "https://github.com/o/r", "2026-09-15")
+    assert "🔴" in msg and "&lt;Cronos&gt;" in msg and "$120.4M" in msg and "세 번째" not in msg and "reports/2026-09/2026-09-15.ko.md" in msg
+    b = {"headline_ko": "h", "briefing_ko": "- **[A](https://a)** — x\n- 시사점"}
+    bm = format_briefing("2026-09-15", b, 3, 1, "https://github.com/o/r")
+    assert '<a href="https://a">A</a>' in bm and "• <b>" in bm and "신규 3, 후속 1" in bm
+
+    # 토큰/채팅이 없으면 비활성, 발송 기록은 대표+병합 uid 모두 남아 재병합 시 재발송 안 됨
+    st = Store(str(tmp_path))
+    n = TelegramNotifier({"enabled": True}, str(tmp_path))
+    assert not n.enabled and n.alert_incidents(st, [inc], "2026-09-15") == 0
+    n.enabled, n.token, n.chat = True, "x", "1"
+    n.send = lambda text: True  # 네트워크 대신
+    assert n.alert_incidents(st, [inc], "2026-09-15") == 1
+    assert st.alert_sent("t1") and st.alert_sent("t2")
+    assert n.alert_incidents(st, [inc], "2026-09-15") == 0          # 두 번째 실행: 중복 발송 없음
+    assert n.alert_briefing(st, "2026-09-15", b, [inc]) and not n.alert_briefing(st, "2026-09-15", b, [inc])
