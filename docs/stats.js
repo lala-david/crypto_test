@@ -1,49 +1,40 @@
-/* 통계: 서버 집계(/api/stats) 를 그림 */
+/* 분석: 기간·유형·체인 필터 → 시계열 + 유형/체인/일별 표 + 제재·수사 + 주소 역할 */
 (() => {
   "use strict";
-  const { $, $$, t, typeName, roleName, esc, money, fmtDate, api, renderNav, renderFoot, applyI18n, bindChrome, columns, hbars, fillSelect } = KL;
-  const S = { days: "30", type: "", chain: "", tab: "value", mode: "amount" };
-  let meta = null, stats = null, facets = null;
+  const { $, $$, t, typeName, roleName, esc, fmtInt, fmtPct, money, fmtDate, api, renderNav, renderFoot, applyI18n, bindChrome, columns, hbars, fillSelect, TYPE_COLOR } = KL;
+  const S = { days: "30", type: "", chain: "", mode: "amount" };
+  let meta = null, st = null, facets = null;
 
-  async function load() {
-    stats = await api("/api/stats", { days: S.days, type: S.type, chain: S.chain });
-    if (!facets || (!S.type && !S.chain)) facets = stats.facets;
-    render();
-  }
+  async function load() { st = await api("/api/stats", { days: S.days, type: S.type, chain: S.chain }); if (!facets || (!S.type && !S.chain)) facets = st.facets; render(); }
   function render() {
     renderNav("stats.html", meta); renderFoot(); applyI18n(); bindChrome(render);
     $$("#rangeSeg button").forEach((b) => b.classList.toggle("on", b.dataset.range === S.days));
-    $$("#statTabs .tab").forEach((b) => b.classList.toggle("on", b.dataset.tab === S.tab));
-    $("#valueMode").style.visibility = S.tab === "value" ? "visible" : "hidden";
+    $$("#valueMode button").forEach((b) => b.classList.toggle("on", b.dataset.mode === S.mode));
     fillSelect($("#typeSel"), Object.keys(facets.types).map((v) => ({ value: v, label: typeName(v) })), t("all_types"), S.type);
     fillSelect($("#chainSel"), Object.keys(facets.chains).map((v) => ({ value: v, label: v })), t("all_chains"), S.chain);
-    $("#panelKpi").innerHTML = `${esc(t("total_value"))} <b>${money(stats.total_amount)}</b> &nbsp;·&nbsp; ${esc(t("total_count"))} <b>${stats.total_count}</b> &nbsp;·&nbsp; ${esc(t("addresses"))} <b>${stats.addresses}</b>`;
-    const main = $("#mainPlot"), side = $("#sidePlot"), tbl = $("#statTable");
-    const cnt = (v) => String(Math.round(v));
-    const table = (head, rows) => { tbl.innerHTML = `<thead><tr>${head.map((h, k) => `<th class="${k ? "num" : ""}">${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, k) => `<td class="${k ? "num mono" : ""}">${esc(String(c))}</td>`).join("")}</tr>`).join("")}</tbody>`; };
-    if (S.tab === "value") {
-      const byAmount = S.mode === "amount";
-      columns(main, stats.daily.map((d) => ({ label: fmtDate(d.day), short: d.day.slice(5), v: byAmount ? d.amount : d.count, extra: byAmount ? `${d.count}${t("unit")}` : money(d.amount) })), byAmount ? money : cnt, t("tab_value"));
-      hbars(side, stats.top.map((x) => ({ k: x.project, v: x.amount_usd, extra: fmtDate(x.incident_date || x.day) })), money, t("top_projects"));
-      table([t("day"), t("count"), t("amount")], stats.daily.map((d) => [fmtDate(d.day), d.count, money(d.amount)]));
-    } else if (S.tab === "type") {
-      columns(main, stats.by_type.map((x) => ({ label: typeName(x.key), short: typeName(x.key).slice(0, 6), v: x.amount, extra: `${x.count}${t("unit")}` })), money, t("tab_type"));
-      hbars(side, [...stats.by_type].sort((a, b) => b.count - a.count).map((x) => ({ k: typeName(x.key), v: x.count, extra: money(x.amount) })), cnt, t("by_type"));
-      table([t("type"), t("count"), t("amount")], stats.by_type.map((x) => [typeName(x.key), x.count, money(x.amount)]));
-    } else if (S.tab === "chain") {
-      columns(main, stats.by_chain.slice(0, 12).map((x) => ({ label: x.key, short: x.key.slice(0, 8), v: x.amount, extra: `${x.count}${t("unit")}` })), money, t("tab_chain"));
-      hbars(side, [...stats.by_chain].sort((a, b) => b.count - a.count).slice(0, 8).map((x) => ({ k: x.key, v: x.count, extra: money(x.amount) })), cnt, t("by_chain"));
-      table([t("chain"), t("count"), t("amount")], stats.by_chain.map((x) => [x.key, x.count, money(x.amount)]));
-    } else {
-      columns(main, stats.daily.map((d) => ({ label: fmtDate(d.day), short: d.day.slice(5), v: d.legal })), cnt, t("legal"));
-      hbars(side, Object.entries(stats.roles).map(([k, v]) => ({ k: roleName(k), v })), cnt, t("legal_side"));
-      table([t("day"), t("legal")], stats.daily.map((d) => [fmtDate(d.day), d.legal]));
-    }
+    $("#sub").textContent = `${fmtInt(st.total_count)}${t("unit")} · ${money(st.total_amount)} · ${t("addresses")} ${fmtInt(st.addresses)} · ${t("follow")} ${fmtInt(st.followup_count)}`;
+    const byAmt = S.mode === "amount"; const cnt = (v) => String(Math.round(v));
+    $("#tsTitle").textContent = byAmt ? t("daily_amount") : t("daily_count");
+    columns($("#tsPlot"), st.daily.map((d) => ({ label: fmtDate(d.day), short: d.day.slice(5), v: byAmt ? d.amount : d.count, extra: byAmt ? `${d.count}${t("unit")}` : money(d.amount) })), byAmt ? money : cnt, $("#tsTitle").textContent, { width: 1280, height: 260 });
+    const tA = st.total_amount || 1, tC = st.total_count || 1;
+    const shareRows = (rows, key) => rows.map((r) => `<tr><td>${key(r)}</td><td class="num">${fmtInt(r.count)}</td><td class="num">${fmtPct(r.count / tC)}</td><td class="num">${money(r.amount)}</td><td class="num">${fmtPct(r.amount / tA)}</td><td class="num">${r.count ? money(r.amount / r.count) : "-"}</td></tr>`).join("");
+    const head = (k) => `<thead><tr><th>${esc(k)}</th><th class="num">${esc(t("th_count"))}</th><th class="num">%</th><th class="num">${esc(t("th_amount"))}</th><th class="num">%</th><th class="num">avg</th></tr></thead>`;
+    const types = st.by_type.slice().sort((a, b) => b.count - a.count);
+    $("#typeTable").innerHTML = head(t("type")) + `<tbody>${shareRows(types, (r) => `<span class="sw" style="background:${TYPE_COLOR[r.key] || "var(--t-other)"}"></span>${esc(typeName(r.key))}`)}</tbody>`;
+    $("#metaType").textContent = `${types.length}`;
+    const chains = st.by_chain.slice().sort((a, b) => b.count - a.count);
+    $("#chainTable").innerHTML = head(t("chain")) + `<tbody>${shareRows(chains, (r) => esc(r.key))}</tbody>`;
+    $("#metaChain").textContent = `${chains.length}`;
+    $("#dailyTable").innerHTML = `<thead><tr><th>${esc(t("day"))}</th><th class="num">${esc(t("count"))}</th><th class="num">${esc(t("new_label"))}</th><th class="num">${esc(t("legal"))}</th><th class="num">${esc(t("amount"))}</th></tr></thead><tbody>${st.daily.slice().reverse().map((d) => `<tr><td class="date">${esc(fmtDate(d.day))}</td><td class="num">${d.count}</td><td class="num">${d.new}</td><td class="num">${d.legal}</td><td class="num">${money(d.amount)}</td></tr>`).join("")}</tbody>`;
+    $("#metaDaily").textContent = `${st.daily.length}d`;
+    columns($("#legalPlot"), st.daily.map((d) => ({ label: fmtDate(d.day), short: d.day.slice(5), v: d.legal })), cnt, t("legal"), { height: 160 });
+    const roles = Object.entries(st.roles || {}).sort((a, b) => b[1] - a[1]);
+    hbars($("#rolesBars"), roles.map(([k, v]) => ({ k: roleName(k), v })), cnt, t("roles"));
+    $("#metaLegal").textContent = `${t("legal")} Σ ${fmtInt(st.daily.reduce((a, d) => a + d.legal, 0))} · ${t("addresses")} Σ ${fmtInt(roles.reduce((a, r) => a + r[1], 0))}`;
   }
   $$("#rangeSeg button").forEach((b) => b.addEventListener("click", () => { S.days = b.dataset.range; load(); }));
-  $$("#statTabs .tab").forEach((b) => b.addEventListener("click", () => { S.tab = b.dataset.tab; render(); }));
-  $$("#valueMode button").forEach((b) => b.addEventListener("click", () => { $$("#valueMode button").forEach((x) => x.classList.remove("on")); b.classList.add("on"); S.mode = b.dataset.mode; render(); }));
+  $$("#valueMode button").forEach((b) => b.addEventListener("click", () => { S.mode = b.dataset.mode; render(); }));
   $("#typeSel").addEventListener("change", (e) => { S.type = e.target.value; load(); });
   $("#chainSel").addEventListener("change", (e) => { S.chain = e.target.value; load(); });
-  api("/api/meta").then((m) => { meta = m; return load(); }).catch((e) => { $("main").insertAdjacentHTML("afterbegin", `<div class="panel empty">API 오류: ${esc(e.message)}</div>`); });
+  api("/api/meta").then((m) => { meta = m; return load(); }).catch((e) => { $("main").insertAdjacentHTML("afterbegin", `<div class="card empty">API 오류: ${esc(e.message)}</div>`); });
 })();

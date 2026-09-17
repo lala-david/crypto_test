@@ -46,13 +46,14 @@ run.py  (매시간)
  └─ github.push: true 면 git commit & push
 ```
 
-### 홈페이지 — Incident Ledger (로컬 백엔드 + 프런트, `server.py` + `docs/`)
+### 홈페이지 — Incident Ledger (로컬 백엔드 + 정량 대시보드, `server.py` + `docs/`)
 - 실행: `python server.py` → http://localhost:8765 (작업 스케줄러 `CryptoIncidentSite` 가 로그온 시 `pythonw server.py` 로 자동 시작; 등록은 `install_site_task.ps1`, LAN 공개는 `-Lan`). 로그는 `logs/server.log`.
-- 백엔드는 Starlette + uvicorn(FastAPI 는 설치된 starlette 1.6 과 충돌해 사용하지 않음). SQLite `data/collector.db` 를 직접 읽어 병합·후속·블랙리스트 대조까지 계산하고, incidents 테이블의 (건수, 최신 collected_at) 서명이 바뀌면 캐시를 다시 만듭니다. 즉 수집기가 돌면 페이지가 자동으로 최신이 됩니다(정적 JSON 내보내기 불필요).
-- API(JSON, 목록은 `/api`): `/api/meta`, `/api/incidents?days=30|all&type=&chain=&source=&q=&hide_followups=&page=&size=&sort=day|amount|date`, `/api/incidents/{uid}`(+related), `/api/briefings`, `/api/briefings/{day|latest}`, `/api/stats?days=…`, `/api/addresses/lookup?q=`, `/api/search?q=`.
-- 페이지: `index.html`(WebGL 노이즈 배경 히어로에 최신 브리핑 헤드라인·KPI, 소스 네트워크 카드, 오늘 브리핑, 최근 사건, 30일 차트) · `incidents.html`(필터·검색·정렬·페이지) · `briefings.html`(날짜별 아카이브) · `stats.html`(금액/유형/체인/제재 탭 + 표) · `addresses.html`(사건 카드·OFAC SDN·crimial_hunter 동시 대조) · `incident.html?id=`(상세: 유형 색 히어로, 배경/수법/요약/자금흐름, 역할 필터 주소표, 출처, 관련 사건). 한/영 전환, 다크(기본)/라이트.
-- 디자인: shadcn 관례의 CSS 토큰(`--background/--card/--border/--primary/--radius`), Inter + Noto Sans KR + JetBrains Mono. 공격 유형 9색은 색약(deutan/tritan) 시뮬레이션 검증을 통과한 팔레트이며 항상 점+라벨을 함께 표기합니다. `common.js` 의 `KL.velaris`(simplex-noise 셰이더)와 `KL.network`(흐르는 연결선)는 21st.dev 의 Velaris / Integration Card 컴포넌트를 바닐라 JS 로 옮긴 것입니다.
-- `collector/site.py` 는 여전히 매 실행 `docs/data/*.json` 스냅샷을 남깁니다(GitHub 에서 데이터만 볼 때 용도). GitHub Pages 는 private+Free 플랜이라 쓰지 않습니다.
+- 백엔드는 Starlette + uvicorn(FastAPI 는 설치된 starlette 1.6 과 충돌). SQLite `data/collector.db` 를 직접 읽어 병합·후속·블랙리스트 대조까지 계산하고, incidents 테이블의 (건수, 최신 collected_at) 서명이 바뀌면 캐시를 다시 만듭니다. 수집기가 돌면 페이지가 자동으로 최신이 됩니다.
+- API(JSON, 목록은 `/api`): `/api/meta`, `/api/incidents?days=30|all&type=&chain=&source=&q=&hide_followups=&page=&size=&sort=day|amount|date`, `/api/incidents/{uid}`(+related), `/api/briefings`, `/api/briefings/{day|latest}`, `/api/stats?days=…&type=&chain=`, `/api/addresses/lookup?q=`, `/api/search?q=`.
+- 집계 규칙: 후속 보도(`followup_of`)는 건수에만 포함하고 금액 합계·순위·비중에서는 제외합니다(같은 사건 이중 계산 방지).
+- 페이지: `index.html` 개요(지표 6개+스파크라인, 일별 건수/금액, 유형·체인 비중 도넛, 주소 역할, 피해액 상위 10, 소스별 수집, 최근 사건, 최신 브리핑) · `incidents.html` 사건 표(검색·유형·체인·소스·정렬·기간·후속 제외·페이지) · `stats.html` 분석(시계열 금액/건수, 유형·체인 표: 건수·%·금액·%·평균, 일별 표, 제재·수사, 주소 역할) · `briefings.html` 날짜별 브리핑 · `addresses.html` 주소 조회(사건 카드·OFAC SDN·crimial_hunter 동시 대조) · `incident.html?id=` 상세(숫자 헤더, 요약, 접힌 수법·배경·자금흐름, 역할별 주소표, 출처, 관련 사건). 한/영, 다크(기본)/라이트.
+- 프런트는 빌드 없는 바닐라 JS(`common.js`: API·i18n·SVG 차트). 유형 9색은 색약 시뮬레이션 검증을 통과한 팔레트이며 항상 점+라벨을 함께 표기합니다.
+- `collector/site.py` 는 매 실행 `docs/data/*.json` 스냅샷을 남깁니다(GitHub 에서 데이터만 볼 때 용도). GitHub Pages 는 private+Free 플랜이라 쓰지 않습니다.
 
 ### 알림 — Teams / Telegram (`collector/notify.py`)
 - 새로 병합된 사건마다 카드 1개(심각도 이모지, 체인·일자·금액, 두 문장 요약, 수법, 주소 최대 3개, 블랙리스트 재등장, 출처·리포트 링크)를 보내고, 그날 첫 브리핑이 생기면 브리핑 1개를 보냅니다. 수집 오류도 알립니다. 두 채널을 동시에 켤 수 있습니다.

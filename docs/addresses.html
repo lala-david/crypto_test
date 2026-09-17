@@ -8,19 +8,15 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="shell"><aside class="side" id="nav"></aside><div class="main"><header class="topbar" id="topbar"></header>
-<main class="page narrow">
-  <p class="page-sub" data-i18n="addr_hint"></p>
-  <form class="search big" id="form">
-    <span class="search-ico">⌕</span>
-    <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="" data-i18n-ph="addr_ph" aria-label="address">
-    <button class="btn-accent" type="submit">⏎</button>
-  </form>
-  <section class="kpis four" id="addrKpis"></section>
-  <section id="result"></section>
+<header class="nav" id="nav"></header>
+<main class="page">
+  <div class="page-h"><div><h1 data-i18n="nav_addresses">주소 조회</h1><div class="sub" id="sub"></div></div></div>
+  <form class="search big" id="form"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="" data-i18n-ph="addr_ph" aria-label="address"><button class="btn primary" type="submit">⏎</button></form>
+  <section class="grid" id="kpis"></section>
+  <section id="result" class="grid"></section>
 </main>
+<footer class="foot" id="foot"></footer>
 <div class="tooltip" id="tip" role="tooltip"></div>
-<footer class="foot" id="foot"></footer></div></div>
 <script src="common.js"></script><script src="addresses.js"></script>
 </body>
 </html>

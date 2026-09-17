@@ -147,6 +147,7 @@ class DataService:
         }
 
     def stats(self, rows: List[dict]) -> dict:
+        """금액 집계·순위는 후속 보도(followup_of)를 제외해 같은 사건이 두 번 더해지지 않게 한다. 건수는 전체/신규를 함께 준다."""
         daily: Dict[str, dict] = defaultdict(lambda: {"count": 0, "amount": 0.0, "legal": 0, "new": 0})
         if rows:
             d0, d1 = min(r["day"] for r in rows), max(r["day"] for r in rows)
@@ -158,28 +159,31 @@ class DataService:
         by_chain: Dict[str, dict] = defaultdict(lambda: {"count": 0, "amount": 0.0})
         roles: Counter = Counter()
         for r in rows:
+            fresh = not r["followup_of"]
+            amt = (r["amount_usd"] or 0) if fresh else 0
             dd = daily[r["day"]]
             dd["count"] += 1
-            dd["amount"] += r["amount_usd"] or 0
+            dd["amount"] += amt
             dd["legal"] += 1 if r["type"] in LEGAL else 0
-            dd["new"] += 0 if r["followup_of"] else 1
+            dd["new"] += 1 if fresh else 0
             by_type[r["type"]]["count"] += 1
-            by_type[r["type"]]["amount"] += r["amount_usd"] or 0
+            by_type[r["type"]]["amount"] += amt
             for c in r["chains"][:1]:
                 by_chain[c]["count"] += 1
-                by_chain[c]["amount"] += r["amount_usd"] or 0
+                by_chain[c]["amount"] += amt
             for a in r["addresses"]:
                 roles[a["role"]] += 1
-        top = sorted([r for r in rows if r["amount_usd"]], key=lambda r: -r["amount_usd"])[:5]
+        base = [r for r in rows if not r["followup_of"]]
+        top = sorted([r for r in base if r["amount_usd"]], key=lambda r: -r["amount_usd"])[:10]
         return {
-            "total_count": len(rows), "total_amount": sum(r["amount_usd"] or 0 for r in rows),
-            "new_count": sum(1 for r in rows if not r["followup_of"]), "followup_count": sum(1 for r in rows if r["followup_of"]),
+            "total_count": len(rows), "total_amount": sum(r["amount_usd"] or 0 for r in base),
+            "new_count": len(base), "followup_count": len(rows) - len(base),
             "addresses": len({a["address"].lower() for r in rows for a in r["addresses"]}),
             "daily": [{"day": k, **v} for k, v in sorted(daily.items())],
             "by_type": sorted([{"key": k, **v} for k, v in by_type.items()], key=lambda x: -x["amount"]),
             "by_chain": sorted([{"key": k, **v} for k, v in by_chain.items()], key=lambda x: -x["amount"]),
             "roles": dict(roles.most_common()),
-            "top": [{"uid": r["uid"], "project": r["project"], "amount_usd": r["amount_usd"], "day": r["day"], "incident_date": r["incident_date"]} for r in top],
+            "top": [{"uid": r["uid"], "project": r["project"], "amount_usd": r["amount_usd"], "day": r["day"], "incident_date": r["incident_date"], "type": r["type"]} for r in top],
         }
 
     def related(self, r: dict, limit: int = 8) -> List[dict]:

@@ -8,28 +8,19 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="shell"><aside class="side" id="nav"></aside><div class="main"><header class="topbar" id="topbar"></header>
+<header class="nav" id="nav"></header>
 <main class="page">
-  <div class="brief-grid">
-    <aside class="panel brief-days">
-      <div class="panel-head"><h2 data-i18n="briefing_days">날짜</h2></div>
-      <ul class="day-list" id="dayList"></ul>
-    </aside>
-    <section>
-      <div class="panel">
-        <div class="panel-head"><h2 id="briefTitle"></h2><span class="muted small" id="briefMeta"></span></div>
-        <p class="headline" id="briefingHeadline"></p>
-        <div class="briefing-body" id="briefingBody"></div>
-      </div>
-      <div class="panel table-panel" style="margin-top:14px">
-        <div class="panel-head"><h2 data-i18n="briefing_incidents">이 날의 사건</h2></div>
-        <div class="table-wrap"><table class="inc" id="dayTable"></table></div>
-      </div>
-    </section>
-  </div>
+  <div class="page-h"><div><h1 data-i18n="nav_briefings">브리핑</h1><div class="sub" id="sub"></div></div></div>
+  <section class="grid">
+    <div class="card c3"><div class="card-h"><h2 data-i18n="day">날짜</h2><span class="meta" id="metaDays"></span></div><ul class="day-list" id="dayList"></ul></div>
+    <div class="c9" style="grid-column: span 9; display: grid; gap: 12px; min-width: 0">
+      <div class="card"><div class="card-h"><h2 id="briefTitle"></h2><span class="meta" id="briefMeta"></span></div><div class="headline" id="briefHeadline"></div><div class="card-b brief" id="briefBody"></div></div>
+      <div class="card"><div class="card-h"><h2 data-i18n="recent">사건</h2><span class="meta" id="metaDay"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="dayTable"></table></div></div>
+    </div>
+  </section>
 </main>
+<footer class="foot" id="foot"></footer>
 <div class="tooltip" id="tip" role="tooltip"></div>
-<footer class="foot" id="foot"></footer></div></div>
 <script src="common.js"></script><script src="briefings.js"></script>
 </body>
 </html>

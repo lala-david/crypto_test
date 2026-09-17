@@ -8,31 +8,30 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="shell"><aside class="side" id="nav"></aside><div class="main"><header class="topbar" id="topbar"></header>
-<main class="ledger">
-  <section class="feed">
-    <div class="hero slim" id="hero"><div class="slim-l"><div class="slim-date" id="slimDate"></div><span class="pill-glass"><span class="dot"></span><span id="heroPillText"></span></span></div></div>
-    <div id="feed"></div>
-    <div class="feed-more"><a class="btn-ghost sm" href="incidents.html" data-i18n="see_all">전체 보기 →</a></div>
+<header class="nav" id="nav"></header>
+<main class="page">
+  <div class="page-h"><div><h1 data-i18n="nav_home">개요</h1><div class="sub" id="sub"></div></div>
+    <div class="seg" id="rangeSeg"><button data-range="7">7d</button><button data-range="30" class="on">30d</button><button data-range="90">90d</button><button data-range="all" data-i18n="all">전체</button></div></div>
+  <section class="grid" id="stats"></section>
+  <section class="grid">
+    <div class="card c6"><div class="card-h"><h2 data-i18n="daily_count">일별 사건 수</h2><span class="meta" id="metaCount"></span></div><div class="card-b plot" id="plotCount"></div></div>
+    <div class="card c6"><div class="card-h"><h2 data-i18n="daily_amount">일별 피해액 (USD)</h2><span class="meta" id="metaAmt"></span></div><div class="card-b plot" id="plotAmt"></div></div>
   </section>
-  <aside class="rail">
-    <section class="panel brief-card">
-      <div class="panel-head"><h2 data-i18n="todays_briefing">오늘의 브리핑</h2><a class="more" href="briefings.html" data-i18n="see_all">전체 보기 →</a></div>
-      <p class="headline" id="briefHeadline"></p>
-      <div class="briefing-body compact" id="briefingBody"></div>
-    </section>
-    <section class="panel">
-      <div class="panel-head"><h2 data-i18n="tab_value">피해 금액</h2><a class="more" href="stats.html" data-i18n="see_all">전체 보기 →</a></div>
-      <div class="panel-body"><div class="plot" id="homePlot"></div></div>
-    </section>
-    <section class="panel"><div class="panel-head"><h2 data-i18n="by_type">유형별 건수</h2></div><div class="panel-body side-plot hb" id="homeTypes"></div></section>
-    <article class="panel integration">
-      <div class="visual" id="network"></div>
-      <div class="copy row"><h3 id="netTitle"></h3></div>
-    </article>
-  </aside>
+  <section class="grid">
+    <div class="card c4"><div class="card-h"><h2 data-i18n="share_type">유형 비중</h2><span class="meta" id="metaType"></span></div><div class="card-b" id="donutType"></div></div>
+    <div class="card c4"><div class="card-h"><h2 data-i18n="share_chain">체인 비중</h2><span class="meta" id="metaChain"></span></div><div class="card-b" id="donutChain"></div></div>
+    <div class="card c4"><div class="card-h"><h2 data-i18n="roles">주소 역할</h2><span class="meta" id="metaRoles"></span></div><div class="card-b hb" id="rolesBars"></div></div>
+  </section>
+  <section class="grid">
+    <div class="card c7"><div class="card-h"><h2 data-i18n="top_amount">피해액 상위</h2><span class="meta" id="metaTop"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="topTable"></table></div></div>
+    <div class="card c5"><div class="card-h"><h2 data-i18n="by_source">소스별 수집</h2><span class="meta" id="metaSrc"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="srcTable"></table></div></div>
+  </section>
+  <section class="grid">
+    <div class="card c8"><div class="card-h"><h2 data-i18n="recent">최근 사건</h2><a class="meta" href="incidents.html" data-i18n="all">전체</a></div><div class="card-b flush table-wrap"><table class="tbl" id="recentTable"></table></div></div>
+    <div class="card c4"><div class="card-h"><h2 data-i18n="latest_briefing">최신 브리핑</h2><a class="meta" href="briefings.html" data-i18n="all">전체</a></div><div class="headline" id="briefHeadline"></div><div class="card-b brief" id="briefBody"></div></div>
+  </section>
 </main>
-<footer class="foot" id="foot"></footer></div></div>
+<footer class="foot" id="foot"></footer>
 <div class="tooltip" id="tip" role="tooltip"></div>
 <script src="common.js"></script><script src="home.js"></script>
 </body>
