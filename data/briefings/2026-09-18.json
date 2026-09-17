@@ -1,6 +1,6 @@
 {
- "headline_ko": "SBA PPP 사기 $245M 등 신규 2건",
- "headline_en": "SBA PPP fraud $245M, 2 new incidents",
- "briefing_ko": "- **Christopher Michael Cadman** — 법 집행 권한 남용·협박·사기, $25K\n- **SBA PPP 사기** — 허위 사업체·과다 급여·신원 도용, $245M\n- **시사점** — 공권력 남용·허위 사업체를 통한 사기 수법이 연속 등장.",
- "briefing_en": "- **Christopher Michael Cadman** — abuse of law-enforcement authority, intimidation and fraud, $25K\n- **SBA PPP fraud** — fake businesses, inflated payroll, identity theft, $245M\n- **Takeaway** — abuse of authority and fake entities to defraud funds keeps reappearing."
+ "headline_ko": "SBA PPP $245M 사기 등 신규 4건",
+ "headline_en": "SBA PPP $245M fraud; 4 new incidents",
+ "briefing_ko": "- **[SBA Paycheck Protection Program](https://www.justice.gov/usao-edva/pr/eastern-district-virginia-joins-doj-fraud-division-sba-and-sba-oig-surge-takedown)** — $245M 사기, 허위 사업·급여 과장 대출 탈취, 암호화폐·부동산·차량 구매에 사용.\n- **[BitBank](https://www.blockmedia.co.kr/archives/1141305)** (Bitcoin) — IRGC에 수억달러 비트코인 전송해 제재 회피망 구축, OFAC 제재 지정.\n- **[Blockchain Dead Drops (BDD)](https://www.chainalysis.com/blog/etherhiding-blockchain-dead-drops/)** (Bitcoin, BSC, TRON, Aptos, Polygon, Ethereum) — OP_RETURN·스마트 계약에 C2 데이터 삽입·교차체인 릴레이·가짜 지갑으로 은폐.\n- **소액** — Cadman $25K.\n- **시사점** — 블록체인에 C2 데이터를 숨겨 전송하는 기법이 지속적으로 등장하고 차단이 어려움.",
+ "briefing_en": "- **[SBA Paycheck Protection Program](https://www.justice.gov/usao-edva/pr/eastern-district-virginia-joins-doj-fraud-division-sba-and-sba-oig-surge-takedown)** — $245M fraud, fake businesses and inflated payroll used to obtain loans, proceeds spent on crypto, real estate and cars.\n- **[BitBank](https://www.blockmedia.co.kr/archives/1141305)** (Bitcoin) — transferred billions of dollars in BTC to IRGC, creating a sanctions-evasion network; designated by OFAC.\n- **[Blockchain Dead Drops (BDD)](https://www.chainalysis.com/blog/etherhiding-blockchain-dead-drops/)** (Bitcoin, BSC, TRON, Aptos, Polygon, Ethereum) — embeds C2 data in OP_RETURN or contract state, builds cross-chain relays and phantom wallets to hide IP.\n- **Smaller** — Cadman $25K.\n- **Takeaway** — Threat actors keep using blockchain-based C2 channels that are hard to block."
 }
