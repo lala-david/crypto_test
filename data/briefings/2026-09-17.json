@@ -1,6 +1,6 @@
 {
- "headline_ko": "DCENT $6.57M 탈취 등 신규 2건",
- "headline_en": "DCENT $6.57M stolen, plus other incidents; 2 new cases",
- "briefing_ko": "- **[DCENT](https://x.com/DCENTWALLETS/status/2100076991798206573)** — $6.57M 규모 자산 탈취, 조사 진행 중.\n- **소액** — Startale $2.9K\n- **시사점** — 초기 접근 권한 확보 시도가 계속 나타나고 있습니다.",
- "briefing_en": "- **[DCENT](https://x.com/DCENTWALLETS/status/2100076991798206573)** — $6.57M stolen from the app wallet; investigation ongoing.\n- **Smaller** — Startale $2.9K\n- **Takeaway** — Initial access exploits remain a common vector for asset theft."
+ "headline_ko": "DCENT $6.57M 탈취 등 신규 3건",
+ "headline_en": "DCENT $6.57M theft, plus others – 3 new incidents",
+ "briefing_ko": "- **[DCENT](https://x.com/DCENTWALLETS/status/2100076991798206573)** (—) — DCENT App Wallet에서 $6.57M 자산이 탈취되었습니다.\n- **[Flamincome](https://x.com/SlowMist_Team/status/2100256590716907706)** (Ethereum) — 플래시 론으로 LP를 주입해 $345.9K를 탈취했습니다.\n- **소액** — Startale $2.9K\n- **시사점** — 스마트 계약 취약점을 이용한 공격이 연속 발생하고 있습니다.",
+ "briefing_en": "- **[DCENT](https://x.com/DCENTWALLETS/status/2100076991798206573)** (—) — $6.57M was stolen from the DCENT App Wallet.\n- **[Flamincome](https://x.com/SlowMist_Team/status/2100256590716907706)** (Ethereum) — attacker used a flash loan to inject LP and siphoned $345.9K.\n- **Smaller** — Startale $2.9K.\n- **Takeaway** — Exploiting smart-contract vulnerabilities continues to be a common attack vector."
 }
