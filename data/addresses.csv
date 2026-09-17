@@ -1,4 +1,18 @@
 ﻿chain,address,role,note,source,project,incident_date,first_seen_at,url
+ETH,0xb4c00e8f3ba815b6c70f45026f8794d2c1f07964,unknown,Attack tx,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+ETH,0x2B5bF7D9D9Dc1EEc68f40C6B7a8f197e65f9731a,attacker,Attacker EOA,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+ETH,0x28E976Ea7b83553d6D1D45CE81334156A2632127,unknown,Attack contract,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+ETH,0x17e801E17CeFC6334059189c178D4783830E03D3,unknown,BonfireSwap,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+ETH,0x5e90253fbae4Dab78aa351f4E6fed08A64AB5590,unknown,BONFIRE token,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+ETH,0xD3F478F0d5E98b01f757bc6cB54Db4C00b9838f2,unknown,Pancake pair,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+ETH,0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c,unknown,WBNB,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+BSC,0xb4c00e8f3ba815b6c70f45026f8794d2c1f07964,unknown,Attack tx,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+BSC,0x2B5bF7D9D9Dc1EEc68f40C6B7a8f197e65f9731a,attacker,Attacker EOA,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+BSC,0x28E976Ea7b83553d6D1D45CE81334156A2632127,attacker,Attack contract,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+BSC,0x17e801E17CeFC6334059189c178D4783830E03D3,victim,BonfireSwap router,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+BSC,0x5e90253fbae4Dab78aa351f4E6fed08A64AB5590,victim,BONFIRE token,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+BSC,0xD3F478F0d5E98b01f757bc6cB54Db4C00b9838f2,victim,Pancake pair,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
+BSC,0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c,victim,WBNB token,defihacklabs,BonfireSwap,2026-09-15,2026-09-17T13:01:11,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/BonfireSwap_exp.sol
 BTC,bc1ql4mfu6aundtkksxklfajs2h3t9nzcd6gyqjlte,attacker,actor-controlled consolidation and on-chain-messaging address; received ~598.5 BTC,rekt,Liquid Network,2026-09-06,2026-09-16T22:02:54,https://rekt.news/liquid-network-rekt
 BTC,bc1qdlld6antmv4xug242ed83q7k4rqw50cwfns38szx4qu2f4jwaxxsuhwxxr,victim,"Liquid Federation peg wallet; received 3,400 BTC returned",rekt,Liquid Network,2026-09-06,2026-09-16T22:02:54,https://rekt.news/liquid-network-rekt
 BTC,Bc1ql4mfu6aundtkksxklfajs2h3t9nzcd6gyqjlte,unknown,,rekt,Liquid Network,2026-09-06,2026-09-16T22:02:54,https://rekt.news/liquid-network-rekt
