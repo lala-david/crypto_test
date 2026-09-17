@@ -1,7 +1,7 @@
 /* 개요: 지표 6 · 일별 건수/금액 · 유형/체인 비중 · 주소 역할 · 피해액 순위 · 소스별 수집 · 최근 사건 · 최신 브리핑 */
 (() => {
   "use strict";
-  const { $, $$, t, typeName, roleName, srcLabel, esc, fmtInt, fmtPct, money, moneyFull, fmtDate, api, renderNav, renderFoot, applyI18n, bindChrome, columns, hbars, donut, statCard, incidentRow, TABLE_HEAD, bindRows, mdToHtml, typeColorHex, detailUrl, pill, state: K } = KL;
+  const { $, $$, t, typeName, roleName, srcLabel, esc, fmtInt, fmtPct, money, moneyFull, fmtDate, api, renderNav, renderFoot, applyI18n, bindChrome, columns, hbars, donut, statCard, incidentRow, TABLE_HEAD, bindRows, mdToHtml, typeColorHex, isWeekend, state: K } = KL;
   const S = { days: "30" };
   let D = null;
 
@@ -28,7 +28,7 @@
     const c = D.cur, p = D.prev, daily = c.daily, last14 = daily.slice(-14);
     const prevOnly = p ? { count: p.total_count - c.total_count, amount: p.total_amount - c.total_amount, addresses: Math.max(0, p.addresses - c.addresses) } : null;
     const rangeLbl = S.days === "all" ? t("all") : t("days_n").replace("{n}", S.days);
-    $("#sub").textContent = `${fmtDate(D.meta.first_day)} – ${fmtDate(D.meta.last_day)} · ${D.meta.days}${t("unit") ? "일" : " days"} · ${rangeLbl}: ${fmtInt(c.total_count)}${t("unit")} · ${money(c.total_amount)}`;
+    $("#sub").innerHTML = `<span>${esc(fmtDate(D.meta.first_day))} – ${esc(fmtDate(D.meta.last_day))}</span><span class="m">${D.meta.days}${t("unit") ? "일" : "d"}</span><span class="m">${fmtInt(c.total_count)}${esc(t("unit"))}</span><span class="m">${esc(money(c.total_amount))}</span><span class="m">${esc(t("follow"))} ${fmtInt(c.followup_count)}</span>`;
     $("#stats").innerHTML = [
       statCard(t("k_today"), fmtInt(D.today.new_count), null, last14.map((d) => d.new)),
       statCard(`${rangeLbl} ${t("count")}`, fmtInt(c.total_count), prevOnly ? ratio(c.total_count, prevOnly.count) : null, last14.map((d) => d.count)),
@@ -38,9 +38,9 @@
       statCard(t("k_sdn"), fmtInt(D.meta.sdn_addresses), null, null),
     ].map((h) => h.replace('class="card stat"', 'class="card stat c2"')).join("");
     // 일별
-    columns($("#plotCount"), daily.map((d) => ({ label: fmtDate(d.day), short: d.day.slice(5), v: d.count, extra: `${t("new_label")} ${d.new}` })), (v) => String(Math.round(v)), t("daily_count"));
+    columns($("#plotCount"), daily.map((d) => ({ label: fmtDate(d.day), short: d.day.slice(5), v: d.count, weekend: isWeekend(d.day), extra: `${t("new_label")} ${d.new}` })), (v) => String(Math.round(v)), t("daily_count"));
     $("#metaCount").textContent = `Σ ${fmtInt(c.total_count)} · avg ${(c.total_count / Math.max(1, daily.length)).toFixed(1)}/d`;
-    columns($("#plotAmt"), daily.map((d) => ({ label: fmtDate(d.day), short: d.day.slice(5), v: d.amount, extra: `${d.count}${t("unit")}` })), money, t("daily_amount"));
+    columns($("#plotAmt"), daily.map((d) => ({ label: fmtDate(d.day), short: d.day.slice(5), v: d.amount, weekend: isWeekend(d.day), extra: `${d.count}${t("unit")}` })), money, t("daily_amount"));
     const peak = daily.reduce((a, d) => (d.amount > a.amount ? d : a), { amount: 0 });
     $("#metaAmt").textContent = `Σ ${money(c.total_amount)} · max ${money(peak.amount)}${peak.day ? " (" + peak.day.slice(5) + ")" : ""}`;
     // 비중
@@ -58,7 +58,7 @@
     const top = D.recent.slice().filter((i) => i.amount_usd).sort((a, b) => b.amount_usd - a.amount_usd);
     const allTop = c.top || [];
     $("#topTable").innerHTML = `<thead><tr><th class="rank">${esc(t("th_rank"))}</th><th>${esc(t("th_incident"))}</th><th>${esc(t("th_date"))}</th><th class="num">${esc(t("th_amount"))}</th><th class="num">${esc(t("th_share"))}</th><th></th></tr></thead><tbody>${
-      allTop.map((x, k) => `<tr class="link" data-href="incident.html?id=${esc(x.uid)}"><td class="rank">${k + 1}</td><td><a class="name" href="incident.html?id=${esc(x.uid)}">${esc(x.project)}</a></td><td class="date">${esc(fmtDate(x.incident_date || x.day))}</td><td class="num">${moneyFull(x.amount_usd)}</td><td class="num">${fmtPct(x.amount_usd / (c.total_amount || 1))}</td><td><div class="bar"><i style="width:${Math.round((x.amount_usd / (allTop[0].amount_usd || 1)) * 100)}%"></i></div></td></tr>`).join("")}</tbody>`;
+      allTop.map((x, k) => `<tr class="link" data-href="incident.html?id=${esc(x.uid)}"><td class="rank ${k < 3 ? "top" : ""}">${k + 1}</td><td><a class="name" href="incident.html?id=${esc(x.uid)}">${esc(x.project)}</a></td><td class="date">${esc(fmtDate(x.incident_date || x.day))}</td><td class="num">${moneyFull(x.amount_usd)}</td><td class="num">${fmtPct(x.amount_usd / (c.total_amount || 1))}</td><td><div class="bar"><i style="width:${Math.round((x.amount_usd / (allTop[0].amount_usd || 1)) * 100)}%"></i></div></td></tr>`).join("")}</tbody>`;
     $("#metaTop").textContent = `top ${allTop.length} = ${fmtPct(allTop.reduce((a, x) => a + x.amount_usd, 0) / (c.total_amount || 1))}`;
     bindRows($("#topTable"));
     // 소스
@@ -66,7 +66,7 @@
     const srcs = Object.entries(D.facets.sources || {}).sort((a, b) => b[1] - a[1]);
     const srcTotal = srcs.reduce((a, s) => a + s[1], 0);
     $("#srcTable").innerHTML = `<thead><tr><th>${esc(t("th_source"))}</th><th class="num">${esc(t("th_count"))}</th><th class="num">${esc(t("th_share"))}</th><th>${esc(t("th_last"))}</th></tr></thead><tbody>${
-      srcs.map(([s, n]) => `<tr><td>${esc(srcLabel(s))}</td><td class="num">${fmtInt(n)}</td><td class="num">${fmtPct(n / (srcTotal || 1))}</td><td class="date">${esc(((runAt[s] || {}).last_run_at || "").replace("T", " ").slice(5, 16) || "-")}</td></tr>`).join("")}</tbody>`;
+      srcs.map(([s, n]) => `<tr><td>${esc(srcLabel(s))}</td><td class="num">${fmtInt(n)}</td><td class="num">${fmtPct(n / (srcTotal || 1))}</td><td class="date">${esc(((runAt[s] || {}).last_run_at || "").replace("T", " ").slice(5, 16) || "-")}</td></tr>`).join("")}</tbody><tfoot><tr><td>Σ</td><td class="num">${fmtInt(srcTotal)}</td><td class="num">100%</td><td></td></tr></tfoot>`;
     $("#metaSrc").textContent = `${srcs.length} src · Σ ${fmtInt(srcTotal)}`;
     // 최근 사건 · 브리핑
     const tb = $("#recentTable"); tb.innerHTML = TABLE_HEAD(true) + `<tbody>${D.recent.map((i) => incidentRow(i, true)).join("")}</tbody>`; bindRows(tb);

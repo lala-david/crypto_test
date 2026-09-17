@@ -7,7 +7,7 @@
   async function show(day) { cur = await api(`/api/briefings/${day}`); history.replaceState(null, "", `briefings.html?day=${day}`); render(); }
   function render() {
     renderNav("briefings.html", meta); renderFoot(); applyI18n(); bindChrome(render);
-    $("#sub").textContent = `${days.length}${t("unit") ? "일" : " days"} · Σ ${fmtInt(days.reduce((a, b) => a + b.relevant, 0))}${t("unit")} · ${money(days.reduce((a, b) => a + b.amount_usd, 0))}`;
+    $("#sub").innerHTML = `<span class="m">${days.length}${t("unit") ? "일" : "d"}</span><span class="m">${fmtInt(days.reduce((a, b) => a + b.relevant, 0))}${esc(t("unit"))}</span><span class="m">${esc(money(days.reduce((a, b) => a + b.amount_usd, 0)))}</span>`;
     $("#metaDays").textContent = `${days.length}`;
     $("#dayList").innerHTML = days.map((b) => `<li class="${cur && cur.day === b.day ? "on" : ""}" data-day="${b.day}"><b>${fmtDate(b.day)} · ${b.relevant}${esc(t("unit"))} · ${money(b.amount_usd)}</b><span>${esc(b[`headline_${K.lang}`] || b.headline_ko)}</span></li>`).join("");
     $$("#dayList li").forEach((li) => li.addEventListener("click", () => show(li.dataset.day)));

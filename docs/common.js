@@ -53,6 +53,7 @@ window.KL = (() => {
   const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const fmtDate = (d) => { if (!d) return "-"; const [y, m, dd] = d.split("-"); return state.lang === "ko" ? `${y}.${m}.${dd}` : `${MON[+m - 1]} ${dd} ${y}`; };
   const dayOf = (i) => i.incident_date || i.day;
+  const isWeekend = (d) => { const w = new Date(d + "T00:00:00").getDay(); return w === 0 || w === 6; };
   const txt = (i, f) => i[`${f}_${state.lang}`] || i[`${f}_${state.lang === "ko" ? "en" : "ko"}`] || "";
   const explorer = (chain, addr) => { const c = (chain || "").toUpperCase();
     if (addr.startsWith("0x")) return c === "BSC" ? `https://bscscan.com/address/${addr}` : c === "ARB" ? `https://arbiscan.io/address/${addr}` : c === "POLYGON" ? `https://polygonscan.com/address/${addr}` : c === "BASE" ? `https://basescan.org/address/${addr}` : `https://etherscan.io/address/${addr}`;
@@ -94,14 +95,21 @@ window.KL = (() => {
   const ticks = (max) => { const st = niceStep(max / 4); const out = []; for (let v = 0; v <= max + 1e-9; v += st) out.push(v); return out; };
   function columns(el, buckets, fmt, label, opts = {}) {
     if (!buckets.length) { el.innerHTML = `<div class="empty">${esc(t("no_data"))}</div>`; return; }
-    const W = opts.width || 640, H = opts.height || 200, m = { l: 50, r: 8, t: 8, b: 24 }; const pw = W - m.l - m.r, ph = H - m.t - m.b;
-    const rawMax = Math.max(...buckets.map((b) => b.v)); const tk = ticks(niceMax(rawMax)); const max = tk[tk.length - 1]; const slot = pw / buckets.length; const bw = Math.max(3, Math.min(26, slot * 0.62));
+    const W = opts.width || 640, H = opts.height || 200, m = { l: 50, r: 8, t: 16, b: 24 }; const pw = W - m.l - m.r, ph = H - m.t - m.b;
+    const rawMax = Math.max(...buckets.map((b) => b.v)); const tk = ticks(niceMax(rawMax)); const max = tk[tk.length - 1];
+    const slot = pw / buckets.length; const bw = Math.max(3, Math.min(28, slot * 0.6));
     const x = (k) => m.l + (k + 0.5) * slot, y = (v) => m.t + ph - (v / max) * ph;
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
+    buckets.forEach((b, k) => { if (b.weekend) s += `<rect class="wk" x="${x(k) - slot / 2}" y="${m.t}" width="${slot}" height="${ph}"/>`; });
     tk.forEach((v) => { s += `<line class="grid" x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}"/><text x="${m.l - 6}" y="${y(v) + 3}" text-anchor="end">${esc(fmt(v))}</text>`; });
     s += `<line class="axis" x1="${m.l}" x2="${W - m.r}" y1="${y(0)}" y2="${y(0)}"/>`;
-    buckets.forEach((b, k) => { if (b.v) s += `<rect class="bar ${b.dim ? "dim" : ""}" x="${x(k) - bw / 2}" y="${y(b.v)}" width="${bw}" height="${Math.max(1, y(0) - y(b.v))}" rx="2"/>`;
-      s += `<rect class="hit" x="${x(k) - slot / 2}" y="${m.t}" width="${slot}" height="${ph}" data-tip="<b>${esc(b.label)}</b><br>${esc(fmt(b.v))}${b.extra ? " · " + esc(b.extra) : ""}"/>`; });
+    const showVal = buckets.length <= (W > 900 ? 24 : 12);
+    buckets.forEach((b, k) => {
+      s += `<g class="col">`;
+      if (b.v) s += `<rect class="bar ${b.dim ? "dim" : ""}" x="${x(k) - bw / 2}" y="${y(b.v)}" width="${bw}" height="${Math.max(1, y(0) - y(b.v))}" rx="2"/>`;
+      if (b.v && showVal) s += `<text class="val" x="${x(k)}" y="${y(b.v) - 4}" text-anchor="middle">${esc(fmt(b.v))}</text>`;
+      s += `<rect class="hit" x="${x(k) - slot / 2}" y="${m.t}" width="${slot}" height="${ph}" data-tip="<b>${esc(b.label)}</b><br>${esc(fmt(b.v))}${b.extra ? " · " + esc(b.extra) : ""}"/></g>`;
+    });
     const step = Math.max(1, Math.ceil(buckets.length / (W > 900 ? 16 : 8)));
     buckets.forEach((b, k) => { if (k % step === 0 || k === buckets.length - 1) s += `<text x="${x(k)}" y="${H - 7}" text-anchor="middle">${esc(b.short || b.label)}</text>`; });
     el.innerHTML = s + "</svg>"; bindTips(el);
@@ -112,7 +120,7 @@ window.KL = (() => {
     let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">`;
     [0, 0.5, 1].forEach((f) => { const xx = m.l + pw * f; s += `<line class="grid" x1="${xx}" x2="${xx}" y1="${m.t}" y2="${H - m.b}"/><text x="${xx}" y="${H - 5}" text-anchor="middle">${esc(fmt(max * f))}</text>`; });
     items.forEach((it, k) => { const yy = m.t + k * rowH + 5, w = Math.max(2, (it.v / max) * pw);
-      s += `<text class="lbl" x="${m.l - 8}" y="${yy + 12}" text-anchor="end">${esc(it.k.length > 15 ? it.k.slice(0, 14) + "…" : it.k)}</text><rect class="bar" x="${m.l}" y="${yy}" width="${w}" height="16" rx="2" style="${it.color ? `fill:${it.color}` : ""}"/><text x="${m.l + w + 5}" y="${yy + 12}">${esc(fmt(it.v))}</text>`;
+      s += `<text class="lbl" x="${m.l - 8}" y="${yy + 12}" text-anchor="end">${esc(it.k.length > 15 ? it.k.slice(0, 14) + "…" : it.k)}</text><rect class="track" x="${m.l}" y="${yy}" width="${pw}" height="16" rx="3"/><rect class="bar" x="${m.l}" y="${yy}" width="${w}" height="16" rx="3" style="${it.color ? `fill:${it.color}` : ""}"/><text class="val" x="${m.l + w + 6}" y="${yy + 12}">${esc(fmt(it.v))}</text>`;
       s += `<rect class="hit" x="0" y="${yy - 4}" width="${W}" height="${rowH}" data-tip="<b>${esc(it.k)}</b><br>${esc(fmt(it.v))}${it.extra ? " · " + esc(it.extra) : ""}"/>`; });
     el.innerHTML = s + "</svg>"; bindTips(el);
   }
@@ -121,18 +129,21 @@ window.KL = (() => {
     if (!total) { el.innerHTML = `<div class="empty">${esc(t("no_data"))}</div>`; return; }
     const R = 44, C = 2 * Math.PI * R; let off = 0;
     let s = `<div class="donut"><svg viewBox="0 0 120 120">`;
-    items.forEach((it) => { const len = (it.v / total) * C; s += `<circle r="${R}" cx="60" cy="60" fill="none" stroke="${it.color}" stroke-width="14" stroke-dasharray="${len} ${C - len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"><title>${esc(it.k)} ${fmtPct(it.v / total)}</title></circle>`; off += len; });
+    const gap = items.length > 1 ? 1.5 : 0;
+    items.forEach((it) => { const len = (it.v / total) * C; const vis = Math.max(0, len - gap); s += `<circle class="seg" r="${R}" cx="60" cy="60" fill="none" stroke="${it.color}" stroke-width="14" stroke-dasharray="${vis} ${C - vis}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"><title>${esc(it.k)} · ${esc(fmtV ? fmtV(it.v) : fmtInt(it.v))} · ${fmtPct(it.v / total)}</title></circle>`; off += len; });
     s += `<text class="center-num" x="60" y="60" text-anchor="middle" dominant-baseline="middle">${esc(centerNum)}</text><text class="center-lbl" x="60" y="78" text-anchor="middle">${esc(centerLbl)}</text></svg>`;
-    s += `<div class="legend"><ul>${items.map((it) => `<li><span class="sw" style="background:${it.color};margin:0"></span><span class="k" title="${esc(it.k)}">${esc(it.k)}</span><span class="v">${esc(fmtV ? fmtV(it.v) : fmtInt(it.v))}</span><span class="p">${fmtPct(it.v / total)}</span></li>`).join("")}</ul></div></div>`;
+    const mx = Math.max(...items.map((i) => i.v));
+    s += `<div class="legend"><ul>${items.map((it) => `<li><span class="sw" style="background:${it.color};margin:0"></span><span class="k" title="${esc(it.k)}">${esc(it.k)}</span><span class="v">${esc(fmtV ? fmtV(it.v) : fmtInt(it.v))}</span><span class="p">${fmtPct(it.v / total)}</span><span class="bar"><i style="width:${Math.round((it.v / mx) * 100)}%;background:${it.color}"></i></span></li>`).join("")}</ul></div></div>`;
     el.innerHTML = s;
   }
   function spark(values) {
     if (!values || values.length < 2) return "";
-    const W = 80, H = 28, max = Math.max(...values, 1); const pts = values.map((v, k) => `${(k / (values.length - 1)) * W},${H - 2 - (v / max) * (H - 4)}`);
-    return `<svg class="spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><polygon class="area" points="0,${H} ${pts.join(" ")} ${W},${H}"/><polyline points="${pts.join(" ")}"/></svg>`;
+    const W = 92, H = 32, max = Math.max(...values, 1); const pt = (v, k) => [(k / (values.length - 1)) * (W - 4) + 2, H - 3 - (v / max) * (H - 8)];
+    const pts = values.map(pt); const id = "sg" + Math.random().toString(36).slice(2, 7); const last = pts[pts.length - 1];
+    return `<svg class="spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="var(--chart)" stop-opacity=".35"/><stop offset="1" stop-color="var(--chart)" stop-opacity="0"/></linearGradient></defs><polygon class="area" style="fill:url(#${id});opacity:1" points="${pts[0][0]},${H} ${pts.map((p) => p.join(",")).join(" ")} ${last[0]},${H}"/><polyline points="${pts.map((p) => p.join(",")).join(" ")}"/><circle class="dot" cx="${last[0]}" cy="${last[1]}" r="2.5"/></svg>`;
   }
-  function statCard(label, value, delta, sparkValues) {
-    const d = delta == null ? "" : `<div class="delta ${delta > 0 ? "up" : delta < 0 ? "down" : ""}">${delta > 0 ? "▲" : delta < 0 ? "▼" : "="} ${esc(Math.abs(delta * 100).toFixed(0))}% ${esc(t("vs_prev"))}</div>`;
+  function statCard(label, value, delta, sparkValues, sub) {
+    const d = delta == null ? (sub ? `<div class="delta"><span class="faint">${esc(sub)}</span></div>` : "") : `<div class="delta"><span class="chip ${delta > 0 ? "up" : delta < 0 ? "down" : ""}">${delta > 0 ? "▲" : delta < 0 ? "▼" : "="} ${esc(Math.abs(delta * 100).toFixed(0))}%</span><span class="faint">${esc(sub || t("vs_prev"))}</span></div>`;
     return `<div class="card stat"><div class="label">${esc(label)}</div><div class="value">${value}</div>${sparkValues ? spark(sparkValues) : ""}${d}</div>`;
   }
 
@@ -153,5 +164,5 @@ window.KL = (() => {
   const typeColorHex = (k) => { const v = TYPE_COLOR[k] || "var(--t-other)"; return getComputedStyle(document.documentElement).getPropertyValue(v.slice(4, -1)).trim() || "#888"; };
 
   return { $, $$, TYPE_COLOR, REPO, state, t, typeName, roleName, srcLabel, esc, fmtInt, fmtPct, money, moneyFull, fmtDate, dayOf, txt, explorer, shortText, pill, chainPills, detailUrl, mdToHtml, api,
-    renderNav, renderFoot, applyI18n, applyTheme, bindChrome, bindTips, columns, hbars, donut, spark, statCard, incidentRow, TABLE_HEAD, bindRows, fillSelect, typeColorHex, niceMax };
+    renderNav, renderFoot, applyI18n, applyTheme, bindChrome, bindTips, columns, hbars, donut, spark, statCard, incidentRow, TABLE_HEAD, bindRows, fillSelect, typeColorHex, niceMax, isWeekend };
 })();

@@ -17,7 +17,7 @@
     fillSelect($("#sourceSel"), Object.keys(facets.sources).map((v) => ({ value: v, label: `${srcLabel(v)} (${facets.sources[v]})` })), t("all_sources"), S.source);
     $("#sortSel").innerHTML = [["day", t("sort_day")], ["date", t("sort_date")], ["amount", t("sort_amount")]].map(([v, l]) => `<option value="${v}"${S.sort === v ? " selected" : ""}>${esc(t("sort"))}: ${esc(l)}</option>`).join("");
     const amt = res.items.reduce((a, i) => a + (i.amount_usd || 0), 0);
-    $("#sub").textContent = `${fmtInt(res.total)}${t("unit")} · ${t("th_amount")} Σ(page) ${money(amt)}`;
+    $("#sub").innerHTML = `<span class="m">${fmtInt(res.total)}${esc(t("unit"))}</span><span class="m">Σ page ${esc(money(amt))}</span>`;
     const tb = $("#incTable");
     tb.innerHTML = TABLE_HEAD() + `<tbody>${res.items.length ? res.items.map((i) => incidentRow(i)).join("") : `<tr><td colspan="7" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
     bindRows(tb);
