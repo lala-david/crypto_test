@@ -30,6 +30,7 @@ ATTACK_ONCHAIN = {"hack_exploit", "private_key_compromise", "rug_pull", "phishin
 LEGAL = {"sanctions_designation", "law_enforcement_action", "laundering_report"}
 LEGAL_WORDS = re.compile(r"\b(indict|indicted|sentenc|charged|charges|plead|guilty|ofac|sanction|seiz|forfeit|arrest|extradit|convict|doj|prosecut)\w*", re.I)
 ATTACK_WORDS = re.compile(r"\b(exploit|hack|hacked|drain|drained|rug|flash.?loan|reentrancy|oracle|private key|compromis)\w*", re.I)
+GENERIC_PROJECT = re.compile(r"^(unknown|various|multiple|n/?a|none|government|.*\bgovernment\b.*|.*\bprogram\b.*|.*\bauthorit(y|ies)\b.*|.*\bdepartment\b.*|미상|불명|정부|다수)$", re.I)
 CRYPTO_WORDS = re.compile(r"bitcoin|btc|ether|eth\b|crypto|token|wallet|blockchain|defi|exchange|usdt|usdc|stablecoin|nft|coin|mixer|tornado|tether|binance|solana|tron|ledger|drainer|smart contract|가상자산|암호화폐|코인|토큰|지갑|블록체인|거래소|스테이블|믹서|디파이|체인", re.I)
 MONEY_RE = re.compile(r"(?:US\$|\$|USD\s?)\s?([\d][\d,]*(?:\.\d+)?)\s*(billion|million|thousand|bn|mn|[bmk])?\b|([\d][\d,]*(?:\.\d+)?)\s*(billion|million)\s+(?:US\s?)?dollars", re.I)
 MULT = {"b": 1e9, "bn": 1e9, "billion": 1e9, "m": 1e6, "mn": 1e6, "million": 1e6, "k": 1e3, "thousand": 1e3}
@@ -98,6 +99,8 @@ def qa_flags(inc: Incident, text: str = "") -> List[str]:
     p, ttl = (inc.project or "").strip().lower(), (inc.title or "").strip().lower()
     if not p or p == ttl or len(p) > 50:
         flags.append("project_is_title")
+    elif GENERIC_PROJECT.search(p):
+        flags.append("project_generic")
     head = f"{inc.title} {inc.summary_en or ''}"
     # 가상자산 단어가 제목·요약·수법 어디에도 없으면 관련성 의심 (DOJ 보도자료 등 일반 범죄가 섞여 들어오는 경우)
     blob = " ".join([inc.title or "", inc.summary_ko or "", inc.summary_en or "", inc.attack_method_ko or "", inc.background_ko or "", " ".join(inc.chains), " ".join(inc.tags)])

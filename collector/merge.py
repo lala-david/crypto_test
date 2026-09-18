@@ -138,12 +138,36 @@ def same_incident(a: Incident, b: Incident) -> bool:
     return names_match(a.project or a.title, b.project or b.title) and dates_compatible(a, b)
 
 
+_LEGAL_STOP = {"district", "attorney", "national", "charged", "guilty", "pleads", "sentenced", "indicted", "office", "united", "states",
+               "department", "justice", "fraud", "million", "cryptocurrency", "crypto", "bitcoin", "laundering", "money", "former", "years",
+               "prison", "scheme", "conspiracy", "federal", "court", "with", "from", "that", "this", "over", "into", "against", "joins", "division"}
+
+
+def _name_words(i: Incident) -> Set[str]:
+    """법집행 카드 매칭용 고유 토큰: project + title 의 4자 이상 영문 토큰(일반어 제외)."""
+    import re as _re
+    words = set()
+    for s in (i.project or "", i.title or "", *(i.actors or [])[:5]):
+        for w in _re.findall(r"[A-Za-z][A-Za-z0-9]{3,}", s):
+            wl = w.lower()
+            if wl not in _LEGAL_STOP:
+                words.add(wl)
+    return words
+
+
 def plausible_pair(a: Incident, b: Incident) -> bool:
     """규칙으론 못 묶었지만 LLM에 물어볼 가치가 있는 쌍. 호출 수를 줄이기 위해 엄격하게:
     같은 계열 + 사건일 ±3일(둘 다 있을 때; 하나만 있으면 게시일 ±3일) + 체인 겹침 + (금액 유사 또는 이름 약한 유사)."""
     if family(a.incident_type) != family(b.incident_type):
         return False
     di, dp = _days_apart(a.incident_date, b.incident_date), _days_apart(a.published_at, b.published_at)
+    if family(a.incident_type) == "legal":
+        # 법집행·제재 카드는 체인이 없으므로 이름/제목에 같은 고유 토큰(4자 이상)이 있고 게시일이 ±5일이면 LLM 에 묻는다.
+        # 예: DOJ "Two Robinhood Employees Charged" ↔ 블록미디어 "로빈후드 상장 정보로 … 기소" (project="Robinhood")
+        if dp is None or dp > 5:
+            return False
+        wa = _name_words(a); wb = _name_words(b)
+        return bool(wa & wb)
     if di is not None:
         if di > 3:
             return False

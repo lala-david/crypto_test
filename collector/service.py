@@ -177,6 +177,7 @@ class DataService:
             self.meta = {
                 "generated_at": (run[0] if run else sig[1]) or "", "days": len(days), "first_day": days[0] if days else None,
                 "last_day": days[-1] if days else None, "incidents_total": len(merged_all),
+                "first_event_day": min((r["event_date"] for r in merged_all if r.get("event_date")), default=None),
                 "new_total": sum(1 for r in merged_all if not r["followup_of"]),
                 "addresses_total": len({a["address"].lower() for r in merged_all for a in r["addresses"]}),
                 "sdn_addresses": self.store.sdn_count(),
@@ -190,7 +191,7 @@ class DataService:
     def range_bounds(self, days: Optional[str], from_: Optional[str], to: Optional[str]) -> Tuple[str, str]:
         """(시작일, 종료일) — 종료일은 마지막 수집일. 'all' 은 첫 수집일부터."""
         last = self.meta.get("last_day") or date.today().isoformat()
-        first = self.meta.get("first_day") or last
+        first = min(self.meta.get("first_day") or last, self.meta.get("first_event_day") or last)
         if from_ or to:
             return (from_ or first), (to or last)
         if not days or days == "all":

@@ -183,6 +183,25 @@ def keyword_relevant(item: RawItem, kw_cfg: dict) -> bool:
     return keyword_hit(f"{item.title}\n{item.summary_hint}\n{item.text[:5000]}", kw_cfg)
 
 
+def chains_from_text(text: str, kw_cfg: dict, limit: int = 3) -> List[str]:
+    """본문에서 체인 이름(config keywords.chains)을 단어 경계로 찾아 등장 순서대로 돌려준다. 카드 chains 가 비었을 때의 폴백."""
+    names = [str(c) for c in (kw_cfg or {}).get("chains", []) if c]
+    found: List[str] = []
+    low = text or ""
+    for n in sorted(names, key=len, reverse=True):
+        nl = n.lower().rstrip("*")
+        if len(nl) < 3:
+            continue
+        m = re.search(r"(?<![a-z0-9])" + re.escape(nl) + r"(?![a-z0-9])", low, re.I)
+        if m:
+            found.append((m.start(), n.rstrip("*")))
+    out: List[str] = []
+    for _, n in sorted(found):
+        if n not in out:
+            out.append(n)
+    return out[:limit]
+
+
 def build_incident(item: RawItem, out: Optional[EnrichOut], model: str, kw_cfg: dict, note: str = "",
                    ignore_addresses: Optional[Iterable[str]] = None) -> Incident:
     """LLM 결과(있으면) + 정규식 추출 + 소스 구조화 필드를 합쳐 Incident 생성."""
@@ -216,6 +235,8 @@ def build_incident(item: RawItem, out: Optional[EnrichOut], model: str, kw_cfg: 
         inc.project = out.project or s.get("name", "")
         inc.incident_date = out.incident_date or s.get("incident_date")
         inc.chains = out.chains or list(s.get("chains", []))
+        if not inc.chains and inc.incident_type in ("hack_exploit", "private_key_compromise", "rug_pull", "phishing_social_engineering"):
+            inc.chains = chains_from_text(" ".join([item.title or "", out.summary_en or "", out.attack_method_en or "", (item.text or "")[:6000]]), kw_cfg)
         inc.amount_usd = out.amount_usd if out.amount_usd is not None else s.get("amount_usd")
         inc.amount_text = out.amount_text
         inc.attack_method_ko, inc.attack_method_en = clean_text(out.attack_method_ko), clean_text(out.attack_method_en)
