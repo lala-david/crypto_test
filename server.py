@@ -6,7 +6,7 @@
 API (모두 JSON):
   GET /api                      엔드포인트 목록
   GET /api/meta
-  GET /api/incidents?days=30|all&from=&to=&type=&chain=&source=&q=&hide_followups=0&page=1&size=20&sort=day|amount|date
+  GET /api/incidents?days=30|all&from=&to=&type=&chain=&source=&q=&hide_followups=0&basis=event|collected&page=1&size=20&sort=day|amount|date
   GET /api/incidents/{uid}
   GET /api/briefings            GET /api/briefings/{day}
   GET /api/stats?days=30&type=&chain=&source=&q=
@@ -57,7 +57,8 @@ def _int(req: Request, name: str, default: int) -> int:
 
 def _filters(req: Request):
     return dict(days=_p(req, "days", "30"), from_=_p(req, "from"), to=_p(req, "to"), type_=_p(req, "type"), chain=_p(req, "chain"),
-                source=_p(req, "source"), q=_p(req, "q"), hide_followups=bool(_int(req, "hide_followups", 0)))
+                source=_p(req, "source"), q=_p(req, "q"), hide_followups=bool(_int(req, "hide_followups", 0)),
+                basis=("collected" if _p(req, "basis") == "collected" else "event"))
 
 
 async def api_index(req: Request):
@@ -75,13 +76,15 @@ async def incidents(req: Request):
     if sort == "amount":
         rows = sorted(rows, key=lambda r: -(r["amount_usd"] or 0))
     elif sort == "date":
-        rows = sorted(rows, key=lambda r: (r["incident_date"] or r["day"]), reverse=True)
+        rows = sorted(rows, key=lambda r: (r.get("event_date") or r["day"]), reverse=True)
     size = max(1, min(_int(req, "size", 20), 200))
     page = max(1, _int(req, "page", 1))
     items = rows[(page - 1) * size:page * size]
     if _int(req, "light", 1):
         items = [{k: v for k, v in r.items() if k not in LIGHT_DROP} for r in items]
-    return J({"total": len(rows), "page": page, "size": size, "items": items, "facets": svc.facets(rows)})
+    base = [r for r in rows if not r["followup_of"]]
+    return J({"total": len(rows), "new_total": len(base), "amount_total": sum(r["amount_usd"] or 0 for r in base),
+              "page": page, "size": size, "items": items, "facets": svc.facets(rows)})
 
 
 async def incident(req: Request):
@@ -110,8 +113,10 @@ async def briefing(req: Request):
 
 
 async def stats(req: Request):
-    rows = svc.filter(**_filters(req))
-    return J({**svc.stats(rows), "facets": svc.facets(rows)})
+    f = _filters(req)
+    rows = svc.filter(**f)
+    lo, hi = svc.range_bounds(f["days"], f["from_"], f["to"])
+    return J({**svc.stats(rows, lo, hi, f["basis"]), "facets": svc.facets(rows)})
 
 
 async def lookup(req: Request):

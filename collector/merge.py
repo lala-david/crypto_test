@@ -104,6 +104,28 @@ def _keys(i: Incident) -> Set[Tuple[str, str]]:
     return keys
 
 
+def _title_sim(a: str, b: str) -> float:
+    ta, tb = _trigrams((a or "").lower()), _trigrams((b or "").lower())
+    if not ta or not tb:
+        return 0.0
+    return len(ta & tb) / len(ta | tb)
+
+
+def same_legal_release(a: Incident, b: Incident) -> bool:
+    """법집행 카드 전용: 같은 소스가 같은 금액을 7일 안에 다시 낸 보도자료(제목이 닮음)는 같은 사건.
+    예: DOJ 'Surge Takedown Exceeding $245 Million' 이 지역 검찰청별로 재게시되는 경우."""
+    if family(a.incident_type) != "legal" or family(b.incident_type) != "legal":
+        return False
+    if not a.source or a.source != b.source:
+        return False
+    if not (a.amount_usd and b.amount_usd and a.amount_usd == b.amount_usd):
+        return False
+    dp = _days_apart(a.published_at, b.published_at)
+    if dp is None or dp > 7:
+        return False
+    return _title_sim(a.title, b.title) >= 0.5
+
+
 def same_incident(a: Incident, b: Incident) -> bool:
     if a.uid == b.uid:
         return True
@@ -111,6 +133,8 @@ def same_incident(a: Incident, b: Incident) -> bool:
         return True
     if family(a.incident_type) != family(b.incident_type):
         return False
+    if same_legal_release(a, b):
+        return True
     return names_match(a.project or a.title, b.project or b.title) and dates_compatible(a, b)
 
 

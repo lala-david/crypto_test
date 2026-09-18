@@ -69,6 +69,9 @@ def main() -> int:
     ap.add_argument("--no-alert", action="store_true", help="Telegram 알림 생략")
     ap.add_argument("--rebrief", action="store_true", help="브리핑을 다시 생성 (--rebuild-day 와 함께 과거 날짜도 가능)")
     ap.add_argument("--rebuild-day", help="YYYY-MM-DD: 수집 없이 그날의 병합/리포트/브리핑 페이지만 다시 생성")
+    ap.add_argument("--relabel", action="store_true", help="기존 카드 재검증: 규칙 QA 로 걸린 카드를 원문과 함께 LLM 에 재확인해 고친다")
+    ap.add_argument("--relabel-all", action="store_true", help="--relabel 을 규칙에 걸리지 않은 카드에도 적용")
+    ap.add_argument("--relabel-only", help="쉼표로 구분한 QA 플래그: 이 플래그에 걸린 카드만 재검증 (예: relevance_suspect)")
     args = ap.parse_args()
 
     with open(args.config, encoding="utf-8") as f:
@@ -85,6 +88,21 @@ def main() -> int:
 
     store = Store(data_dir)
     http = Http(os.path.join(data_dir, "cache"))
+
+    if args.relabel or args.relabel_all or args.relabel_only:
+        from collector.relabel import run_relabel
+        llm_cfg0 = dict(cfg.get("llm", {}))
+        prov = None if args.no_llm else build_provider(llm_cfg0, args.provider)
+        log.info("=== 재검증 시작 (LLM: %s) ===", prov.describe() if prov else "없음 — 규칙 QA 만")
+        summ = run_relabel(store, http, prov, data_dir, only_flagged=not args.relabel_all, limit=args.limit,
+                           max_tokens=min(4000, int(llm_cfg0.get("max_tokens", 8000))),
+                           only_flags={f.strip() for f in args.relabel_only.split(",") if f.strip()} if args.relabel_only else None)
+        log.info("재검증 결과: %s", json.dumps(summ, ensure_ascii=False))
+        store.export_jsonl(); store.export_state()
+        if summ["days"]:
+            log.info("바뀐 카드가 있는 날짜: %s → 각각 `python run.py --rebuild-day <날짜> --rebrief --no-push` 로 재생성", ", ".join(summ["days"]))
+        print(json.dumps(summ, ensure_ascii=False))
+        return 0
     ctx = SourceContext(http=http, store=store, since=since, keywords=cfg.get("keywords", {}), log=log)
 
     # 0) 대상 소스 결정 (주기)

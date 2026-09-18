@@ -1,12 +1,12 @@
 # 일일 브리핑 아카이브 / Daily Briefing Archive
 
-최신 / Latest: **[2026-09-18](2026-09/2026-09-18.md)** — SBA PPP $245M 사기 적발 등 신규 6건
+최신 / Latest: **[2026-09-18](2026-09/2026-09-18.md)** — 9월 18일 브리핑 · 신규 3건 · 피해 $3.5M · 제재·수사 $25K · 후속 4건
 
 ## 2026-09
 
 | 날짜 | 헤드라인 (KO) | Headline (EN) | 사건 | 리포트 |
 |---|---|---|---:|---|
-| [2026-09-18](2026-09/2026-09-18.md) | SBA PPP $245M 사기 적발 등 신규 6건 | SBA PPP $245M fraud bust, 5 other new incidents | 8/12 | [KO](../reports/2026-09/2026-09-18.ko.md) · [EN](../reports/2026-09/2026-09-18.en.md) |
-| [2026-09-17](2026-09/2026-09-17.md) | 이란 정부 $61M 압류 등 신규 8건 | Iranian govt $61M seizure plus 8 new incidents | 8/17 | [KO](../reports/2026-09/2026-09-17.ko.md) · [EN](../reports/2026-09/2026-09-17.en.md) |
-| [2026-09-16](2026-09/2026-09-16.md) | Liquid Network $320M 탈취 등 신규 8건 | Liquid Network $320M theft, 8 new incidents | 9/16 | [KO](../reports/2026-09/2026-09-16.ko.md) · [EN](../reports/2026-09/2026-09-16.en.md) |
-| [2026-09-15](2026-09/2026-09-15.md) | Liquid Network에서 $320M 탈취, 오늘 신규 28건 | Liquid Network loses $320M; 28 new incidents today | 26/39 | [KO](../reports/2026-09/2026-09-15.ko.md) · [EN](../reports/2026-09/2026-09-15.en.md) |
+| [2026-09-18](2026-09/2026-09-18.md) | 9월 18일 브리핑 · 신규 3건 · 피해 $3.5M · 제재·수사 $25K · 후속 4건 | Sep 18 briefing · 3 new · loss $3.5M · enforcement $25K · 4 follow-ups | 7/12 | [KO](../reports/2026-09/2026-09-18.ko.md) · [EN](../reports/2026-09/2026-09-18.en.md) |
+| [2026-09-17](2026-09/2026-09-17.md) | 9월 17일 브리핑 · 신규 6건 · 피해 $12.9M · 제재·수사 $61M · 후속 1건 | Sep 17 briefing · 6 new · loss $12.9M · enforcement $61M · 1 follow-ups | 7/17 | [KO](../reports/2026-09/2026-09-17.ko.md) · [EN](../reports/2026-09/2026-09-17.en.md) |
+| [2026-09-16](2026-09/2026-09-16.md) | 9월 16일 브리핑 · 신규 6건 · 피해 $39.2M · 제재·수사 $245.1M · 후속 3건 | Sep 16 briefing · 6 new · loss $39.2M · enforcement $245.1M · 3 follow-ups | 9/16 | [KO](../reports/2026-09/2026-09-16.ko.md) · [EN](../reports/2026-09/2026-09-16.en.md) |
+| [2026-09-15](2026-09/2026-09-15.md) | 9월 15일 브리핑 · 신규 26건 · 피해 $503.7M · 제재·수사 $436M | Sep 15 briefing · 26 new · loss $503.7M · enforcement $436M | 26/39 | [KO](../reports/2026-09/2026-09-15.ko.md) · [EN](../reports/2026-09/2026-09-15.en.md) |

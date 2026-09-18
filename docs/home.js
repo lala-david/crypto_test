@@ -1,78 +1,83 @@
-/* 개요: 지표 6 · 일별 건수/금액 · 유형/체인 비중 · 주소 역할 · 피해액 순위 · 소스별 수집 · 최근 사건 · 최신 브리핑 */
+/* 개요: 지표 6 · 일별 건수/금액 · 유형/대표 체인 비중 · 주소 역할 · 금액 상위 10 · 출처별 사건 · 최근 사건 · 최신 브리핑 */
 (() => {
   "use strict";
-  const { $, $$, t, typeName, roleName, srcLabel, esc, fmtInt, fmtPct, money, moneyFull, fmtDate, api, renderNav, renderFoot, applyI18n, bindChrome, columns, hbars, donut, statCard, incidentRow, TABLE_HEAD, bindRows, mdToHtml, typeColorHex, isWeekend, state: K } = KL;
-  const S = { days: "30" };
+  const { $, t, typeName, typeFull, roleName, srcLabel, esc, fmtInt, fmtPct, money, moneyFull, fmtDate, fmtMD, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, basisSeg, columns, hbars, donut, statCard, incidentRow, TABLE_HEAD, tableLegend, bindRows, mdToHtml, typeColorHex, chainName, sw, errorBox, state: K } = KL;
+  const S = { days: "30", basis: "event" };
   let D = null;
 
   async function load() {
     const meta = await api("/api/meta");
     const n = S.days === "all" ? null : +S.days;
+    const last = new Date(meta.last_day + "T00:00:00");
+    const iso = (d) => d.toISOString().slice(0, 10);
+    const prevQ = n ? { from: iso(new Date(last.getTime() - (2 * n - 1) * 864e5)), to: iso(new Date(last.getTime() - n * 864e5)) } : null;
     const [cur, prev, today, recent, briefs] = await Promise.all([
-      api("/api/stats", { days: S.days }),
-      n ? api("/api/stats", { days: n * 2 }) : Promise.resolve(null),
-      api("/api/stats", { from: meta.last_day, to: meta.last_day }),
-      api("/api/incidents", { days: S.days, size: 10 }),
-      api("/api/briefings"),
+      api("/api/stats", { days: S.days, basis: S.basis }), prevQ ? api("/api/stats", { ...prevQ, basis: S.basis }) : Promise.resolve(null),
+      api("/api/stats", { from: meta.last_day, to: meta.last_day, basis: "collected" }), api("/api/incidents", { days: S.days, size: 10, basis: S.basis, sort: S.basis === "event" ? "date" : "day" }), api("/api/briefings"),
     ]);
     const brief = briefs.length ? await api(`/api/briefings/${briefs[0].day}`) : null;
     D = { meta, cur, prev, today, recent: recent.items, facets: recent.facets, brief };
     render();
   }
-  const ratio = (a, b) => (b > 0 ? (a - b) / b : null);
-  const shareTable = (rows, total, keyFmt) => rows.map((r) => `<tr><td>${keyFmt(r)}</td><td class="num">${fmtInt(r.count)}</td><td class="num">${money(r.amount)}</td><td class="num">${fmtPct(r.amount / (total || 1))}</td></tr>`).join("");
+  const delta = (cur, prev, key) => {
+    if (!prev || !prev.collected_days || !prev[key]) return `<span class="faint">${esc(t("vs_prev"))}: -</span>`;
+    const r = (cur - prev[key]) / prev[key];
+    return `<span class="chip ${r > 0 ? "up" : r < 0 ? "down" : ""}">${r > 0 ? "▲" : r < 0 ? "▼" : "="} ${Math.abs(r * 100).toFixed(0)}%</span><span class="faint">${esc(t("vs_prev"))}</span>`;
+  };
 
   function render() {
     renderNav("index.html", D.meta); renderFoot(); applyI18n(); bindChrome(render);
-    $$("#rangeSeg button").forEach((b) => b.classList.toggle("on", b.dataset.range === S.days));
-    const c = D.cur, p = D.prev, daily = c.daily, last14 = daily.slice(-14);
-    const prevOnly = p ? { count: p.total_count - c.total_count, amount: p.total_amount - c.total_amount, addresses: Math.max(0, p.addresses - c.addresses) } : null;
+    rangeSeg($("#rangeSeg"), S.days, (v) => { S.days = v; load(); });
+    basisSeg($("#basisSeg"), S.basis, (v) => { S.basis = v; load(); });
+    const basisLbl = S.basis === "event" ? t("basis_event") : t("basis_collected");
+    const c = D.cur, p = D.prev ? { ...D.prev, collected_days: D.prev.range.collected_days } : null, daily = c.daily, last14 = daily.slice(-14);
     const rangeLbl = S.days === "all" ? t("all") : t("days_n").replace("{n}", S.days);
-    $("#sub").innerHTML = `<span>${esc(fmtDate(D.meta.first_day))} – ${esc(fmtDate(D.meta.last_day))}</span><span class="m">${D.meta.days}${t("unit") ? "일" : "d"}</span><span class="m">${fmtInt(c.total_count)}${esc(t("unit"))}</span><span class="m">${esc(money(c.total_amount))}</span><span class="m">${esc(t("follow"))} ${fmtInt(c.followup_count)}</span>`;
+    $("#sub").innerHTML = `<span>${esc(fmtDate(c.range.from))} – ${esc(fmtDate(c.range.to))}</span><span class="m">${esc(basisLbl)}</span>`;
+    const cnt = (v) => String(Math.round(v));
     $("#stats").innerHTML = [
-      statCard(t("k_today"), fmtInt(D.today.new_count), null, last14.map((d) => d.new)),
-      statCard(`${rangeLbl} ${t("count")}`, fmtInt(c.total_count), prevOnly ? ratio(c.total_count, prevOnly.count) : null, last14.map((d) => d.count)),
-      statCard(`${rangeLbl} ${t("amount")}`, money(c.total_amount), prevOnly ? ratio(c.total_amount, prevOnly.amount) : null, last14.map((d) => d.amount)),
-      statCard(`${rangeLbl} ${t("follow")}`, fmtInt(c.followup_count), null, null),
-      statCard(t("k_addr"), fmtInt(c.addresses), prevOnly ? ratio(c.addresses, prevOnly.addresses) : null, null),
-      statCard(t("k_sdn"), fmtInt(D.meta.sdn_addresses), null, null),
-    ].map((h) => h.replace('class="card stat"', 'class="card stat c2"')).join("");
-    // 일별
-    columns($("#plotCount"), daily.map((d) => ({ label: fmtDate(d.day), short: d.day.slice(5), v: d.count, weekend: isWeekend(d.day), extra: `${t("new_label")} ${d.new}` })), (v) => String(Math.round(v)), t("daily_count"));
-    $("#metaCount").textContent = `Σ ${fmtInt(c.total_count)} · avg ${(c.total_count / Math.max(1, daily.length)).toFixed(1)}/d`;
-    columns($("#plotAmt"), daily.map((d) => ({ label: fmtDate(d.day), short: d.day.slice(5), v: d.amount, weekend: isWeekend(d.day), extra: `${d.count}${t("unit")}` })), money, t("daily_amount"));
+      statCard(`${t("k_latest_new")} · ${fmtMD(D.meta.last_day)}`, fmtInt(D.today.new_count), `<span class="faint">${esc(t("follow"))} ${fmtInt(D.today.followup_count)}</span>`, last14.map((d) => d.new), { title: t("basis_collected") }),
+      statCard(`${t("k_new")} · ${rangeLbl}`, fmtInt(c.new_count), delta(c.new_count, p, "new_count"), last14.map((d) => d.new)),
+      statCard(`${t("k_follow")} · ${rangeLbl}`, fmtInt(c.followup_count), `<span class="faint">${esc(t("all"))} ${fmtInt(c.total_count)}${esc(t("unit"))}</span>`, last14.map((d) => d.count - d.new)),
+      statCard(`${t("k_loss")} · ${rangeLbl}`, money(c.loss_amount), delta(c.loss_amount, p, "loss_amount"), last14.map((d) => d.amount), { title: moneyFull(c.loss_amount) }),
+      statCard(`${t("k_legal")} · ${rangeLbl}`, money(c.legal_amount), `<span class="faint">${fmtInt(c.legal_count)}${esc(t("unit"))}</span>`, last14.map((d) => d.legal), { title: moneyFull(c.legal_amount) }),
+      statCard(`${t("k_addr")} · ${rangeLbl}`, fmtInt(c.addresses), `<span class="faint">${esc(t("k_unknown_amt"))} ${fmtInt(c.unknown_amount_count)}${esc(t("unit"))}</span>`, last14.map((d) => d.addresses || 0)),
+    ].map((h) => h.replace('class="card stat ', 'class="card stat c2 ')).join("");
+    // 일별 (수집일 기준)
+    const bucket = (d, v, extra) => ({ label: fmtMD(d.day), v, extra });
+    columns($("#plotCount"), daily.map((d) => bucket(d, d.count, `${t("new_label")} ${d.new}`)), cnt, t("daily_count"));
+    $("#metaCount").textContent = `${basisLbl} · ${t("daily_avg")} ${(c.total_count / Math.max(1, c.range.collected_days)).toFixed(1)}`;
+    columns($("#plotAmt"), daily.map((d) => bucket(d, d.amount, `${d.count}${t("unit")}`)), money, t("daily_amount"));
     const peak = daily.reduce((a, d) => (d.amount > a.amount ? d : a), { amount: 0 });
-    $("#metaAmt").textContent = `Σ ${money(c.total_amount)} · max ${money(peak.amount)}${peak.day ? " (" + peak.day.slice(5) + ")" : ""}`;
-    // 비중
-    const byType = c.by_type.slice().sort((a, b) => b.count - a.count);
-    donut($("#donutType"), byType.map((x) => ({ k: typeName(x.key), v: x.count, color: typeColorHex(x.key) })), fmtInt(c.total_count), t("count"));
-    $("#metaType").textContent = `${byType.length} ${t("type")}`;
-    const chains = c.by_chain.slice().sort((a, b) => b.count - a.count); const top5 = chains.slice(0, 5), rest = chains.slice(5).reduce((a, x) => a + x.count, 0);
-    const CH = ["#3f7fe8", "#34d399", "#e0521c", "#8f66f0", "#d9408a", "#7a8290"];
-    donut($("#donutChain"), [...top5.map((x, k) => ({ k: x.key, v: x.count, color: CH[k] })), ...(rest ? [{ k: t("all") === "All" ? "Other" : "기타", v: rest, color: CH[5] }] : [])], fmtInt(chains.reduce((a, x) => a + x.count, 0)), t("count"));
-    $("#metaChain").textContent = `${chains.length} ${t("chain")}`;
-    const roles = Object.entries(c.roles || {}).sort((a, b) => b[1] - a[1]);
-    hbars($("#rolesBars"), roles.map(([k, v]) => ({ k: roleName(k), v })), (v) => String(Math.round(v)), t("roles"));
-    $("#metaRoles").textContent = `Σ ${fmtInt(roles.reduce((a, r) => a + r[1], 0))}`;
-    // 순위
-    const top = D.recent.slice().filter((i) => i.amount_usd).sort((a, b) => b.amount_usd - a.amount_usd);
-    const allTop = c.top || [];
-    $("#topTable").innerHTML = `<thead><tr><th class="rank">${esc(t("th_rank"))}</th><th>${esc(t("th_incident"))}</th><th>${esc(t("th_date"))}</th><th class="num">${esc(t("th_amount"))}</th><th class="num">${esc(t("th_share"))}</th><th></th></tr></thead><tbody>${
-      allTop.map((x, k) => `<tr class="link" data-href="incident.html?id=${esc(x.uid)}"><td class="rank ${k < 3 ? "top" : ""}">${k + 1}</td><td><a class="name" href="incident.html?id=${esc(x.uid)}">${esc(x.project)}</a></td><td class="date">${esc(fmtDate(x.incident_date || x.day))}</td><td class="num">${moneyFull(x.amount_usd)}</td><td class="num">${fmtPct(x.amount_usd / (c.total_amount || 1))}</td><td><div class="bar"><i style="width:${Math.round((x.amount_usd / (allTop[0].amount_usd || 1)) * 100)}%"></i></div></td></tr>`).join("")}</tbody>`;
-    $("#metaTop").textContent = `top ${allTop.length} = ${fmtPct(allTop.reduce((a, x) => a + x.amount_usd, 0) / (c.total_amount || 1))}`;
+    $("#metaAmt").textContent = `${basisLbl} · ${t("peak")} ${money(peak.amount)}${peak.day ? " (" + fmtMD(peak.day) + ")" : ""}`;
+    // 비중 (신규 기준)
+    const byType = c.by_type.filter((x) => x.new).sort((a, b) => b.new - a.new);
+    donut($("#donutType"), byType.map((x) => ({ k: typeName(x.key), v: x.new, color: typeColorHex(x.key), title: typeFull(x.key) })), fmtInt(c.new_count), t("new_label"));
+    $("#metaType").textContent = `${t("basis_new")} · ${byType.length} ${t("type")}`;
+    const chains = c.by_chain.filter((x) => x.new).sort((a, b) => b.new - a.new);
+    const CH = ["#3f7fe8", "#34d399", "#e0521c", "#8f66f0", "#d9408a", "#b8800e", "#109e8c", "#7a8290"];
+    donut($("#donutChain"), chains.map((x, k) => ({ k: chainName(x.key), v: x.new, color: x.key === "unknown" ? "#5a6470" : CH[k % CH.length] })), fmtInt(c.new_count), t("new_label"), null, 0.04);
+    $("#metaChain").textContent = `${t("basis_first_chain")} · ${chains.filter((x) => x.key !== "unknown").length} ${t("chain")}`;
+    const roles = Object.entries(c.roles || {}).sort((a, b) => b[1] - a[1]); const rt = roles.reduce((a, r) => a + r[1], 0) || 1;
+    hbars($("#rolesBars"), roles.map(([k, v]) => ({ k: roleName(k), v, pct: v / rt })), cnt, t("roles"));
+    $("#metaRoles").textContent = `${fmtInt(c.addresses)} ${t("addresses")}`;
+    // 금액 상위 10 (신규 기준, 후속 제외)
+    const top = c.top || []; const tot = c.total_amount || 1;
+    $("#topTable").innerHTML = `<thead><tr><th class="rank">${esc(t("th_rank"))}</th><th>${esc(t("th_incident"))}</th><th>${esc(t("th_type"))}</th><th>${esc(t("th_date"))}</th><th class="num">${esc(t("th_amount"))}</th><th class="num">${esc(t("th_share"))}</th><th class="barcol"></th></tr></thead><tbody>${
+      top.map((x, k) => `<tr class="link" data-href="incident.html?id=${esc(x.uid)}"><td class="rank ${k < 3 ? "top" : ""}">${k + 1}</td><td><a class="name" href="incident.html?id=${esc(x.uid)}">${esc(x.project)}</a></td><td><span class="pill" title="${esc(typeFull(x.type))}">${sw(x.type)}${esc(typeName(x.type))}</span></td><td class="date">${esc(fmtDate(x.event_date || x.incident_date || x.day))}</td><td class="num">${moneyFull(x.amount_usd)}</td><td class="num">${fmtPct(x.amount_usd / tot)}</td><td class="barcol"><div class="bar"><i style="width:${Math.round((x.amount_usd / tot) * 100)}%"></i></div></td></tr>`).join("")}</tbody>`;
+    $("#metaTop").textContent = `${t("basis_new")} · ${fmtPct(top.reduce((a, x) => a + x.amount_usd, 0) / tot, 0)}`;
     bindRows($("#topTable"));
-    // 소스
+    // 출처별 사건 (사건당 1회)
     const runAt = Object.fromEntries((D.meta.source_runs || []).map((r) => [r.name, r]));
-    const srcs = Object.entries(D.facets.sources || {}).sort((a, b) => b[1] - a[1]);
-    const srcTotal = srcs.reduce((a, s) => a + s[1], 0);
-    $("#srcTable").innerHTML = `<thead><tr><th>${esc(t("th_source"))}</th><th class="num">${esc(t("th_count"))}</th><th class="num">${esc(t("th_share"))}</th><th>${esc(t("th_last"))}</th></tr></thead><tbody>${
-      srcs.map(([s, n]) => `<tr><td>${esc(srcLabel(s))}</td><td class="num">${fmtInt(n)}</td><td class="num">${fmtPct(n / (srcTotal || 1))}</td><td class="date">${esc(((runAt[s] || {}).last_run_at || "").replace("T", " ").slice(5, 16) || "-")}</td></tr>`).join("")}</tbody><tfoot><tr><td>Σ</td><td class="num">${fmtInt(srcTotal)}</td><td class="num">100%</td><td></td></tr></tfoot>`;
-    $("#metaSrc").textContent = `${srcs.length} src · Σ ${fmtInt(srcTotal)}`;
+    const srcsAll = Object.entries(D.facets.sources || {}).sort((a, b) => b[1] - a[1]); const nInc = D.facets.incidents || 1;
+    const srcs = srcsAll.slice(0, 10), restN = srcsAll.slice(10).length;
+    $("#srcTable").innerHTML = `<thead><tr><th>${esc(t("th_source"))}</th><th class="num">${esc(t("th_count"))}</th><th class="num">${esc(t("coverage"))}</th><th>${esc(t("th_last"))}</th></tr></thead><tbody>${
+      srcs.map(([s, n]) => `<tr><td>${esc(srcLabel(s))}</td><td class="num">${fmtInt(n)}</td><td class="num">${fmtPct(n / nInc, 0)}</td><td class="date">${esc(((runAt[s] || {}).last_run_at || "").replace("T", " ").slice(5, 16) || "-")}</td></tr>`).join("")}${restN ? `<tr><td class="faint">${esc(t("other"))} ${restN}</td><td class="num">${fmtInt(srcsAll.slice(10).reduce((a, s) => a + s[1], 0))}</td><td></td><td></td></tr>` : ""}</tbody>`;
+    $("#metaSrc").textContent = `${srcsAll.length} ${t("th_source")} · ${fmtInt(nInc)}${t("unit")}`;
     // 최근 사건 · 브리핑
     const tb = $("#recentTable"); tb.innerHTML = TABLE_HEAD(true) + `<tbody>${D.recent.map((i) => incidentRow(i, true)).join("")}</tbody>`; bindRows(tb);
+    $("#recentLegend").innerHTML = tableLegend();
     if (D.brief) { $("#briefHeadline").textContent = `${fmtDate(D.brief.day)} · ${D.brief[`headline_${K.lang}`] || D.brief.headline_ko}`; $("#briefBody").innerHTML = mdToHtml(D.brief[`briefing_${K.lang}`] || D.brief.briefing_ko); }
     else { $("#briefHeadline").textContent = ""; $("#briefBody").innerHTML = `<div class="empty">${esc(t("no_data"))}</div>`; }
   }
-  $$("#rangeSeg button").forEach((b) => b.addEventListener("click", () => { S.days = b.dataset.range; load(); }));
-  load().catch((e) => { $("main").insertAdjacentHTML("afterbegin", `<div class="card empty">API 오류: ${esc(e.message)} — server.py 확인</div>`); });
+  load().catch((e) => { $("main").insertAdjacentHTML("afterbegin", errorBox(e)); });
 })();

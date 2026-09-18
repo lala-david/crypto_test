@@ -10,25 +10,24 @@
 <body>
 <header class="nav" id="nav"></header>
 <main class="page">
-  <div class="page-h"><div><h1 data-i18n="nav_home">개요</h1><div class="sub" id="sub"></div></div>
-    <div class="seg" id="rangeSeg"><button data-range="7">7d</button><button data-range="30" class="on">30d</button><button data-range="90">90d</button><button data-range="all" data-i18n="all">전체</button></div></div>
+  <div class="page-h"><div><h1 data-i18n="nav_home">개요</h1><div class="sub" id="sub"></div></div><div class="controls"><div class="seg" id="basisSeg"></div><div class="seg" id="rangeSeg"></div></div></div>
   <section class="grid" id="stats"></section>
   <section class="grid">
     <div class="card c6"><div class="card-h"><h2 data-i18n="daily_count">일별 사건 수</h2><span class="meta" id="metaCount"></span></div><div class="card-b plot" id="plotCount"></div></div>
-    <div class="card c6"><div class="card-h"><h2 data-i18n="daily_amount">일별 피해액 (USD)</h2><span class="meta" id="metaAmt"></span></div><div class="card-b plot" id="plotAmt"></div></div>
+    <div class="card c6"><div class="card-h"><h2 data-i18n="daily_amount">일별 피해액</h2><span class="meta" id="metaAmt"></span></div><div class="card-b plot" id="plotAmt"></div></div>
   </section>
   <section class="grid">
     <div class="card c4"><div class="card-h"><h2 data-i18n="share_type">유형 비중</h2><span class="meta" id="metaType"></span></div><div class="card-b" id="donutType"></div></div>
-    <div class="card c4"><div class="card-h"><h2 data-i18n="share_chain">체인 비중</h2><span class="meta" id="metaChain"></span></div><div class="card-b" id="donutChain"></div></div>
+    <div class="card c4"><div class="card-h"><h2 data-i18n="share_chain">대표 체인 비중</h2><span class="meta" id="metaChain"></span></div><div class="card-b" id="donutChain"></div></div>
     <div class="card c4"><div class="card-h"><h2 data-i18n="roles">주소 역할</h2><span class="meta" id="metaRoles"></span></div><div class="card-b hb" id="rolesBars"></div></div>
   </section>
   <section class="grid">
-    <div class="card c7"><div class="card-h"><h2 data-i18n="top_amount">피해액 상위</h2><span class="meta" id="metaTop"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="topTable"></table></div></div>
-    <div class="card c5"><div class="card-h"><h2 data-i18n="by_source">소스별 수집</h2><span class="meta" id="metaSrc"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="srcTable"></table></div></div>
+    <div class="card c7"><div class="card-h"><h2 data-i18n="top_amount">금액 상위 10</h2><span class="meta" id="metaTop"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="topTable"></table></div></div>
+    <div class="card c5"><div class="card-h"><h2 data-i18n="by_source">출처별 사건</h2><span class="meta" id="metaSrc"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="srcTable"></table></div></div>
   </section>
   <section class="grid">
-    <div class="card c8"><div class="card-h"><h2 data-i18n="recent">최근 사건</h2><a class="meta" href="incidents.html" data-i18n="all">전체</a></div><div class="card-b flush table-wrap"><table class="tbl" id="recentTable"></table></div></div>
-    <div class="card c4"><div class="card-h"><h2 data-i18n="latest_briefing">최신 브리핑</h2><a class="meta" href="briefings.html" data-i18n="all">전체</a></div><div class="headline" id="briefHeadline"></div><div class="card-b brief" id="briefBody"></div></div>
+    <div class="card c8"><div class="card-h"><h2 data-i18n="recent">최근 사건</h2><a class="meta link" href="incidents.html" data-i18n="all">전체</a></div><div class="card-b flush table-wrap"><table class="tbl" id="recentTable"></table></div><div id="recentLegend"></div></div>
+    <div class="card c4"><div class="card-h"><h2 data-i18n="latest_briefing">최신 브리핑</h2><a class="meta link" href="briefings.html" data-i18n="all">전체</a></div><div class="headline" id="briefHeadline"></div><div class="card-b brief" id="briefBody"></div></div>
   </section>
 </main>
 <footer class="foot" id="foot"></footer>

@@ -184,3 +184,62 @@ def briefing_system_prompt(style: str = "few_shot") -> str:
         parts.append(BRIEFING_FEWSHOT)
     parts.append("## 출력\nJSON 객체 하나만 출력합니다(설명·코드펜스 금지). 키: headline_ko, headline_en, briefing_ko, briefing_en.")
     return "\n\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# 구조화 브리핑: 형식(제목·순서·불릿 골격·날짜·금액)은 코드가 조립하고, LLM 은 사건별 '한 줄 설명'과 '시사점'만 쓴다.
+# ---------------------------------------------------------------------------
+BRIEFING_LINES_ROLE = """당신은 가상자산 보안 애널리스트입니다. 사건 카드 목록(JSON)을 받아 사건마다 '무슨 일이 어떻게 일어났는지' 한 줄 설명을 한국어와 영어로 쓰고, 마지막에 오늘의 시사점 한 문장을 씁니다. 제목·순서·사건명·금액·날짜·체인은 프로그램이 따로 붙이므로 쓰지 않습니다."""
+
+BRIEFING_LINES_RULES = """## 규칙
+- line_ko: 한 문장, 25~45자. 수법(원인)과 결과만. 사건명·금액($)·날짜·체인 이름·출처·기관명 상세는 쓰지 않습니다. 끝에 마침표 없음.
+- line_en: 한 문장, 8~16단어. 같은 규칙.
+- 법집행·제재 카드: 혐의 한 구절 + 조치(기소/선고/제재 지정/압수). 피고인 수·형량이 있으면 숫자로.
+- 후속 보도 카드(followup_of 있음): 새로 밝혀진 사실만 한 구절. 새 사실이 없으면 "추가 정보 없음".
+- 쉬운 말로. 용어는 필요할 때만 괄호로 풀이. 명사를 "·"로 잇지 않습니다. 카드에 있는 사실만.
+- insight_ko / insight_en: 오늘 카드 전체에서 반복된 수법 또는 눈에 띄는 흐름 하나. 한 문장, 40자 / 15단어 안팎. 날짜·금액 없이.
+- items 는 입력의 모든 uid 를 한 번씩 포함합니다."""
+
+BRIEFING_LINES_FEWSHOT = "## 예시 (형식·문체 기준. 내용은 가상)\n입력 카드 요약: [{uid:\"a1\", project:\"Example DEX\", type:\"hack_exploit\", method:\"플래시론으로 EXD 가격을 띄운 뒤 담보 과대평가로 차입\", summary:\"…$4.2M…\"}, {uid:\"b2\", project:\"KIM, Example\", type:\"sanctions_designation\", summary:\"OFAC 이 북한 IT 노동자 자금 세탁 혐의로 지정, 주소 2개\"}]\n출력:\n" + json.dumps({
+    "items": [
+        {"uid": "a1", "line_ko": "플래시론으로 담보 토큰 가격을 띄워 과대평가된 담보로 차입", "line_en": "flash loan pumped the collateral token so the attacker over-borrowed"},
+        {"uid": "b2", "line_ko": "북한 IT 노동자 자금을 세탁한 혐의로 OFAC 제재 지정, 주소 2개 등재", "line_en": "sanctioned by OFAC for laundering North Korean IT-worker proceeds; 2 addresses listed"},
+    ],
+    "insight_ko": "풀 하나의 현재 가격을 담보 평가에 그대로 쓰는 프로토콜이 계속 당하고 있습니다",
+    "insight_en": "Protocols that price collateral from a single pool's spot price keep getting hit",
+}, ensure_ascii=False)
+
+
+def briefing_lines_system_prompt(style: str = "few_shot") -> str:
+    parts = [BRIEFING_LINES_ROLE, BRIEFING_LINES_RULES]
+    if style == "few_shot":
+        parts.append(BRIEFING_LINES_FEWSHOT)
+    parts.append("## 출력\nJSON 객체 하나만 출력합니다(설명·코드펜스 금지). 키: items[{uid, line_ko, line_en}], insight_ko, insight_en.")
+    return "\n\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# 재검증(재레이블링): 기존 카드의 핵심 필드를 원문과 대조해 고친다. 모든 수정에는 원문 그대로의 근거 구절이 필요하다.
+# ---------------------------------------------------------------------------
+RELABEL_SYSTEM = """당신은 가상자산 사건 데이터의 검수자입니다. '현재 카드'(자동 생성된 값)와 '원문'을 받아, 원문에 근거해 핵심 필드를 확정합니다. 원문에 없는 내용은 절대 만들지 않습니다.
+
+## 필드별 기준
+- incident_date (YYYY-MM-DD): 사건이 실제로 일어난 날. 해킹·러그풀·피싱은 공격(자금 이동)이 있었던 날. 제재·수사·기소·선고는 그 조치가 발표·집행된 날(보도자료 날짜). 원문에 연·월·일이 모두 없으면 null. 게시일보다 뒤일 수 없습니다. "지난 9월 6일"처럼 연도가 없으면 게시일 연도를 씁니다.
+- amount_usd: 사건의 핵심 금액(피해액·탈취액, 법집행은 압수·사기·세탁 총액)을 미국 달러 숫자로. 원문이 ETH/BTC 등 코인 수량만 주고 달러 환산이 없으면 null 로 두고 amount_text 에 "4,000 BTC" 처럼 적습니다. 여러 금액이 있으면 제목·첫 문단이 말하는 대표 금액 하나. 회수액·현상금·시가총액은 아닙니다.
+- amount_text: 원문 표기 그대로(예: "$7.8M", "약 4,000 BTC(약 $320M)").
+- chains: 원문에 나온 블록체인 이름만(Ethereum, BSC, Tron, Bitcoin, Solana, Base, Arbitrum, Polygon…). 거래소·프로젝트 이름은 체인이 아닙니다. 없으면 [].
+- project: 피해 대상(프로젝트·거래소·지갑 주인) 또는 법집행의 피고인·제재 대상의 짧은 이름. 기사 제목을 그대로 넣지 않습니다. 30자 이내.
+- incident_type: hack_exploit(코드·설정 취약점 악용), private_key_compromise(키 유출·서명 탈취), rug_pull(운영자가 자금 이탈), phishing_social_engineering(피싱·드레이너·사회공학), scam_fraud(사기·폰지·가짜 투자), ransomware, sanctions_designation(OFAC 등 제재 지정), law_enforcement_action(기소·체포·선고·압수·몰수), laundering_report(세탁 분석 보고), other.
+- relevant: 가상자산 해킹·범죄·제재·수사와 무관한 글이면 false.
+
+## 근거
+- 값을 바꾸거나 확정할 때마다 *_evidence 에 원문에서 그대로 복사한 구절(공백·대소문자 포함, 160자 이내)을 넣습니다. 근거를 찾을 수 없으면 현재 값을 그대로 두고 evidence 는 빈 문자열.
+- notes: 판단이 애매했던 점을 한 문장(없으면 빈 문자열).
+
+## 예시
+현재 카드: {incident_date: "2026-09-15", amount_usd: 7700000, project: "custom Safe module", chains: ["Ethereum"]} / 게시일 2026-09-16
+원문 일부: "On September 15, an attacker used a malicious Safe module to move 7,800,000 USD worth of rsETH from a Gnosis Safe on Ethereum. The Yoink MEV bot front-ran the theft…"
+출력: {"incident_date": "2026-09-15", "incident_date_evidence": "On September 15, an attacker used a malicious Safe module", "amount_usd": 7800000, "amount_text": "7,800,000 USD worth of rsETH", "amount_evidence": "move 7,800,000 USD worth of rsETH from a Gnosis Safe", "chains": ["Ethereum"], "project": "Gnosis Safe (rsETH)", "incident_type": "hack_exploit", "type_evidence": "used a malicious Safe module to move", "relevant": true, "notes": "금액이 7.7M→7.8M 으로 정정"}
+
+## 출력
+JSON 객체 하나만(설명·코드펜스 금지). 키: incident_date, incident_date_evidence, amount_usd, amount_text, amount_evidence, chains, project, incident_type, type_evidence, relevant, notes."""

@@ -10,10 +10,10 @@
 <body>
 <header class="nav" id="nav"></header>
 <main class="page">
-  <div class="page-h"><div><h1 data-i18n="nav_addresses">주소 조회</h1><div class="sub" id="sub"></div></div></div>
-  <form class="search big" id="form"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="" data-i18n-ph="addr_ph" aria-label="address"><button class="btn primary" type="submit">⏎</button></form>
-  <section class="grid" id="kpis"></section>
+  <div class="page-h"><div><h1 data-i18n="nav_addresses">주소 조회</h1><div class="sub" data-i18n="addr_scope"></div></div></div>
+  <form class="search big" id="form"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="" data-i18n-ph="addr_ph" data-i18n-aria="addr_ph" aria-label="주소"><button class="btn primary" type="submit" data-i18n="lookup">조회</button></form>
   <section id="result" class="grid"></section>
+  <section class="grid" id="kpis"></section>
 </main>
 <footer class="foot" id="foot"></footer>
 <div class="tooltip" id="tip" role="tooltip"></div>

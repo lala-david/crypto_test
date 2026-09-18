@@ -11,11 +11,11 @@
 <header class="nav" id="nav"></header>
 <main class="page">
   <div class="page-h"><div><h1 data-i18n="nav_briefings">브리핑</h1><div class="sub" id="sub"></div></div></div>
-  <section class="grid">
+  <section class="grid start">
     <div class="card c3"><div class="card-h"><h2 data-i18n="day">날짜</h2><span class="meta" id="metaDays"></span></div><ul class="day-list" id="dayList"></ul></div>
-    <div class="c9" style="grid-column: span 9; display: grid; gap: 12px; min-width: 0">
+    <div style="grid-column: span 9; display: grid; gap: 12px; min-width: 0">
       <div class="card"><div class="card-h"><h2 id="briefTitle"></h2><span class="meta" id="briefMeta"></span></div><div class="headline" id="briefHeadline"></div><div class="card-b brief" id="briefBody"></div></div>
-      <div class="card"><div class="card-h"><h2 data-i18n="recent">사건</h2><span class="meta" id="metaDay"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="dayTable"></table></div></div>
+      <div class="card"><div class="card-h"><h2 data-i18n="day_incidents">당일 사건</h2><span class="meta" id="metaDay"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="dayTable"></table></div><div id="dayLegend"></div></div>
     </div>
   </section>
 </main>
