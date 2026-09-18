@@ -20,7 +20,8 @@
     render();
   }
   const delta = (cur, prev, key) => {
-    if (!prev || !prev.collected_days || !prev[key]) return `<span class="faint">${esc(t("vs_prev"))}: -</span>`;
+    // 이전 기간에 사건이 5건 미만이면 비율이 무의미하므로 표시하지 않는다
+    if (!prev || !prev.collected_days || !prev[key] || (prev.new_count || 0) < 5) return `<span class="faint">${esc(t("vs_prev"))}: -</span>`;
     const r = (cur - prev[key]) / prev[key];
     return `<span class="chip ${r > 0 ? "up" : r < 0 ? "down" : ""}">${r > 0 ? "▲" : r < 0 ? "▼" : "="} ${Math.abs(r * 100).toFixed(0)}%</span><span class="faint">${esc(t("vs_prev"))}</span>`;
   };
@@ -76,7 +77,7 @@
     // 최근 사건 · 브리핑
     const tb = $("#recentTable"); tb.innerHTML = TABLE_HEAD(true) + `<tbody>${D.recent.map((i) => incidentRow(i, true)).join("")}</tbody>`; bindRows(tb);
     $("#recentLegend").innerHTML = tableLegend();
-    if (D.brief) { $("#briefHeadline").textContent = `${fmtDate(D.brief.day)} · ${D.brief[`headline_${K.lang}`] || D.brief.headline_ko}`; $("#briefBody").innerHTML = mdToHtml(D.brief[`briefing_${K.lang}`] || D.brief.briefing_ko); }
+    if (D.brief) { $("#briefHeadline").textContent = D.brief[`headline_${K.lang}`] || D.brief.headline_ko; $("#briefBody").innerHTML = mdToHtml(D.brief[`briefing_${K.lang}`] || D.brief.briefing_ko); }
     else { $("#briefHeadline").textContent = ""; $("#briefBody").innerHTML = `<div class="empty">${esc(t("no_data"))}</div>`; }
   }
   load().catch((e) => { $("main").insertAdjacentHTML("afterbegin", errorBox(e)); });
