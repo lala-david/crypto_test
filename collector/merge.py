@@ -135,7 +135,15 @@ def same_incident(a: Incident, b: Incident) -> bool:
         return False
     if same_legal_release(a, b):
         return True
-    return names_match(a.project or a.title, b.project or b.title) and dates_compatible(a, b)
+    if names_match(a.project or a.title, b.project or b.title) and dates_compatible(a, b):
+        return True
+    # 같은 피해 대상(정규화 이름이 완전히 같음)에 대한 보도가 14일 안에 이어지면 같은 사건의 후속으로 본다
+    # (예: Revolut 개인정보 유출 9.11 → 협박·몸값 요구 9.17)
+    na, nb = normalize_name(a.project or a.title), normalize_name(b.project or b.title)
+    if na and na == nb and len(na) >= 4:
+        dp = _days_apart(a.incident_date or a.published_at, b.incident_date or b.published_at)
+        return dp is not None and dp <= 14
+    return False
 
 
 _LEGAL_STOP = {"district", "attorney", "national", "charged", "guilty", "pleads", "sentenced", "indicted", "office", "united", "states",
