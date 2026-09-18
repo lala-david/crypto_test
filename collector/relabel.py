@@ -19,6 +19,7 @@ from typing import Dict, List, Optional, Tuple
 
 from .http import Http
 from .llm import LLMProvider
+from .enrich import is_stale_reference
 from .models import INCIDENT_TYPES, Incident
 from .prompts import RELABEL_SYSTEM
 from .store import Store
@@ -76,6 +77,8 @@ def qa_flags(inc: Incident, text: str = "") -> List[str]:
     pub = (inc.published_at or "")[:10]
     day = (inc.collected_at or "")[:10]
     idt = inc.incident_date
+    if is_stale_reference(idt, inc.published_at, inc.incident_type):
+        flags.append("stale_reference")
     if not idt:
         flags.append("no_incident_date")
     else:
@@ -296,6 +299,16 @@ def run_relabel(store: Store, http: Http, provider: Optional[LLMProvider], data_
                 summary["flags"][f] = summary["flags"].get(f, 0) + 1
             if flags:
                 summary["flagged"] += 1
+            if "stale_reference" in flags and inc.relevant:
+                # 규칙만으로 확정: 회고성 기사 → 신규 사건 아님 (LLM 불필요)
+                inc.relevant = False
+                inc.relevance_reason = "회고성 기사: 사건일이 게시일보다 1년 이상 이전"
+                inc.enrich_note = (inc.enrich_note + " | " if inc.enrich_note else "") + "relabel: stale_reference"
+                store.save_incident(inc)
+                summary["changed"] += 1
+                summary["days"].add(inc.collected_at[:10])
+                lf.write(json.dumps({"ts": datetime.now().isoformat(timespec="seconds"), "uid": inc.uid, "flags": flags, "changed": ["relevant→false (stale_reference)"], "project": inc.project}, ensure_ascii=False) + "\n")
+                continue
             if only_flagged and not flags:
                 continue
             if only_flags and not (set(flags) & only_flags):

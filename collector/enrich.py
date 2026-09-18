@@ -183,6 +183,21 @@ def keyword_relevant(item: RawItem, kw_cfg: dict) -> bool:
     return keyword_hit(f"{item.title}\n{item.summary_hint}\n{item.text[:5000]}", kw_cfg)
 
 
+_ATTACK_FAMILY = {"hack_exploit", "private_key_compromise", "rug_pull", "phishing_social_engineering", "scam_fraud", "ransomware"}
+
+
+def is_stale_reference(incident_date, published_at, incident_type, max_days: int = 365) -> bool:
+    """사건일이 게시일보다 1년 이상 이전인 공격 기사 = 과거 사건을 되짚는 회고 기사(예: 2026-09 에 나온 Bybit 2025-02 해킹 기사)."""
+    if not incident_date or not published_at or incident_type not in _ATTACK_FAMILY:
+        return False
+    try:
+        d0 = datetime.strptime(incident_date[:10], "%Y-%m-%d")
+        d1 = datetime.strptime(published_at[:10], "%Y-%m-%d")
+    except ValueError:
+        return False
+    return (d1 - d0).days > max_days
+
+
 def chains_from_text(text: str, kw_cfg: dict, limit: int = 3) -> List[str]:
     """본문에서 체인 이름(config keywords.chains)을 단어 경계로 찾아 등장 순서대로 돌려준다. 카드 chains 가 비었을 때의 폴백."""
     names = [str(c) for c in (kw_cfg or {}).get("chains", []) if c]
@@ -235,6 +250,9 @@ def build_incident(item: RawItem, out: Optional[EnrichOut], model: str, kw_cfg: 
         inc.project = out.project or s.get("name", "")
         inc.incident_date = out.incident_date or s.get("incident_date")
         inc.chains = out.chains or list(s.get("chains", []))
+        if is_stale_reference(inc.incident_date, item.published_at, inc.incident_type):
+            inc.relevant = False
+            inc.relevance_reason = "회고성 기사: 사건일이 게시일보다 1년 이상 이전 (신규 사건 아님)"
         if not inc.chains and inc.incident_type in ("hack_exploit", "private_key_compromise", "rug_pull", "phishing_social_engineering"):
             inc.chains = chains_from_text(" ".join([item.title or "", out.summary_en or "", out.attack_method_en or "", (item.text or "")[:6000]]), kw_cfg)
         inc.amount_usd = out.amount_usd if out.amount_usd is not None else s.get("amount_usd")
