@@ -21,7 +21,7 @@ from .http import Http
 from .llm import LLMProvider
 from .enrich import is_stale_reference
 from .models import INCIDENT_TYPES, Incident
-from .prompts import RELABEL_SYSTEM
+from .prompts import RELABEL_SYSTEM, REVIEW_SYSTEM
 from .store import Store
 from .textextract import html_to_text
 
@@ -335,5 +335,112 @@ def run_relabel(store: Store, http: Http, provider: Optional[LLMProvider], data_
             log.info("[relabel] %s | flags=%s | changed=%s | rejected=%s", (inc.project or inc.title)[:40], flags, changed, rejected)
             lf.write(json.dumps({"ts": datetime.now().isoformat(timespec="seconds"), "uid": inc.uid, "flags": flags, "before": before,
                                  "after": _card_view(inc), "changed": changed, "rejected": rejected, "llm_out": out}, ensure_ascii=False) + "\n")
+    summary["days"] = sorted(summary["days"])
+    return summary
+
+
+# ---------------------------------------------------------------------------
+# 사건 여부 판정(review): 모든 relevant 카드를 같은 기준으로 LLM 에 묻고, 확신도 0.8 이상의 제외 판정만 적용한다.
+# ---------------------------------------------------------------------------
+REVIEW_CATEGORIES = ["new_attack", "new_enforcement", "sanctions", "laundering_report", "exchange_self_report", "court_procedure",
+                     "retrospective", "general_crime_no_crypto", "market_or_opinion", "duplicate_or_update_only", "other"]
+EXCLUDE_CATEGORIES = {"exchange_self_report", "court_procedure", "retrospective", "general_crime_no_crypto", "market_or_opinion"}
+REVIEW_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "is_new_incident": {"type": "boolean"}, "category": {"type": "string", "enum": REVIEW_CATEGORIES},
+        "crypto_involved": {"type": "boolean"}, "amount_is_loss": {"type": "boolean"},
+        "confidence": {"type": "number"}, "evidence": {"type": "string"}, "reason": {"type": "string"},
+    },
+    "required": ["is_new_incident", "category", "crypto_involved", "amount_is_loss", "confidence", "evidence", "reason"],
+    "additionalProperties": False,
+}
+
+
+def _review_card(inc: Incident, text: str) -> str:
+    card = {"source": inc.source, "title": inc.title, "published_at": inc.published_at, "project": inc.project, "incident_type": inc.incident_type,
+            "incident_date": inc.incident_date, "chains": inc.chains, "amount_usd": inc.amount_usd, "amount_text": inc.amount_text,
+            "summary_ko": inc.summary_ko[:600], "attack_method_ko": inc.attack_method_ko[:300], "background_ko": inc.background_ko[:300],
+            "addresses": len(inc.addresses), "tags": inc.tags[:6]}
+    return "## 카드\n" + json.dumps(card, ensure_ascii=False) + "\n## 원문 일부(카드와 무관하면 무시)\n" + (text[:6000] if text else "(없음)")
+
+
+def _save_retry(store: Store, inc: Incident) -> None:
+    import sqlite3, time
+    for _ in range(6):
+        try:
+            store.save_incident(inc)
+            return
+        except sqlite3.OperationalError:
+            time.sleep(1)
+    store.save_incident(inc)
+
+
+def run_review(store: Store, http: Http, provider: LLMProvider, data_dir: str, limit: int = 0, max_tokens: int = 1500,
+               min_conf: float = 0.8, include_irrelevant: bool = False) -> dict:
+    """모든 카드에 '새 사건인가' 를 묻는다. 제외 판정은 confidence ≥ min_conf 일 때만 적용. 결과는 data/review_log.jsonl."""
+    from .store import incident_from_dict
+    q = "SELECT json FROM incidents ORDER BY collected_at" if include_irrelevant else "SELECT json FROM incidents WHERE relevant=1 ORDER BY collected_at"
+    cards = [incident_from_dict(json.loads(r[0])) for r in store.conn.execute(q).fetchall()]
+    if include_irrelevant:
+        # 키워드 필터로 걸러진 잡음은 빼고, 사람이 손으로 제외했거나 규칙/LLM 이 뒤늦게 제외한 카드만 다시 판정한다(복구 검증용)
+        cards = [c for c in cards if not c.relevant and re.search(r"재검토|재검증|회고성|LLM 판정|relabel|review", c.relevance_reason or "")]
+    log_path = os.path.join(data_dir, "review_log.jsonl")
+    summary = {"checked": 0, "excluded": 0, "restored": 0, "amount_cleared": 0, "low_confidence": 0, "categories": {}, "days": set(), "errors": 0}
+    with open(log_path, "a", encoding="utf-8") as lf:
+        for k, inc in enumerate(cards):
+            if limit and k >= limit:
+                break
+            summary["checked"] += 1
+            text = fetch_text(http, inc, max_chars=8000)
+            try:
+                out = provider.complete_json(REVIEW_SYSTEM, _review_card(inc, text), REVIEW_SCHEMA, max_tokens)
+            except Exception as e:
+                log.error("review LLM 실패 %s: %s", inc.uid, str(e)[:200])
+                out = None
+            if not out:
+                summary["errors"] += 1
+                log.warning("[review] %s | LLM 이 JSON 을 내놓지 않음(토큰 부족/거부)", (inc.project or inc.title)[:40])
+                continue
+            cat = out.get("category", "other")
+            conf = float(out.get("confidence") or 0)
+            # 하네스 규칙이 LLM 판정보다 우선한다:
+            #  (1) 사건일이 게시일보다 1년 이상 이전이면 회고 기사  (2) 가상자산이 수단·대상이 아니면 일반 범죄
+            #  (3) 법집행·제재 카테고리인데 카드와 원문 어디에도 가상자산 단어가 없으면 일반 범죄
+            blob = " ".join([inc.title or "", inc.summary_ko or "", inc.summary_en or "", inc.attack_method_ko or "", text or ""])
+            if is_stale_reference(inc.incident_date, inc.published_at, inc.incident_type):
+                out = dict(out, is_new_incident=False, category="retrospective", confidence=max(conf, 0.9), reason="규칙: 사건일이 게시일보다 1년 이상 이전 · " + (out.get("reason") or ""))
+            elif out.get("crypto_involved") is False or (cat in ("new_enforcement", "sanctions", "laundering_report") and not CRYPTO_WORDS.search(blob)):
+                out = dict(out, is_new_incident=False, category="general_crime_no_crypto", confidence=max(conf, 0.9), reason="규칙: 가상자산이 사건의 수단·대상이 아님 · " + (out.get("reason") or ""))
+            cat = out.get("category", "other")
+            conf = float(out.get("confidence") or 0)
+            summary["categories"][cat] = summary["categories"].get(cat, 0) + 1
+            changed = []
+            if out.get("is_new_incident") is False:
+                if conf >= min_conf and cat in EXCLUDE_CATEGORIES:
+                    if inc.relevant:
+                        inc.relevant = False
+                        inc.relevance_reason = f"LLM 판정: {cat} — {out.get('reason', '')}"[:220]
+                        changed.append("relevant→false")
+                        summary["excluded"] += 1
+                else:
+                    summary["low_confidence"] += 1
+            elif out.get("is_new_incident") is True and not inc.relevant and conf >= min_conf and include_irrelevant:
+                inc.relevant = True
+                inc.relevance_reason = f"LLM 판정: {cat}"
+                changed.append("relevant→true")
+                summary["restored"] += 1
+            if out.get("amount_is_loss") is False and conf >= min_conf and inc.amount_usd and inc.relevant:
+                inc.amount_text = inc.amount_text or f"${inc.amount_usd:,.0f}"
+                inc.amount_usd = None
+                changed.append("amount_usd→null (not a loss)")
+                summary["amount_cleared"] += 1
+            if changed:
+                inc.enrich_note = (inc.enrich_note + " | " if inc.enrich_note else "") + "review " + datetime.now().strftime("%m-%d") + ": " + ",".join(changed)
+                _save_retry(store, inc)
+                summary["days"].add(inc.collected_at[:10])
+            log.info("[review] %-34s | %-24s | new=%s conf=%.2f | %s", (inc.project or inc.title)[:34], cat, out.get("is_new_incident"), conf, ",".join(changed) or "-")
+            lf.write(json.dumps({"ts": datetime.now().isoformat(timespec="seconds"), "uid": inc.uid, "project": inc.project, "source": inc.source,
+                                 "day": inc.collected_at[:10], "out": out, "changed": changed}, ensure_ascii=False) + "\n")
     summary["days"] = sorted(summary["days"])
     return summary

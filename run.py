@@ -72,6 +72,8 @@ def main() -> int:
     ap.add_argument("--relabel", action="store_true", help="기존 카드 재검증: 규칙 QA 로 걸린 카드를 원문과 함께 LLM 에 재확인해 고친다")
     ap.add_argument("--relabel-all", action="store_true", help="--relabel 을 규칙에 걸리지 않은 카드에도 적용")
     ap.add_argument("--relabel-only", help="쉼표로 구분한 QA 플래그: 이 플래그에 걸린 카드만 재검증 (예: relevance_suspect)")
+    ap.add_argument("--review", action="store_true", help="모든 카드에 대해 로컬 LLM 으로 '새 사건인가' 판정(확신도 0.8 이상 제외만 적용)")
+    ap.add_argument("--review-all", action="store_true", help="--review 를 이미 제외된 카드에도 적용(복구 가능)")
     args = ap.parse_args()
 
     with open(args.config, encoding="utf-8") as f:
@@ -88,6 +90,17 @@ def main() -> int:
 
     store = Store(data_dir)
     http = Http(os.path.join(data_dir, "cache"))
+
+    if args.review or args.review_all:
+        from collector.relabel import run_review
+        llm_cfg0 = dict(cfg.get("llm", {}))
+        prov = build_provider(llm_cfg0, args.provider)
+        log.info("=== 사건 여부 판정 시작 (LLM: %s) ===", prov.describe())
+        summ = run_review(store, http, prov, data_dir, limit=args.limit, include_irrelevant=args.review_all, max_tokens=int(llm_cfg0.get("max_tokens", 8000)))
+        log.info("판정 결과: %s", json.dumps(summ, ensure_ascii=False))
+        store.export_jsonl(); store.export_state()
+        print(json.dumps(summ, ensure_ascii=False))
+        return 0
 
     if args.relabel or args.relabel_all or args.relabel_only:
         from collector.relabel import run_relabel
