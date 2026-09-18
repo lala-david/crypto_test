@@ -1,4 +1,15 @@
 ﻿chain,address,role,note,source,project,incident_date,first_seen_at,url
+OSMOSIS,osmo1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8vtzltn,victim,Osmosis address holding frozen allBTC,rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
+NOMIC,nomic1kq2rzz6fq2q7fsu75a9g7cpzjeanmk685ak9g7,unknown,Sender of all 25 outbound IBC packet transfers to Osmosis,rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
+NOMIC,nomic1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8cgz4wt,unknown,Transaction signer for IBC packets,rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
+NOBLE,noble1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8vny890,laundering,Receiver of USDC from Osmosis via IBC,rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
+AXELAR,axelar1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8q788kq,unknown,Axelar address involved in IBC routing,rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
+ETH,0x8f36fd9ffc0a8ca373aa7a4787292536a489d2b5,attacker,"Ethereum beneficiary of proceeds, also Tornado Cash router",rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
+ETHEREUM,0x75b42eceb283eaa88303d23bca8f9ccc6c5579cdfc1e8c757ea1e33118dd125b,unknown,Ethereum address receiving ETH from beneficiary,rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
+ETHEREUM,0xe051dc2bbb37b1510faecaeace9288ca5bc0deda9562bdfe164643d268e69236,unknown,Ethereum address receiving ETH from beneficiary,rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
+ETHEREUM,0x3dc170230bbbaab36b0bbfb0201ba705d09448be9db973c3725a72577e54ae1a,unknown,Ethereum address receiving ETH from beneficiary,rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
+ETHEREUM,0x6426edf655e833c2544a5541faceadb22d8d7c9a758432b409932155b6b4148f,unknown,Ethereum address receiving ETH from beneficiary,rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
+NOMIC,Nomic1rk07saqmvfle50h4h9hul00g67xzrcc5ytfxjm,attacker,"Address circulated as ""the exploiter""",rekt,Osmosis,2026-06-25,2026-09-19T02:01:57,https://rekt.news/nomic-rekt
 ETH,0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b0,unknown,Example exploit tx,defihacklabs,RsETHSafeModule,2026-09-15,2026-09-18T10:02:22,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/RsETHSafeModule_exp.sol
 ETH,0x40E93a52F6Af9fCD3b476aeDADD7FeABD9f7AbA8,victim,Victim Safe (whale)      0x40E93a52F6Af9fCD3b476aeDADD7FeABD,defihacklabs,RsETHSafeModule,2026-09-15,2026-09-18T10:02:22,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/RsETHSafeModule_exp.sol
 ETH,0x4f0055926c839D1d960a82CBF84E2eE933958ebC,victim,Vulnerable Router        0x4f0055926c839D1d960a82CBF84E2eE93,defihacklabs,RsETHSafeModule,2026-09-15,2026-09-18T10:02:22,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/RsETHSafeModule_exp.sol
