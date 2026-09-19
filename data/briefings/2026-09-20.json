@@ -1,0 +1,15 @@
+{
+ "headline_ko": "9월 20일 브리핑 · 신규 1건",
+ "headline_en": "Sep 20 briefing · 1 new",
+ "briefing_ko": "- **소액·미상 1건** — [Blink Wallet](https://x.com/blinkbtc/status/2101290680584695956) -\n- **시사점** — 관리형 계정 무단 접근을 통한 자금 탈취 시제가 계속 나타나고 있다.",
+ "briefing_en": "- **Smaller / unknown (1)** — [Blink Wallet](https://x.com/blinkbtc/status/2101290680584695956) -\n- **Takeaway** — Unauthorized access to managed accounts remains a common vector for stealing crypto funds.",
+ "counts": {
+  "new": 1,
+  "followups": 0,
+  "major": 0,
+  "minor": 1,
+  "loss_usd": 0,
+  "legal_usd": 0
+ },
+ "format": "structured-v2"
+}
