@@ -1,14 +1,14 @@
 {
- "headline_ko": "9월 19일 브리핑 · 신규 1건 · 피해 $3.1M · 후속 1건",
- "headline_en": "Sep 19 briefing · 1 new · loss $3.1M · 1 follow-ups",
- "briefing_ko": "- **[Osmosis](https://rekt.news/nomic-rekt)** · Cosmos · 해킹 · **$3.1M** · 6.25 — 중복 mint으로 무담보 nBTC를 만들고, allBTC로 교환해 3.15 M달러 손실을 일으켰다\n- **후속 1건** — [AI Bot Lecture Scam](https://www.tokenpost.kr/news/blockchain/410502) (첫 보도 9.16, TRM Labs가 9월 14일에 탈취 사실을 공개하고, 6개 주소를…)\n- **시사점** — 스마트 계약 함수 결함을 이용한 무담보 토큰 발행·탈취가 계속 발생하고 있다.",
- "briefing_en": "- **[Osmosis](https://rekt.news/nomic-rekt)** · Cosmos · Hack · **$3.1M** · Jun 25 — Attacker double-minted nBTC via ibc_deliver and swapped it…\n- **Follow-ups (1)** — [AI Bot Lecture Scam](https://www.tokenpost.kr/news/blockchain/410502) (first 9.16, TRM Labs disclosed the theft on Sep 14 and is…)\n- **Takeaway** — Exploiting contract function bugs to mint uncollateralized tokens and steal funds remains a common pattern.",
+ "headline_ko": "9월 19일 브리핑 · 신규 2건 · 피해 $4.4M · 후속 1건",
+ "headline_en": "Sep 19 briefing · 2 new · loss $4.4M · 1 follow-ups",
+ "briefing_ko": "- **[Osmosis](https://rekt.news/nomic-rekt)** · Cosmos · 해킹 · **$3.1M** · 6.25 — ibc_deliver 함수 버그로 무담보 nBTC를 두 번 mint해 allBTC로 교환 후 브리지와…\n- **[Radix Engine](https://www.tokenpost.kr/news/briefing/410679)** · Ethereum · 해킹 · **$1.3M** · 9.17 — 금고 소유권 검증 결함을 이용해 여러 토큰을 인출해 네트워크 거래 처리가 일시 중단됨\n- **후속 1건** — [AI Bot Lecture Scam](https://www.tokenpost.kr/news/blockchain/410502) (첫 보도 9.16, 악성 로직이 234개 계약에서 ETH를 인출해 총 274.60 ETH를…)\n- **시사점** — 스마트 계약 로직 결함을 이용한 무담보 토큰 인출·발행이 계속 발생하고 있습니다.",
+ "briefing_en": "- **[Osmosis](https://rekt.news/nomic-rekt)** · Cosmos · Hack · **$3.1M** · Jun 25 — Exploited ibc_deliver bug to double-mint uncollateralized…\n- **[Radix Engine](https://www.tokenpost.kr/news/briefing/410679)** · Ethereum · Hack · **$1.3M** · Sep 17 — Exploited vault ownership check flaw to withdraw tokens…\n- **Follow-ups (1)** — [AI Bot Lecture Scam](https://www.tokenpost.kr/news/blockchain/410502) (first 9.16, Malicious code withdrew ETH from 234 contracts…)\n- **Takeaway** — Repeatedly, attackers exploit smart-contract logic flaws to mint or withdraw tokens without collateral.",
  "counts": {
-  "new": 1,
+  "new": 2,
   "followups": 1,
-  "major": 1,
+  "major": 2,
   "minor": 0,
-  "loss_usd": 3150000.0,
+  "loss_usd": 4410000.0,
   "legal_usd": 0
  },
  "format": "structured-v2"
