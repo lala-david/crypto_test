@@ -48,7 +48,8 @@
     const amountLbl = inc.legal ? t("k_legal") : t("loss_label");
     const STOP = /^(defihacklabs|latest news|news|crypto|암호화폐|가상자산|blockchain|defi|hack)$/i;
     const tag = (inc.tags || []).map((x) => String(x).trim()).find((x) => x && x.length <= 18 && !/^0x/.test(x) && !STOP.test(x));
-    const method = tag || shortText(txt(inc, "attack_method"), 22);
+    const short = shortText(txt(inc, "attack_method"), 22);
+    const method = tag || (short.endsWith("…") ? "" : short); // 잘린 문장 조각은 보여주지 않는다(툴팁에 전문)
     const eoa = inc.addresses.filter((a) => a.kind === "eoa" || a.kind === "wallet").length, ca = inc.addresses.filter((a) => a.kind === "contract").length;
     const roleCounts = ["attacker", "victim", "laundering", "sanctioned"].map((r) => [r, inc.addresses.filter((a) => a.role === r).length]).filter(([, n]) => n);
     const srcRows = inc.sources.map((s) => `<a class="case-row" href="${esc(s.url)}" target="_blank" rel="noopener"><span class="who">${esc(srcLabel(s.source))}</span><span class="what">${esc(s.title || s.url)}</span><span class="go">↗</span></a>`).join("")
