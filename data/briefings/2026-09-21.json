@@ -1,14 +1,14 @@
 {
- "headline_ko": "9월 21일 브리핑 · 신규 2건 · 피해 $2M · 후속 2건",
- "headline_en": "Sep 21 briefing · 2 new · loss $2M · 2 follow-ups",
- "briefing_ko": "- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$1.5M** · 9.19 — 개인키가 탈취돼 약 1,530,000달러가 유출되었습니다\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$463K** · 9.19 — 개인키가 탈취돼 약 462,730달러가 유출되었습니다\n- **후속 2건** — [Startale](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Startale_exp.sol) (첫 보도 9.17, 플래그 지속을 이용해 계정을 재초기화하고 delegatecall으로…), [Nimiq](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Nimiq_exp.sol) (첫 보도 9.18, GSN 포워더가 서명·nonce 건너뛰고 악성 페이마스터만 확인해 약…)\n- **시사점** — 키 관리 부실과 계약 초기화 검증 미비가 여러 프로젝트에서지속 악용됩니다.",
- "briefing_en": "- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · Key compromise · **$1.5M** · Sep 19 — A compromised private key allowed theft of roughly million\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · Key compromise · **$463K** · Sep 19 — The attacker stole the private key and drained about\n- **Follow-ups (2)** — [Startale](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Startale_exp.sol) (first 9.17, The attacker reused a lingering init flag to…), [Nimiq](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Nimiq_exp.sol) (first 9.18, The GSN forwarder skipped signature checks…)\n- **Takeaway** — Poor key security and missing init-state checks continue to be repeatedly exploited across projects.",
+ "headline_ko": "9월 21일 브리핑 · 신규 4건 · 피해 $12.7M · 후속 2건",
+ "headline_en": "Sep 21 briefing · 4 new · loss $12.7M · 2 follow-ups",
+ "briefing_ko": "- **[Crypto developers](https://cointelegraph.com/news/north-korean-fake-recruiters-infect-30k-devices-steal-107m-in-crypto)** · 체인 미상 · 피싱 · **$10.7M** · 9.21 — 가짜 채용 제안을 통한 피싱(소셜 엔지니어링)으로 악성코드를 설치하고, 탈취된 암호화폐를 범죄자 지갑으로…\n- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$1.5M** · 9.19 — Key Compromise — Private Key Compromised\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$463K** · 9.19 — Key Compromise — Private Key Compromised\n- **소액·미상 1건** — [Binance](https://www.tokenpost.kr/news/cryptocurrency/411310) 금액 미상\n- **후속 2건** — [Startale](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Startale_exp.sol) (첫 보도 9.17), [Nimiq](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Nimiq_exp.sol) (첫 보도 9.18)",
+ "briefing_en": "- **[Crypto developers](https://cointelegraph.com/news/north-korean-fake-recruiters-infect-30k-devices-steal-107m-in-crypto)** · chain n/a · Phishing · **$10.7M** · Sep 21 — Phishing via fake recruitment offers installed malware…\n- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · Key compromise · **$1.5M** · Sep 19 — Key Compromise — Private Key Compromised\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · Key compromise · **$463K** · Sep 19 — Key Compromise — Private Key Compromised\n- **Smaller / unknown (1)** — [Binance](https://www.tokenpost.kr/news/cryptocurrency/411310) amount n/a\n- **Follow-ups (2)** — [Startale](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Startale_exp.sol) (first 9.17), [Nimiq](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Nimiq_exp.sol) (first 9.18)",
  "counts": {
-  "new": 2,
+  "new": 4,
   "followups": 2,
-  "major": 2,
-  "minor": 0,
-  "loss_usd": 1992730,
+  "major": 3,
+  "minor": 1,
+  "loss_usd": 12692730.0,
   "legal_usd": 0
  },
  "format": "structured-v2"
