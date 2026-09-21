@@ -1,14 +1,14 @@
 {
- "headline_ko": "9월 22일 브리핑 · 신규 2건 · 피해 $374K",
- "headline_en": "Sep 22 briefing · 2 new · loss $374K",
- "briefing_ko": "- **[Internet Token](https://x.com/DefimonAlerts/status/2101969009461567690)** · Base · 해킹 · **$265K** · 9.21 — 공격자는 가짜 풀 콜백으로 INT를 대량 발행하고 공식 풀에서 WETH를 인출했다\n- **[RWC Token](https://x.com/TenArmorAlert/status/2101925758214316524)** · BNB Smart Chain · 해킹 · **$109K** · 9.21 — 플래시론으로 풀을 조작해 RWC를 소각하고 가격을 올린 뒤 USDT를 빼냈다\n- **시사점** — 풀 취약점을 이용한 토큰 발행과 가격 조작 공격이 빈번히 발생한다.",
- "briefing_en": "- **[Internet Token](https://x.com/DefimonAlerts/status/2101969009461567690)** · Base · Hack · **$265K** · Sep 21 — Attacker minted massive INT via fake pool callback and…\n- **[RWC Token](https://x.com/TenArmorAlert/status/2101925758214316524)** · BNB Smart Chain · Hack · **$109K** · Sep 21 — Attacker used a flash loan to burn RWC, inflate its price…\n- **Takeaway** — Attacks repeatedly exploit liquidity-pool flaws to mint tokens, manipulate prices, and drain assets.",
+ "headline_ko": "9월 22일 브리핑 · 신규 4건 · 피해 $1.8M",
+ "headline_en": "Sep 22 briefing · 4 new · loss $1.8M",
+ "briefing_ko": "- **[Balancer](https://www.tokenpost.kr/news/blockchain/411746)** · Ethereum · 해킹 · **$1.4M** · 8.31 — V1 풀 취약점으로 ETH를 탈취해 손실, DAO가 296 ETH 회수\n- **[Internet Token](https://x.com/DefimonAlerts/status/2101969009461567690)** · Base · 해킹 · **$265K** · 9.21 — 가짜 풀 콜백으로 대량 INT를 민팅하고 공식 풀에서 WETH를 인출해 자금을 탈취\n- **[RWC Token](https://x.com/TenArmorAlert/status/2101925758214316524)** · BNB Smart Chain · 해킹 · **$109K** · 9.21 — 플래시론으로 RWC를 소각·풀 잔액을 재조정해 가격을 올린 뒤 USDT를 탈취\n- **소액·미상 1건** — [캄보디아 가상자산 사기단](https://www.tokenpost.kr/news/briefing/411723) 금액 미상\n- **시사점** — 프로토콜은 풀 콜백·가격 동기화·플래시론을 악용한 공격에 지속적으로 노출된다.",
+ "briefing_en": "- **[Balancer](https://www.tokenpost.kr/news/blockchain/411746)** · Ethereum · Hack · **$1.4M** · Aug 31 — Exploit of Balancer V1 pool drained ETH causing loss, DAO…\n- **[Internet Token](https://x.com/DefimonAlerts/status/2101969009461567690)** · Base · Hack · **$265K** · Sep 21 — Minted fake tokens via callback and withdrew WETH from the…\n- **[RWC Token](https://x.com/TenArmorAlert/status/2101925758214316524)** · BNB Smart Chain · Hack · **$109K** · Sep 21 — Used flash loan to burn RWC, inflate price, then stole USDT\n- **Smaller / unknown (1)** — [캄보디아 가상자산 사기단](https://www.tokenpost.kr/news/briefing/411723) amount n/a\n- **Takeaway** — Protocols keep falling to attacks that abuse callbacks, price syncs, and flash loans.",
  "counts": {
-  "new": 2,
+  "new": 4,
   "followups": 0,
-  "major": 2,
-  "minor": 0,
-  "loss_usd": 374460.85,
+  "major": 3,
+  "minor": 1,
+  "loss_usd": 1768155.52,
   "legal_usd": 0
  },
  "format": "structured-v2"
