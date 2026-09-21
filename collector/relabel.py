@@ -21,7 +21,7 @@ from .http import Http
 from .llm import LLMProvider
 from .enrich import is_stale_reference
 from .models import INCIDENT_TYPES, Incident
-from .prompts import RELABEL_SYSTEM, REVIEW_SYSTEM
+from .prompts import AUDIT_SYSTEM, RELABEL_SYSTEM, REVIEW_SYSTEM
 from .store import Store
 from .textextract import html_to_text
 
@@ -209,8 +209,10 @@ def apply_verified(inc: Incident, out: dict, text: str) -> Tuple[List[str], List
     elif out.get("incident_date") is None and inc.incident_date and out.get("incident_date_evidence") == "" and "date_after_published" in qa_flags(inc):
         inc.incident_date = None
         changed.append("incident_date→null")
-    # 금액
+    # 금액 (review/audit 가 '피해액 아님'으로 비운 카드는 다시 채우지 않는다)
     new_a = out.get("amount_usd")
+    if "not a loss" in (inc.enrich_note or ""):
+        new_a = None if inc.amount_usd is None else inc.amount_usd
     if isinstance(new_a, (int, float)) and new_a > 0 and not _close(float(new_a), float(inc.amount_usd or 0), 0.001):
         ev = out.get("amount_evidence", "")
         ok = evidence_in_text(ev, text) and (any(_close(float(new_a), v) for v in money_values(ev)) or re.sub(r"[^\d]", "", ev).find(re.sub(r"[^\d]", "", f"{new_a:.0f}")[:4]) >= 0)
@@ -376,16 +378,27 @@ def _save_retry(store: Store, inc: Incident) -> None:
     store.save_incident(inc)
 
 
-def run_review(store: Store, http: Http, provider: LLMProvider, data_dir: str, limit: int = 0, max_tokens: int = 1500,
-               min_conf: float = 0.8, include_irrelevant: bool = False) -> dict:
-    """모든 카드에 '새 사건인가' 를 묻는다. 제외 판정은 confidence ≥ min_conf 일 때만 적용. 결과는 data/review_log.jsonl."""
+def run_review(store: Store, http: Http, provider: LLMProvider, data_dir: str, limit: int = 0, max_tokens: int = 8000,
+               min_conf: float = 0.8, include_irrelevant: bool = False, cards: Optional[List[Incident]] = None, skip_reviewed: bool = False) -> dict:
+    """카드에 '새 사건인가' 를 묻는다. 제외 판정은 confidence ≥ min_conf 일 때만 적용. 결과는 data/review_log.jsonl.
+    cards 를 주면 그 카드만(매시간 수집의 신규 카드), skip_reviewed 면 이미 판정 기록이 있는 카드는 건너뛴다."""
     from .store import incident_from_dict
-    q = "SELECT json FROM incidents ORDER BY collected_at" if include_irrelevant else "SELECT json FROM incidents WHERE relevant=1 ORDER BY collected_at"
-    cards = [incident_from_dict(json.loads(r[0])) for r in store.conn.execute(q).fetchall()]
+    log_path = os.path.join(data_dir, "review_log.jsonl")
+    if cards is None:
+        q = "SELECT json FROM incidents ORDER BY collected_at" if include_irrelevant else "SELECT json FROM incidents WHERE relevant=1 ORDER BY collected_at"
+        cards = [incident_from_dict(json.loads(r[0])) for r in store.conn.execute(q).fetchall()]
+    if skip_reviewed and os.path.exists(log_path):
+        seen = set()
+        with open(log_path, encoding="utf-8") as f:
+            for line in f:
+                try:
+                    seen.add(json.loads(line).get("uid"))
+                except Exception:
+                    pass
+        cards = [c for c in cards if c.uid not in seen]
     if include_irrelevant:
         # 키워드 필터로 걸러진 잡음은 빼고, 사람이 손으로 제외했거나 규칙/LLM 이 뒤늦게 제외한 카드만 다시 판정한다(복구 검증용)
         cards = [c for c in cards if not c.relevant and re.search(r"재검토|재검증|회고성|LLM 판정|relabel|review", c.relevance_reason or "")]
-    log_path = os.path.join(data_dir, "review_log.jsonl")
     summary = {"checked": 0, "excluded": 0, "restored": 0, "amount_cleared": 0, "low_confidence": 0, "categories": {}, "days": set(), "errors": 0}
     with open(log_path, "a", encoding="utf-8") as lf:
         for k, inc in enumerate(cards):
@@ -444,3 +457,122 @@ def run_review(store: Store, http: Http, provider: LLMProvider, data_dir: str, l
                                  "day": inc.collected_at[:10], "out": out, "changed": changed}, ensure_ascii=False) + "\n")
     summary["days"] = sorted(summary["days"])
     return summary
+
+
+# ---------------------------------------------------------------------------
+# 교차 감사(audit): 최근 병합 사건 목록을 한 번에 LLM 에 보여 중복·금액·유형·날짜·이름 문제를 찾고,
+# 확신도 0.85 이상의 '같은 사건' 판정은 merge_decisions 캐시에 넣어 다음 병합에서 자동으로 합쳐지게 한다.
+# ---------------------------------------------------------------------------
+def _obj(props, req):
+    return {"type": "object", "properties": props, "required": req, "additionalProperties": False}
+
+
+_NUM = {"type": "number"}
+_S = {"type": "string"}
+AUDIT_SCHEMA = _obj({
+    "duplicates": {"type": "array", "items": _obj({"uids": {"type": "array", "items": _S}, "representative": _S, "confidence": _NUM, "evidence": _S}, ["uids", "representative", "confidence", "evidence"])},
+    "wrong_amount": {"type": "array", "items": _obj({"uid": _S, "suggested_amount_usd": {"anyOf": [_NUM, {"type": "null"}]}, "confidence": _NUM, "evidence": _S}, ["uid", "suggested_amount_usd", "confidence", "evidence"])},
+    "wrong_type": {"type": "array", "items": _obj({"uid": _S, "suggested_type": _S, "confidence": _NUM, "evidence": _S}, ["uid", "suggested_type", "confidence", "evidence"])},
+    "wrong_date": {"type": "array", "items": _obj({"uid": _S, "suggested_date": {"anyOf": [_S, {"type": "null"}]}, "confidence": _NUM, "evidence": _S}, ["uid", "suggested_date", "confidence", "evidence"])},
+    "not_incident": {"type": "array", "items": _obj({"uid": _S, "category": _S, "confidence": _NUM, "evidence": _S}, ["uid", "category", "confidence", "evidence"])},
+    "naming": {"type": "array", "items": _obj({"uid": _S, "suggested_name": _S, "confidence": _NUM, "evidence": _S}, ["uid", "suggested_name", "confidence", "evidence"])},
+    "overall": _S,
+}, ["duplicates", "wrong_amount", "wrong_type", "wrong_date", "not_incident", "naming", "overall"])
+
+
+def run_audit(store: Store, provider: LLMProvider, data_dir: str, days: int = 30, max_tokens: int = 8000, min_conf: float = 0.85, apply: bool = True) -> dict:
+    """최근 days 일 병합 사건을 LLM 에 한 번에 보여 교차 검토. 자동 반영: 중복(merge_decisions), 사건 아님(제외 카테고리만), 금액 null 화, 이름·유형·날짜."""
+    from datetime import date, timedelta
+    from .dedupe import LLMJudge
+    from .merge import mark_followups, merge_incidents
+    judge = LLMJudge(None, store)
+    today = date.today()
+    lo = (today - timedelta(days=days)).isoformat()
+    days_list = [r[0] for r in store.conn.execute("SELECT DISTINCT substr(collected_at,1,10) d FROM incidents WHERE relevant=1 AND substr(collected_at,1,10)>=? ORDER BY d", (lo,))]
+    history: List[Incident] = []
+    merged: List[Incident] = []
+    for d in days_list:
+        m = [i for i in merge_incidents(store.incidents_collected_on(d), judge) if i.relevant]
+        mark_followups(m, history, judge)
+        history += m
+        merged += m
+    listing = [{
+        "uid": i.uid, "project": i.project or i.title, "type": i.incident_type, "event_date": i.incident_date, "reported": (i.published_at or "")[:10],
+        "amount_usd": i.amount_usd, "amount_text": (i.amount_text or "")[:40], "chains": i.chains[:3],
+        "sources": sorted({i.source, *[m.get("source") for m in i.merged_from if m.get("source")]}),
+        "followup_of": (i.followup_of or {}).get("project") if i.followup_of else None,
+        "summary": (i.summary_ko or i.summary_en or "")[:160],
+    } for i in merged]
+    user = f"최근 {days}일 사건 {len(listing)}건:\n" + json.dumps(listing, ensure_ascii=False)
+    out = provider.complete_json(AUDIT_SYSTEM, user, AUDIT_SCHEMA, max_tokens)
+    if not out:
+        return {"error": "LLM 이 JSON 을 내놓지 않음", "listed": len(listing)}
+    by_uid = {i.uid: i for i in merged}
+    applied = {"duplicates": 0, "not_incident": 0, "amount": 0, "naming": 0, "type": 0, "date": 0}
+    conf_of = lambda it: float(it.get("confidence") or 0)
+    if apply:
+        for g in out.get("duplicates") or []:
+            uids = [u for u in g.get("uids") or [] if u in by_uid]
+            linked = {(by_uid[u].followup_of or {}).get("uid") for u in uids if by_uid[u].followup_of}
+            if len(uids) >= 2 and conf_of(g) >= min_conf and not linked & set(uids):
+                rep = g.get("representative") if g.get("representative") in uids else uids[0]
+                for u in uids:
+                    if u != rep:
+                        store.set_merge_decision(rep, u, True, "audit: " + (g.get("evidence") or "")[:160])
+                applied["duplicates"] += 1
+        for it in out.get("not_incident") or []:
+            inc = by_uid.get(it.get("uid"))
+            if inc and conf_of(it) >= min_conf and it.get("category") in EXCLUDE_CATEGORIES:
+                inc.relevant = False
+                inc.relevance_reason = ("LLM 교차감사: " + str(it.get("category")) + " — " + (it.get("evidence") or ""))[:220]
+                _save_retry(store, inc)
+                applied["not_incident"] += 1
+        for it in out.get("wrong_amount") or []:
+            inc = by_uid.get(it.get("uid"))
+            if inc and conf_of(it) >= min_conf and it.get("suggested_amount_usd") is None and inc.amount_usd:
+                inc.amount_text = inc.amount_text or ("$" + format(inc.amount_usd, ",.0f"))
+                inc.amount_usd = None
+                inc.enrich_note = (inc.enrich_note or "") + " | audit: amount not a loss"
+                _save_retry(store, inc)
+                applied["amount"] += 1
+        # 이름 제안은 LLM 이 장황한 설명형 이름을 내놓는 경우가 많아 자동 반영하지 않는다(보고서에서 사람이 판단).
+        for it in out.get("wrong_type") or []:
+            inc = by_uid.get(it.get("uid"))
+            st = it.get("suggested_type")
+            if inc and st in INCIDENT_TYPES and conf_of(it) >= min_conf and st != inc.incident_type:
+                inc.enrich_note = (inc.enrich_note or "") + " | audit: type " + inc.incident_type + "->" + st
+                inc.incident_type = st
+                _save_retry(store, inc)
+                applied["type"] += 1
+        for it in out.get("wrong_date") or []:
+            inc = by_uid.get(it.get("uid"))
+            nd = _iso(it.get("suggested_date"))
+            if inc and nd and conf_of(it) >= min_conf and (not inc.published_at or nd <= inc.published_at[:10]) and nd != inc.incident_date:
+                inc.enrich_note = (inc.enrich_note or "") + " | audit: date " + str(inc.incident_date) + "->" + nd
+                inc.incident_date = nd
+                _save_retry(store, inc)
+                applied["date"] += 1
+    # 사람이 볼 보고서: 자동 반영 여부와 낮은 확신도 항목까지 전부
+    def name(u):
+        return (by_uid[u].project or by_uid[u].title) if u in by_uid else str(u)
+    lines = ["# 교차 감사 " + today.isoformat() + " — 최근 " + str(days) + "일 " + str(len(listing)) + "건", "", out.get("overall", ""), ""]
+    for key, title in (("duplicates", "중복 의심"), ("not_incident", "사건 아님"), ("wrong_amount", "금액 의심"), ("wrong_type", "유형 의심"), ("wrong_date", "날짜 의심"), ("naming", "이름 제안")):
+        items = out.get(key) or []
+        lines.append("")
+        lines.append("## " + title + " (" + str(len(items)) + ")")
+        for it in items:
+            conf = conf_of(it)
+            auto_ok = conf >= min_conf and apply and key in ("duplicates", "wrong_amount", "wrong_type", "wrong_date") or (key == "not_incident" and it.get("category") in EXCLUDE_CATEGORIES and conf >= min_conf and apply)
+            tag = "자동 반영" if auto_ok else "검토 필요"
+            if key == "duplicates":
+                lines.append("- [" + tag + " " + format(conf, ".2f") + "] " + " ↔ ".join(name(u) for u in it.get("uids") or []) + " — " + (it.get("evidence") or ""))
+            else:
+                sug = it.get("suggested_amount_usd") if key == "wrong_amount" else it.get("suggested_type") if key == "wrong_type" else it.get("suggested_date") if key == "wrong_date" else it.get("suggested_name") if key == "naming" else it.get("category")
+                lines.append("- [" + tag + " " + format(conf, ".2f") + "] " + name(it.get("uid")) + " → " + str(sug) + " — " + (it.get("evidence") or ""))
+    os.makedirs(os.path.join(data_dir, "audits"), exist_ok=True)
+    path = os.path.join(data_dir, "audits", today.isoformat() + ".md")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+    with open(os.path.join(data_dir, "audits", today.isoformat() + ".json"), "w", encoding="utf-8") as f:
+        json.dump({"listing": listing, "out": out, "applied": applied}, f, ensure_ascii=False, indent=1)
+    return {"listed": len(listing), "found": {k: len(out.get(k) or []) for k in ("duplicates", "not_incident", "wrong_amount", "wrong_type", "wrong_date", "naming")}, "applied": applied, "report": path}

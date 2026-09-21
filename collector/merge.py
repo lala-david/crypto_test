@@ -118,7 +118,10 @@ def same_legal_release(a: Incident, b: Incident) -> bool:
         return False
     if not a.source or a.source != b.source:
         return False
-    if not (a.amount_usd and b.amount_usd and a.amount_usd == b.amount_usd):
+    # 금액이 둘 다 있으면 같아야 하고, 둘 다 비어 있으면(단속 총액을 지운 경우) 제목 유사도로만 판단
+    if a.amount_usd and b.amount_usd and a.amount_usd != b.amount_usd:
+        return False
+    if bool(a.amount_usd) != bool(b.amount_usd):
         return False
     dp = _days_apart(a.published_at, b.published_at)
     if dp is None or dp > 7:

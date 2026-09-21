@@ -5,7 +5,8 @@ window.KL = (() => {
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const I18N = {
     ko: {
-      nav_home: "개요", nav_incidents: "사건", nav_briefings: "브리핑", nav_stats: "통계", nav_addresses: "주소 조회",
+      nav_home: "개요", nav_incidents: "사건", nav_briefings: "브리핑", nav_stats: "통계", nav_addresses: "지갑 주소",
+      recent_addresses: "최근 수집 주소", all_addresses: "수집 주소", th_address: "주소", role_all: "전체 역할", lookup_title: "주소 조회", addr_list_hint: "사건에서 수집한 지갑 주소. 역할은 우선순위(제재 > 공격자 > 세탁 > 피해자)로 하나만 표시.", top_amount5: "금액 상위 5",
       updated: "수집", all: "전체", unit: "건", no_data: "데이터 없음", search_ph: "사건·주소 검색", hide_follow: "후속 제외", days_n: "{n}일", collected_days: "수집 {n}일",
       k_latest_new: "최근일 신규", k_new: "신규 사건", k_follow: "후속 보도", k_loss: "피해액", k_legal: "제재·수사 금액", k_addr: "주소", k_unknown_amt: "금액 미상", vs_prev: "이전 기간 대비",
       daily_count: "일별 사건 수", daily_amount: "일별 피해액", share_type: "유형 비중", share_chain: "대표 체인 비중", by_source: "출처별 사건", top_amount: "금액 상위 10", recent: "최근 사건", roles: "주소 역할",
@@ -25,7 +26,8 @@ window.KL = (() => {
       roles_map: { attacker: "공격자", laundering: "세탁·경유", victim: "피해자", sanctioned: "제재 대상", unknown: "미분류" },
     },
     en: {
-      nav_home: "Overview", nav_incidents: "Incidents", nav_briefings: "Briefings", nav_stats: "Stats", nav_addresses: "Address lookup",
+      nav_home: "Overview", nav_incidents: "Incidents", nav_briefings: "Briefings", nav_stats: "Stats", nav_addresses: "Wallet addresses",
+      recent_addresses: "Recently collected addresses", all_addresses: "Collected addresses", th_address: "Address", role_all: "All roles", lookup_title: "Address lookup", addr_list_hint: "Wallet addresses collected from incidents. One role per address by priority (sanctioned > attacker > laundering > victim).", top_amount5: "Top 5 by amount",
       updated: "Collected", all: "All", unit: "", no_data: "No data", search_ph: "Search incidents / addresses", hide_follow: "Hide follow-ups", days_n: "{n}d", collected_days: "{n} days collected",
       k_latest_new: "New (latest day)", k_new: "New incidents", k_follow: "Follow-ups", k_loss: "Loss", k_legal: "Enforcement amount", k_addr: "Addresses", k_unknown_amt: "Unknown amount", vs_prev: "vs previous period",
       daily_count: "Incidents per day", daily_amount: "Loss per day", share_type: "By type", share_chain: "By primary chain", by_source: "By source", top_amount: "Top 10 by amount", recent: "Recent incidents", roles: "Address roles",

@@ -74,6 +74,8 @@ def main() -> int:
     ap.add_argument("--relabel-only", help="쉼표로 구분한 QA 플래그: 이 플래그에 걸린 카드만 재검증 (예: relevance_suspect)")
     ap.add_argument("--review", action="store_true", help="모든 카드에 대해 로컬 LLM 으로 '새 사건인가' 판정(확신도 0.8 이상 제외만 적용)")
     ap.add_argument("--review-all", action="store_true", help="--review 를 이미 제외된 카드에도 적용(복구 가능)")
+    ap.add_argument("--review-force", action="store_true", help="--review 에서 이미 판정한 카드도 다시 판정")
+    ap.add_argument("--audit", action="store_true", help="최근 30일 사건 목록을 로컬 LLM 이 교차 검토(중복·금액·유형·날짜·이름) → data/audits/")
     args = ap.parse_args()
 
     with open(args.config, encoding="utf-8") as f:
@@ -91,12 +93,23 @@ def main() -> int:
     store = Store(data_dir)
     http = Http(os.path.join(data_dir, "cache"))
 
+    if args.audit:
+        from collector.relabel import run_audit
+        llm_cfg0 = dict(cfg.get("llm", {}))
+        prov = build_provider(llm_cfg0, args.provider)
+        log.info("=== 교차 감사 시작 (LLM: %s) ===", prov.describe())
+        summ = run_audit(store, prov, data_dir, days=30, max_tokens=int(llm_cfg0.get("max_tokens", 8000)))
+        log.info("교차 감사 결과: %s", json.dumps(summ, ensure_ascii=False))
+        store.export_jsonl(); store.export_state()
+        print(json.dumps(summ, ensure_ascii=False))
+        return 0
+
     if args.review or args.review_all:
         from collector.relabel import run_review
         llm_cfg0 = dict(cfg.get("llm", {}))
         prov = build_provider(llm_cfg0, args.provider)
         log.info("=== 사건 여부 판정 시작 (LLM: %s) ===", prov.describe())
-        summ = run_review(store, http, prov, data_dir, limit=args.limit, include_irrelevant=args.review_all, max_tokens=int(llm_cfg0.get("max_tokens", 8000)))
+        summ = run_review(store, http, prov, data_dir, limit=args.limit, include_irrelevant=args.review_all, max_tokens=int(llm_cfg0.get("max_tokens", 8000)), skip_reviewed=not args.review_force)
         log.info("판정 결과: %s", json.dumps(summ, ensure_ascii=False))
         store.export_jsonl(); store.export_state()
         print(json.dumps(summ, ensure_ascii=False))
@@ -191,6 +204,17 @@ def main() -> int:
             run_incidents.append(inc)
             log.info("[%s] %s | relevant=%s enriched=%s addrs=%d", inc.source, inc.title[:60], inc.relevant,
                      inc.enriched, len(inc.addresses))
+
+    # 3.5) 이번에 새로 만든 카드는 곧바로 '새 사건인가' 판정(로컬 LLM, 카드당 ~5초). 제외 판정은 확신도 0.8 이상만.
+    if provider and run_incidents and not args.rebuild_day:
+        try:
+            from collector.relabel import run_review
+            rv = run_review(store, http, provider, data_dir, max_tokens=int(llm_cfg.get("max_tokens", 8000)), cards=[i for i in run_incidents if i.relevant])
+            log.info("신규 카드 판정: %s", json.dumps({k: rv[k] for k in ("checked", "excluded", "amount_cleared")}, ensure_ascii=False))
+            new_uids = {i.uid for i in run_incidents}
+            run_incidents = [i for i in store.incidents_collected_on(today) if i.uid in new_uids] or run_incidents
+        except Exception as e:
+            log.warning("신규 카드 판정 실패(건너뜀): %s", str(e)[:200])
 
     # 4) 오늘 누적 사건 → 소스 간 같은 사건 병합(규칙 + LLM 판정) → 이전 14일 사건의 후속 보도 표시 → 주소 대조
     # 같은-사건 판정은 가벼운 모델로 (config.llm.<provider>.dedupe_model), 없으면 본 모델

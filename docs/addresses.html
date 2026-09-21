@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>주소 조회 · Incident Ledger</title>
+<title>지갑 주소 · Incident Ledger</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="style.css">
@@ -10,10 +10,11 @@
 <body>
 <header class="nav" id="nav"></header>
 <main class="page">
-  <div class="page-h"><div><h1 data-i18n="nav_addresses">주소 조회</h1><div class="sub" data-i18n="addr_scope"></div></div></div>
-  <form class="search big" id="form"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="" data-i18n-ph="addr_ph" data-i18n-aria="addr_ph" aria-label="주소"><button class="btn primary" type="submit" data-i18n="lookup">조회</button></form>
+  <div class="page-h"><div><h1 data-i18n="nav_addresses">지갑 주소</h1><div class="sub" id="sub"></div></div>
+    <div class="controls"><form class="search" id="form" style="min-width:320px"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="" data-i18n-ph="addr_ph" aria-label="주소"><button class="btn primary" type="submit" data-i18n="lookup">조회</button></form>
+      <label class="ctl"><select id="chainSel"></select></label><div class="seg" id="roleSeg"></div><div class="seg" id="rangeSeg"></div></div></div>
   <section id="result" class="grid"></section>
-  <section class="grid" id="kpis"></section>
+  <section class="card"><div class="card-h"><h2 data-i18n="all_addresses">수집 주소</h2><span class="meta" id="metaList"></span></div><div class="table-wrap"><table class="tbl" id="addrTable"></table></div><div class="pager" id="pager"></div></section>
 </main>
 <footer class="foot" id="foot"></footer>
 <div class="tooltip" id="tip" role="tooltip"></div>

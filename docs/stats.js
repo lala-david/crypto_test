@@ -38,6 +38,9 @@
     const roles = Object.entries(st.roles || {}).sort((a, b) => b[1] - a[1]); const rt = roles.reduce((a, r) => a + r[1], 0) || 1;
     hbars($("#rolesBars"), roles.map(([k, v]) => ({ k: roleName(k), v, pct: v / rt })), cnt, t("roles"));
     $("#metaRoles").textContent = `${fmtInt(st.addresses)} ${t("addresses")}`;
+    const srcsAll = Object.entries(st.facets.sources || {}).sort((a, b) => b[1] - a[1]); const nInc = st.facets.incidents || 1;
+    $("#srcTable").innerHTML = `<thead><tr><th>${esc(t("th_source"))}</th><th class="num">${esc(t("th_count"))}</th><th class="num">${esc(t("coverage"))}</th></tr></thead><tbody>${srcsAll.map(([k, n]) => `<tr><td>${esc(KL.srcLabel(k))}</td><td class="num">${fmtInt(n)}</td><td class="num">${fmtPct(n / nInc, 0)}</td></tr>`).join("")}</tbody>`;
+    $("#metaSrc").textContent = `${srcsAll.length} · ${fmtInt(nInc)}${t("unit")}`;
   }
   $$("#valueMode button").forEach((b) => b.addEventListener("click", () => { S.mode = b.dataset.mode; render(); }));
   $("#typeSel").addEventListener("change", (e) => { S.type = e.target.value; load(); });

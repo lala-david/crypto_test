@@ -323,6 +323,37 @@ class DataService:
                 break
         return out
 
+    def list_addresses(self, days=None, from_=None, to=None, role=None, chain=None, q=None, basis: str = "event", limit: int = 5000) -> dict:
+        """기간 내 사건에서 수집한 지갑 주소 목록(주소당 1행, 사건 여러 개면 묶음). 후속 보도 카드도 포함(주소는 사실이므로)."""
+        rows = self.filter(days, from_, to, basis=basis)
+        seen: Dict[str, dict] = {}
+        chain_n = norm_chain(chain).lower() if chain else ""
+        ql = (q or "").strip().lower()
+        for r in rows:
+            for a in r["addresses"]:
+                if role and a["role"] != role:
+                    continue
+                if chain_n and (a["chain"] or "").lower() != chain_n:
+                    continue
+                if ql and ql not in a["address"].lower() and ql not in r["project"].lower():
+                    continue
+                k = a["address"].lower()
+                if k not in seen:
+                    seen[k] = {"address": a["address"], "chain": a["chain"], "role": a["role"], "note": a["note"], "blacklist": bool((r.get("blacklist_detail") or {}).get(a["address"])),
+                               "incidents": [], "first_day": r["day"], "event_date": r.get("event_date")}
+                e = seen[k]
+                if ROLE_PRIORITY.get(a["role"], 9) < ROLE_PRIORITY.get(e["role"], 9):
+                    e["role"] = a["role"]
+                if not any(x["uid"] == r["uid"] for x in e["incidents"]):
+                    e["incidents"].append({"uid": r["uid"], "project": r["project"], "type": r["type"], "day": r["day"], "event_date": r.get("event_date"), "amount_usd": r["amount_usd"]})
+                if r["day"] > e["first_day"]:
+                    e["first_day"] = r["day"]
+        out = sorted(seen.values(), key=lambda e: (ROLE_PRIORITY.get(e["role"], 9), e["first_day"]), reverse=False)
+        out.sort(key=lambda e: e["first_day"], reverse=True)
+        roles = Counter(e["role"] for e in out)
+        chains = Counter(e["chain"] for e in out)
+        return {"total": len(out), "items": out[:limit], "roles": dict(roles.most_common()), "chains": dict(chains.most_common())}
+
     def lookup_address(self, q: str) -> dict:
         self.refresh()
         qn = q.strip()

@@ -51,7 +51,7 @@ run.py  (매시간)
 - 백엔드는 Starlette + uvicorn(FastAPI 는 설치된 starlette 1.6 과 충돌). SQLite `data/collector.db` 를 직접 읽어 병합·후속·블랙리스트 대조까지 계산하고, incidents 테이블의 (건수, 최신 collected_at) 서명이 바뀌면 캐시를 다시 만듭니다. 수집기가 돌면 페이지가 자동으로 최신이 됩니다.
 - API(JSON, 목록은 `/api`): `/api/meta`, `/api/incidents?days=30|all&type=&chain=&source=&q=&hide_followups=&page=&size=&sort=day|amount|date`, `/api/incidents/{uid}`(+related), `/api/briefings`, `/api/briefings/{day|latest}`, `/api/stats?days=…&type=&chain=`, `/api/addresses/lookup?q=`, `/api/search?q=`.
 - 집계 규칙: 후속 보도(`followup_of`)는 건수에만 포함하고 금액 합계·순위·비중에서는 제외합니다(같은 사건 이중 계산 방지).
-- 페이지: `index.html` 개요(지표 6개+스파크라인, 일별 건수/금액, 유형·체인 비중 도넛, 주소 역할, 피해액 상위 10, 소스별 수집, 최근 사건, 최신 브리핑) · `incidents.html` 사건 표(검색·유형·체인·소스·정렬·기간·후속 제외·페이지) · `stats.html` 분석(시계열 금액/건수, 유형·체인 표: 건수·%·금액·%·평균, 일별 표, 제재·수사, 주소 역할) · `briefings.html` 날짜별 브리핑 · `addresses.html` 주소 조회(사건 카드·OFAC SDN·crimial_hunter 동시 대조) · `incident.html?id=` 상세(숫자 헤더, 요약, 접힌 수법·배경·자금흐름, 역할별 주소표, 출처, 관련 사건). 한/영, 다크(기본)/라이트.
+- 페이지: `index.html` 개요(지표 4개, 일별 피해액, 유형 비중, 최근 수집 주소, 금액 상위 5, 최근 사건, 최신 브리핑) · `incidents.html` 사건 표(검색·유형·체인·소스·정렬·기간·후속 제외·페이지) · `stats.html` 통계(시계열 금액/건수, 유형·체인 표: 신규·%·금액·%·평균, 일별 표, 제재·수사, 주소 역할, 출처별 사건) · `briefings.html` 날짜별 브리핑 · `addresses.html` 지갑 주소(기간·역할·체인별 수집 주소 목록 + 조회: 사건 카드·OFAC SDN·crimial_hunter 동시 대조; API `/api/addresses`) · `incident.html?id=` 상세(숫자 헤더, 요약, 접힌 수법·배경·자금흐름, 역할별 주소표, 출처, 관련 사건). 한/영, 다크(기본)/라이트.
 - 프런트는 빌드 없는 바닐라 JS(`common.js`: API·i18n·SVG 차트). 유형 9색은 색약 시뮬레이션 검증을 통과한 팔레트이며 항상 점+라벨을 함께 표기합니다.
 - `collector/site.py` 는 매 실행 `docs/data/*.json` 스냅샷을 남깁니다(GitHub 에서 데이터만 볼 때 용도). GitHub Pages 는 private+Free 플랜이라 쓰지 않습니다.
 
@@ -64,6 +64,8 @@ run.py  (매시간)
 - 규칙 QA 로 의심 카드를 고릅니다: 사건일 없음/게시일 이후/수집일과 같음, 금액이 원문에 없음, 원문에 금액이 있는데 카드엔 없음, 온체인 유형인데 체인 없음, 이름이 제목 그대로, 유형 의심(법집행 단어).
 - 걸린 카드는 원문을 다시 가져와(HTTP 캐시) 로컬 LLM 에 '현재 카드 + 원문' 을 주고 핵심 필드를 확정하게 합니다(`prompts.RELABEL_SYSTEM`, JSON 스키마). **모든 수정에는 원문 그대로의 근거 구절이 필요**하고, 하네스가 근거가 원문에 실제로 있는지·날짜가 게시일 이전인지·금액 숫자가 근거와 맞는지 검사해 통과한 수정만 적용합니다.
 - 결과는 `data/relabel_log.jsonl` (before/after/근거/거부 이유). `--relabel-all` 은 규칙에 걸리지 않은 카드도 검증, `--relabel-only relevance_suspect` 처럼 특정 플래그만 재검증. 바뀐 날짜는 `--rebuild-day` 로 재생성.
+- **매시간 자동 판정**: 수집 직후 새 카드에 대해 위 판정을 바로 실행합니다(카드당 ~5초). 이미 판정한 카드는 `--review` 에서 건너뛰고, `--review-force` 로 다시 판정할 수 있습니다.
+- **교차 감사** `python run.py --audit`: 최근 30일 병합 사건 목록 전체를 한 번에 LLM 에 보여 카드 하나씩 볼 때는 안 보이는 문제를 찾습니다 — 이름이 다른 중복, 피해액이 아닌 금액(회수·요구·단속 총액), 유형·날짜 오류, 두루뭉술한 이름, 사건 아님. 확신도 0.85 이상만 자동 반영(중복은 `merge_decisions` 캐시에 넣어 다음 병합에서 합쳐짐)하고, 전체 결과는 `data/audits/YYYY-MM-DD.md` 로 남겨 사람이 봅니다.
 - 판정 하네스 규칙(LLM 보다 우선): 사건일이 게시일보다 1년 이상 이전이면 회고 기사, 가상자산이 수단·대상이 아니면 일반 범죄, 법집행·제재 카드인데 카드·원문 어디에도 가상자산 단어가 없으면 일반 범죄. DOJ 페이지는 HTML 재수집이 안 되므로(빈 본문) 원문 없는 카드에는 삭제성 판정을 적용하지 않습니다.
 - **사건 여부 판정** `python run.py --review`: 모든 카드에 대해 로컬 LLM 이 '원장에 올릴 새 사건인가'를 같은 기준(`prompts.REVIEW_SYSTEM`: new_attack / new_enforcement / sanctions / laundering_report 는 올림, exchange_self_report / court_procedure / retrospective / general_crime_no_crypto / market_or_opinion 은 제외)으로 판정합니다. 제외는 확신도 0.8 이상일 때만 적용하고, 금액이 피해액이 아니면(차단 실적·거래량) amount_usd 를 비웁니다. 기록은 `data/review_log.jsonl`. `--review-all` 은 사람·규칙이 제외한 카드만 다시 판정해 잘못 제외됐으면 복구합니다.
 - 하네스 안전장치: 원문이 없거나 사건을 다루지 않으면(JS 렌더링 목록 페이지 등) '관련 없음'·금액 삭제·유형 변경 같은 삭제성 판단은 받지 않고, $5B 이상이거나 '처리량·거래량' 성격의 금액은 피해액으로 받지 않습니다. 첫 실행(2026-09-18)에서 80장 중 25장 검증, 18장 수정(사건일 14, 금액 6, 체인 5), 하네스가 2건을 잘못 통과시켜 규칙을 보강했습니다.

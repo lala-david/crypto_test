@@ -10,6 +10,7 @@ API (모두 JSON):
   GET /api/incidents/{uid}
   GET /api/briefings            GET /api/briefings/{day}
   GET /api/stats?days=30&type=&chain=&source=&q=
+  GET /api/addresses?days=30&role=attacker|laundering|sanctioned|victim|unknown&chain=&q=&page=&size=
   GET /api/addresses/lookup?q=  GET /api/search?q=
 정적 파일: docs/ (index.html, incidents.html, …)
 """
@@ -119,6 +120,15 @@ async def stats(req: Request):
     return J({**svc.stats(rows, lo, hi, f["basis"]), "facets": svc.facets(rows)})
 
 
+async def addresses(req: Request):
+    f = _filters(req)
+    role, chain, q = _p(req, "role"), _p(req, "chain"), _p(req, "q")
+    size = max(1, min(_int(req, "size", 50), 500)); page = max(1, _int(req, "page", 1))
+    res = svc.list_addresses(f["days"], f["from_"], f["to"], role=role, chain=chain, q=q, basis=f["basis"], limit=100000)
+    items = res["items"][(page - 1) * size:page * size]
+    return J({"total": res["total"], "page": page, "size": size, "items": items, "roles": res["roles"], "chains": res["chains"]})
+
+
 async def lookup(req: Request):
     q = (_p(req, "q") or "").strip()
     if len(q) < 6:
@@ -137,7 +147,7 @@ async def http_error(req: Request, exc: HTTPException):
 app = Starlette(routes=[
     Route("/api", api_index), Route("/api/meta", meta), Route("/api/incidents", incidents), Route("/api/incidents/{uid}", incident),
     Route("/api/briefings", briefings), Route("/api/briefings/{day}", briefing), Route("/api/stats", stats),
-    Route("/api/addresses/lookup", lookup), Route("/api/search", search),
+    Route("/api/addresses", addresses), Route("/api/addresses/lookup", lookup), Route("/api/search", search),
     Mount("/", app=StaticFiles(directory=DOCS, html=True), name="static"),
 ], exception_handlers={HTTPException: http_error})
 
