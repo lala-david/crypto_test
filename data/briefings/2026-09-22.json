@@ -1,0 +1,15 @@
+{
+ "headline_ko": "9월 22일 브리핑 · 신규 2건 · 피해 $374K",
+ "headline_en": "Sep 22 briefing · 2 new · loss $374K",
+ "briefing_ko": "- **[Internet Token](https://x.com/DefimonAlerts/status/2101969009461567690)** · Base · 해킹 · **$265K** · 9.21 — 가짜 풀 콜백으로 대량 INT를 민팅하고 공식 풀에서 WETH를 인출했다\n- **[RWC Token](https://x.com/TenArmorAlert/status/2101925758214316524)** · BNB Smart Chain · 해킹 · **$109K** · 9.21 — 플래시론으로 풀 가격을 인위적으로 올려 USDT를 탈취했다\n- **시사점** — 유동성 풀을 조작해 가격을 왜곡하거나 토큰을 무에서 만들고 있다.",
+ "briefing_en": "- **[Internet Token](https://x.com/DefimonAlerts/status/2101969009461567690)** · Base · Hack · **$265K** · Sep 21 — Minted massive INT via a fake pool callback and withdrew…\n- **[RWC Token](https://x.com/TenArmorAlert/status/2101925758214316524)** · BNB Smart Chain · Hack · **$109K** · Sep 21 — Used a flash loan to manipulate the pool price and steal…\n- **Takeaway** — Attackers keep manipulating liquidity pools to distort prices or mint tokens from thin air.",
+ "counts": {
+  "new": 2,
+  "followups": 0,
+  "major": 2,
+  "minor": 0,
+  "loss_usd": 374460.85,
+  "legal_usd": 0
+ },
+ "format": "structured-v2"
+}
