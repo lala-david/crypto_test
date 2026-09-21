@@ -310,3 +310,9 @@ body { font-size: 14px; }
 .kind.eoa { color: var(--ink); }
 .kind.other { color: var(--warn); }
 .ell { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tbl td.nowrap { white-space: nowrap; }
+.tbl td.ell { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tbl td.ell.wide { max-width: 320px; }
+.lbl { display: inline-block; max-width: 200px; vertical-align: bottom; }
+.tbl td.nowrap .addr, .tbl td.addr.nowrap { white-space: nowrap; word-break: normal; }
+.tbl td.ell { max-width: 200px; }
