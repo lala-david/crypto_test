@@ -88,7 +88,9 @@ def _strip_line(s: str, project: str, max_len: int = 60) -> str:
         s = s[len(project):].lstrip(" -—:·,")
     s = re.sub(r"\s?\$[\d.,]+\s*[KMB]?\b", " ", s)  # 금액은 골격이 붙이므로 본문에서 제거(양쪽 공백은 하나로)
     # "약 1,530,000달러", "150만 달러", "1.5M USD", "462,730 dollars" 같은 표기도 제거 (골격의 $ 금액과 중복)
-    s = re.sub(r"(?:약|around|about|approx\.?|roughly)?\s*\$?\d[\d,]*(?:\.\d+)?\s*(?:[KMB]|만|억|천만|백만)?\s*(?:달러|dollars?|USD|usd)(?:\s*(?:상당|어치|규모|worth))?", " ", s)
+    s = re.sub(r"(?:약|around|about|approx\.?|roughly)?\s*\$?\d[\d,]*(?:\.\d+)?\s*(?:[KMB]|만|억|천만|백만)?\s*(?:달러|dollars?|USD|usd)(?:\s*(?:상당|어치|규모|worth))?", "\x00", s)
+    s = re.sub(r"\x00\s*(?:가|이|을|를|은|는|의|로|으로)?(?=\s|$)", " ", s)  # 금액 뒤에 붙어 있던 조사("…달러가", "…상당의")도 함께 제거
+    s = s.replace("\x00", " ")
     s = re.sub(r"약\s+(?=(?:규모|상당|어치|의\s))", "", s)
     s = re.sub(r"\s{2,}", " ", s).strip(" -—,·")
     # 로컬 LLM 이 한글 띄어쓰기를 통째로 빼먹는 경우 → 폴백 사용을 위해 빈 문자열
@@ -97,13 +99,26 @@ def _strip_line(s: str, project: str, max_len: int = 60) -> str:
     if len(s) > max_len:
         cut = max(s.rfind(",", 0, max_len), s.rfind(" ", 0, max_len))
         s = s[: cut if cut > max_len * 0.5 else max_len].rstrip(" ,") + "…"
+    if len(s.strip("…. ")) < 6:  # 금액만 있던 줄은 제거 후 조각만 남는다 → 폴백 사용
+        return ""
     return s
 
 
+_TYPE_LINE_KO = {"private_key_compromise": "개인키 유출로 자산 탈취", "hack_exploit": "취약점을 이용한 자산 탈취", "phishing_social_engineering": "피싱으로 자산 탈취",
+                 "rug_pull": "러그풀", "sanctions_designation": "제재 지정", "law_enforcement_action": "수사·기소", "laundering_report": "자금세탁 보고",
+                 "ransomware": "랜섬웨어", "scam_fraud": "사기"}
+
+
 def _fallback_line(i: Incident, lang: str) -> str:
+    """LLM 한 줄이 없을 때: 카드의 수법/요약 첫 문장. 한국어 브리핑인데 한글이 없으면(규칙 기반 DeFiLlama 카드의 영문 분류) 유형별 한국어 문구로."""
     src = (i.attack_method_ko if lang == "ko" else i.attack_method_en) or (i.summary_ko if lang == "ko" else i.summary_en) or ""
     first = re.split(r"(?<=[.!?。])\s+", src.strip())[0] if src.strip() else ""
-    return _strip_line(first, i.project)[:80] or ("추가 정보 없음" if lang == "ko" else "no further detail")
+    out = _strip_line(first, i.project)[:80]
+    if lang == "ko" and (len(out) < 6 or not re.search(r"[가-힣]", out)):
+        return _TYPE_LINE_KO.get(i.incident_type, "추가 정보 없음")
+    if lang == "en" and len(out) < 6:
+        return "no further detail"
+    return out
 
 
 def _digest(cards: List[Incident]) -> str:
