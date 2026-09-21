@@ -21,6 +21,7 @@ from collections import Counter, defaultdict
 from datetime import date, timedelta
 from typing import Dict, List, Optional, Tuple
 
+from .addrcheck import AddrChecker, kind_text
 from .crimial import CrimialHunter
 from .dedupe import LLMJudge
 from .merge import mark_followups, merge_incidents, normalize_name
@@ -34,6 +35,10 @@ CHAIN_ALIAS = {
     "bsc": "BSC", "bnb chain": "BSC", "bnb smart chain": "BSC", "binance smart chain": "BSC", "binance chain": "BSC",
     "liquid network": "Liquid", "btc": "Bitcoin", "sol": "Solana", "matic": "Polygon", "polygon pos": "Polygon",
     "arb": "Arbitrum", "arbitrum one": "Arbitrum", "op": "Optimism", "avax": "Avalanche", "avalanche c-chain": "Avalanche",
+    # 표시 이름의 대소문자 변형(과거 merge_addresses 가 대문자로 저장한 값 포함)
+    "ethereum": "Ethereum", "bitcoin": "Bitcoin", "solana": "Solana", "polygon": "Polygon", "arbitrum": "Arbitrum", "optimism": "Optimism",
+    "avalanche": "Avalanche", "base": "Base", "hyperevm": "HyperEVM", "hyperliquid": "HyperEVM", "cronos": "Cronos", "sonic": "Sonic", "linea": "Linea",
+    "monero": "Monero", "xmr": "Monero", "osmosis": "Osmosis", "nomic": "Nomic", "noble": "Noble", "axelar": "Axelar", "cosmos": "Cosmos", "starknet": "Starknet",
 }
 
 
@@ -126,7 +131,28 @@ class DataService:
         # 건수 · 최신 수집시각 · json 총 길이(재검증으로 내용만 바뀐 경우 감지)
         r = self.store.conn.execute("SELECT COUNT(*), MAX(collected_at), SUM(length(json)) FROM incidents").fetchone()
         b = tuple(sorted(os.path.basename(p) + str(int(os.path.getmtime(p))) for p in glob.glob(os.path.join(self.data_dir, "briefings", "*.json"))))
-        return (r[0], r[1], r[2], b)
+        lp = os.path.join(self.data_dir, "address_labels.json")
+        return (r[0], r[1], r[2], b, int(os.path.getmtime(lp)) if os.path.exists(lp) else 0)
+
+    def _attach_address_labels(self, rows: List[dict]) -> None:
+        """addrcheck 결과(address_labels.json)를 주소 dict 에 붙인다: kind(eoa/contract/wallet/…), ctype, kind_text, label, tx_count."""
+        path = os.path.join(self.data_dir, "address_labels.json")
+        labels: Dict[str, dict] = {}
+        if os.path.exists(path):
+            try:
+                with open(path, encoding="utf-8") as f:
+                    labels = json.load(f)
+            except Exception:
+                labels = {}
+        self.address_labels = labels
+        for r in rows:
+            for a in r["addresses"]:
+                x = labels.get(AddrChecker.key(a["address"]))
+                if not x:
+                    a.update(kind="", ctype="", kind_text="", label="", tx_count=None)
+                    continue
+                a.update(kind=x.get("kind") or "", ctype=x.get("ctype") or "", kind_text=kind_text(x), label=x.get("label") or "",
+                         tx_count=x.get("tx_count"), symbol=x.get("symbol") or "", proxy=bool(x.get("proxy")), checked_at=(x.get("checked_at") or "")[:10])
 
     def refresh(self, force: bool = False) -> None:
         sig = self._signature()
@@ -160,6 +186,7 @@ class DataService:
             for d in days:
                 merged_all += [inc_json(i, d) for i in per_day[d]]
             merged_all.sort(key=lambda r: (r["day"], r["incident_date"] or ""), reverse=True)
+            self._attach_address_labels(merged_all)
             briefings = []
             for p in sorted(glob.glob(os.path.join(self.data_dir, "briefings", "*.json"))):
                 d = os.path.basename(p)[:-5]
@@ -323,7 +350,7 @@ class DataService:
                 break
         return out
 
-    def list_addresses(self, days=None, from_=None, to=None, role=None, chain=None, q=None, basis: str = "event", limit: int = 5000) -> dict:
+    def list_addresses(self, days=None, from_=None, to=None, role=None, chain=None, q=None, basis: str = "event", limit: int = 5000, kind: str = "") -> dict:
         """기간 내 사건에서 수집한 지갑 주소 목록(주소당 1행, 사건 여러 개면 묶음). 후속 보도 카드도 포함(주소는 사실이므로)."""
         rows = self.filter(days, from_, to, basis=basis)
         seen: Dict[str, dict] = {}
@@ -335,11 +362,14 @@ class DataService:
                     continue
                 if chain_n and (a["chain"] or "").lower() != chain_n:
                     continue
+                if kind and (a.get("kind") or "unchecked") != kind and not (kind == "contract" and a.get("kind") == "contract"):
+                    continue
                 if ql and ql not in a["address"].lower() and ql not in r["project"].lower():
                     continue
                 k = a["address"].lower()
                 if k not in seen:
                     seen[k] = {"address": a["address"], "chain": a["chain"], "role": a["role"], "note": a["note"], "blacklist": bool((r.get("blacklist_detail") or {}).get(a["address"])),
+                               "kind": a.get("kind", ""), "ctype": a.get("ctype", ""), "kind_text": a.get("kind_text", ""), "label": a.get("label", ""), "tx_count": a.get("tx_count"),
                                "incidents": [], "first_day": r["day"], "event_date": r.get("event_date")}
                 e = seen[k]
                 if ROLE_PRIORITY.get(a["role"], 9) < ROLE_PRIORITY.get(e["role"], 9):
@@ -352,7 +382,8 @@ class DataService:
         out.sort(key=lambda e: e["first_day"], reverse=True)
         roles = Counter(e["role"] for e in out)
         chains = Counter(e["chain"] for e in out)
-        return {"total": len(out), "items": out[:limit], "roles": dict(roles.most_common()), "chains": dict(chains.most_common())}
+        kinds = Counter((e.get("kind") or "unchecked") for e in out)
+        return {"total": len(out), "items": out[:limit], "roles": dict(roles.most_common()), "chains": dict(chains.most_common()), "kinds": dict(kinds.most_common())}
 
     def lookup_address(self, q: str) -> dict:
         self.refresh()

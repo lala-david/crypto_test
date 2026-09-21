@@ -1,0 +1,149 @@
+{
+ "summary": {
+  "addresses": 312,
+  "checked": 198,
+  "kinds": {
+   "eoa": 209,
+   "contract": 74,
+   "unfunded": 18,
+   "wallet": 11
+  },
+  "ctypes": {
+   "contract": 40,
+   "token": 17,
+   "lp_pool": 6,
+   "proxy": 3,
+   "ctoken": 1,
+   "router": 1,
+   "v3_pool": 2,
+   "safe": 1,
+   "atoken": 2,
+   "nft": 1
+  },
+  "cards_changed": 15,
+  "changes": 20,
+  "days": [
+   "2026-09-15",
+   "2026-09-17",
+   "2026-09-18",
+   "2026-09-20"
+  ],
+  "rpc": {
+   "rpc_calls": 208,
+   "rpc_errors": 0
+  },
+  "oklink": false
+ },
+ "changes": [
+  {
+   "uid": "f0e4a1ea4036f53c",
+   "project": "Tectonic",
+   "changes": [
+    "phantom_contract_removed 0xd3aac8a1a9e412e2… (Orchestrator Contract)",
+    "phantom_contract_removed 0x2dc6a36f4e5eeefe… (Borrower Contract)"
+   ]
+  },
+  {
+   "uid": "6567b5179c6fb0bc",
+   "project": "YamFinance",
+   "changes": [
+    "truncated_tx_removed 0xf3c9b1d7094bd11e… (Proposal creation tx)"
+   ]
+  },
+  {
+   "uid": "b6fcaf1b9dca7c3a",
+   "project": "ORB",
+   "changes": [
+    "truncated_tx_removed 0x5e6b33b7d69b505d… (Attack tx)"
+   ]
+  },
+  {
+   "uid": "0ed4e6515f2dd3bd",
+   "project": "GDC",
+   "changes": [
+    "truncated_tx_removed 0xf12ccb683c51cc1c… (Attack tx)"
+   ]
+  },
+  {
+   "uid": "90941b92547619e1",
+   "project": "EtherFiAtomicQueue",
+   "changes": [
+    "truncated_tx_removed 0x7cbe0b4349513fed… (Attack tx)"
+   ]
+  },
+  {
+   "uid": "ec8baca30ce2ffb5",
+   "project": "OMNI404",
+   "changes": [
+    "truncated_tx_removed 0x4cbc3d8db832eb54… (Attack tx (run))"
+   ]
+  },
+  {
+   "uid": "3f4e4a9ddb15a21d",
+   "project": "UnifiProtocol",
+   "changes": [
+    "truncated_tx_removed 0x74634e4ccc7e8922… (Attack tx)"
+   ]
+  },
+  {
+   "uid": "7dcbf0adc5dc94a7",
+   "project": "BeatXswap",
+   "changes": [
+    "truncated_tx_removed 0xcc71a3bb131c7346… (Attack tx)"
+   ]
+  },
+  {
+   "uid": "80f0277fe88564a0",
+   "project": "EnsoFinance",
+   "changes": [
+    "truncated_tx_removed 0x63fbfc4b47e810d6… (Attack tx)"
+   ]
+  },
+  {
+   "uid": "9fd024f79d7b0d8d",
+   "project": "OrderFactory",
+   "changes": [
+    "truncated_tx_removed 0x201c7a9b4114c76f… (Attack tx)"
+   ]
+  },
+  {
+   "uid": "dd282a46ff0998df",
+   "project": "BonfireSwap",
+   "changes": [
+    "truncated_tx_removed 0xb4c00e8f3ba815b6… (Attack tx)",
+    "truncated_tx_removed 0xb4c00e8f3ba815b6… (Attack tx)"
+   ]
+  },
+  {
+   "uid": "1a96fd35a33fe926",
+   "project": "RsETHSafeModule",
+   "changes": [
+    "truncated_tx_removed 0x0e7680b06cb8a6f8… (Example exploit tx)"
+   ]
+  },
+  {
+   "uid": "5cda55e0d065f1f4",
+   "project": "Likwid",
+   "changes": [
+    "truncated_tx_removed 0x83cbd07d59aedc2f… (attack tx)",
+    "truncated_tx_removed 0x83cbd07d59aedc2f… (attack tx address)"
+   ]
+  },
+  {
+   "uid": "454f0ebc6282a922",
+   "project": "Flamincome",
+   "changes": [
+    "truncated_tx_removed 0x5ff8150482f5473b… (Attack tx)",
+    "phantom_contract_removed 0x875da4Bd7b4a52a8… (Exploit contract)"
+   ]
+  },
+  {
+   "uid": "01dcf593b33091ff",
+   "project": "PrimeFinance",
+   "changes": [
+    "truncated_tx_removed 0xff990876d863a617… (exploit tx)",
+    "phantom_contract_removed 0x817D33738D979eD8… (attacker contract)"
+   ]
+  }
+ ]
+}

@@ -76,6 +76,8 @@ def main() -> int:
     ap.add_argument("--review-all", action="store_true", help="--review 를 이미 제외된 카드에도 적용(복구 가능)")
     ap.add_argument("--review-force", action="store_true", help="--review 에서 이미 판정한 카드도 다시 판정")
     ap.add_argument("--audit", action="store_true", help="최근 30일 사건 목록을 로컬 LLM 이 교차 검토(중복·금액·유형·날짜·이름) → data/audits/")
+    ap.add_argument("--addrcheck", action="store_true", help="모든 카드의 지갑 주소를 온체인으로 검증·분류(EOA/CA·토큰·풀, 활동 체인) 후 카드 교정 + 보고서")
+    ap.add_argument("--addrcheck-force", action="store_true", help="--addrcheck 에서 캐시된 결과도 다시 조회")
     args = ap.parse_args()
 
     with open(args.config, encoding="utf-8") as f:
@@ -92,6 +94,17 @@ def main() -> int:
 
     store = Store(data_dir)
     http = Http(os.path.join(data_dir, "cache"))
+
+    if args.addrcheck or args.addrcheck_force:
+        from collector.addrcheck import run_addrcheck
+        log.info("=== 지갑 주소 검증 시작 ===")
+        summ = run_addrcheck(store, data_dir, cfg.get("addrcheck") or {}, force=args.addrcheck_force, limit=args.limit)
+        log.info("주소 검증 결과: %s", json.dumps(summ, ensure_ascii=False))
+        store.export_jsonl(); store.export_state()
+        if summ["days"]:
+            log.info("바뀐 카드가 있는 날짜: %s → 각각 `python run.py --rebuild-day <날짜> --no-push` 로 재생성", ", ".join(summ["days"]))
+        print(json.dumps(summ, ensure_ascii=False))
+        return 0
 
     if args.audit:
         from collector.relabel import run_audit
@@ -215,6 +228,16 @@ def main() -> int:
             run_incidents = [i for i in store.incidents_collected_on(today) if i.uid in new_uids] or run_incidents
         except Exception as e:
             log.warning("신규 카드 판정 실패(건너뜀): %s", str(e)[:200])
+
+    # 3.6) 신규 카드의 지갑 주소를 온체인으로 검증(EOA/CA·유형·활동 체인) → 체인/역할 교정, tx 해시 분리. 캐시된 주소는 건너뜀.
+    ac_cfg = cfg.get("addrcheck") or {}
+    if run_incidents and not args.rebuild_day and ac_cfg.get("enabled", True):
+        try:
+            from collector.addrcheck import run_addrcheck
+            ar = run_addrcheck(store, data_dir, ac_cfg, cards=[i for i in run_incidents if i.relevant and i.addresses], report=False)
+            log.info("신규 카드 주소 검증: %s", json.dumps({k: ar[k] for k in ("addresses", "checked", "kinds", "changes")}, ensure_ascii=False))
+        except Exception as e:
+            log.warning("주소 검증 실패(건너뜀): %s", str(e)[:200])
 
     # 4) 오늘 누적 사건 → 소스 간 같은 사건 병합(규칙 + LLM 판정) → 이전 14일 사건의 후속 보도 표시 → 주소 대조
     # 같은-사건 판정은 가벼운 모델로 (config.llm.<provider>.dedupe_model), 없으면 본 모델

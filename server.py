@@ -125,9 +125,9 @@ async def addresses(req: Request):
     f = _filters(req)
     role, chain, q = _p(req, "role"), _p(req, "chain"), _p(req, "q")
     size = max(1, min(_int(req, "size", 50), 500)); page = max(1, _int(req, "page", 1))
-    res = svc.list_addresses(f["days"], f["from_"], f["to"], role=role, chain=chain, q=q, basis=f["basis"], limit=100000)
+    res = svc.list_addresses(f["days"], f["from_"], f["to"], role=role, chain=chain, q=q, basis=f["basis"], limit=100000, kind=_p(req, "kind") or "")
     items = res["items"][(page - 1) * size:page * size]
-    return J({"total": res["total"], "page": page, "size": size, "items": items, "roles": res["roles"], "chains": res["chains"]})
+    return J({"total": res["total"], "page": page, "size": size, "items": items, "roles": res["roles"], "chains": res["chains"], "kinds": res.get("kinds", {})})
 
 
 async def lookup(req: Request):

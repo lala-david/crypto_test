@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const { $, $$, t, roleName, esc, fmtInt, money, moneyFull, fmtDate, explorer, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, statCard, sw, chainPills, detailUrl, bindRows, errorBox } = KL;
+  const { $, $$, t, roleName, esc, fmtInt, money, moneyFull, fmtDate, explorer, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, statCard, sw, chainPills, detailUrl, bindRows, errorBox, kindName } = KL;
   const S = { days: "30" };
   let D = null;
 
@@ -35,9 +35,9 @@
     // 최근 수집 주소: 주소 · 체인 · 역할 · 사건 (제재·공격자·세탁 우선)
     const pri = { sanctioned: 0, attacker: 1, laundering: 2, victim: 3, unknown: 4 };
     const addrs = D.addrs.items.filter((a) => a.role !== "unknown").sort((a, b) => (b.first_day > a.first_day ? 1 : b.first_day < a.first_day ? -1 : pri[a.role] - pri[b.role])).slice(0, 10);
-    $("#addrTable").innerHTML = `<thead><tr><th>${esc(t("th_address"))}</th><th>${esc(t("chain"))}</th><th>${esc(t("addr_role"))}</th><th>${esc(t("th_incident"))}</th></tr></thead><tbody>${
+    $("#addrTable").innerHTML = `<thead><tr><th>${esc(t("th_address"))}</th><th>${esc(t("chain"))}</th><th>${esc(t("th_kind"))}</th><th>${esc(t("addr_role"))}</th><th>${esc(t("th_incident"))}</th></tr></thead><tbody>${
       addrs.map((a) => { const i = a.incidents[0]; const url = explorer(a.chain, a.address);
-        return `<tr><td class="addr">${url ? `<a href="${url}" target="_blank" rel="noopener" title="${esc(a.address)}">${esc(shortAddr(a.address))}</a>` : `<span title="${esc(a.address)}">${esc(shortAddr(a.address))}</span>`}<button class="copy" data-copy="${esc(a.address)}" type="button">${esc(t("copy"))}</button>${a.blacklist ? `<span class="tag warn">BL</span>` : ""}</td><td class="mono muted">${esc(a.chain)}</td><td><span class="role ${esc(a.role)}">${esc(roleName(a.role))}</span></td><td>${sw(i.type)}<a class="name" href="incident.html?id=${esc(i.uid)}">${esc(i.project)}</a></td></tr>`; }).join("") || `<tr><td colspan="4" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
+        return `<tr><td class="addr">${url ? `<a href="${url}" target="_blank" rel="noopener" title="${esc(a.address)}">${esc(shortAddr(a.address))}</a>` : `<span title="${esc(a.address)}">${esc(shortAddr(a.address))}</span>`}<button class="copy" data-copy="${esc(a.address)}" type="button">${esc(t("copy"))}</button>${a.blacklist ? `<span class="tag warn">BL</span>` : ""}</td><td class="mono muted">${esc(a.chain)}</td><td class="small">${esc(kindName(a) || "–")}</td><td><span class="role ${esc(a.role)}">${esc(roleName(a.role))}</span></td><td>${sw(i.type)}<a class="name" href="incident.html?id=${esc(i.uid)}">${esc(i.project)}</a></td></tr>`; }).join("") || `<tr><td colspan="5" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
     $$(".copy[data-copy]", $("#addrTable")).forEach((b) => b.addEventListener("click", async () => { try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = t("copied"); setTimeout(() => (b.textContent = t("copy")), 1200); } catch (_) {} }));
   };
   // ---- 상단 배너: 21st.dev "All about the Benjamins" 디더 효과 (배너 안에만) ----

@@ -146,7 +146,8 @@ def merge_addresses(*lists: Iterable[Address]) -> List[Address]:
         for a in lst:
             k = a.key()
             if k not in merged:
-                merged[k] = Address(chain=a.chain.upper(), address=a.address, role=a.role or "unknown", note=a.note or "")
+                # 체인 표기는 그대로 둔다(예: HyperEVM). 대소문자 무시 비교는 key() 가 맡고, 표시 정규화는 service.norm_chain 이 한다.
+                merged[k] = Address(chain=a.chain, address=a.address, role=a.role or "unknown", note=a.note or "")
             else:
                 cur = merged[k]
                 if cur.role == "unknown" and a.role and a.role != "unknown":

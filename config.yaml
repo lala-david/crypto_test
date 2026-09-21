@@ -447,3 +447,13 @@ keywords:
     - darknet
     - "dark web"
     - "scam center*"
+
+# ---------------------------------------------------------------------------
+# 지갑 주소 온체인 검증 (collector/addrcheck.py · run.py --addrcheck · 매시간 신규 카드 주소 자동)
+addrcheck:
+  enabled: true
+  # 공개 RPC 덮어쓰기/추가: 체인 표시 이름 → URL 또는 URL 목록 (기본값은 addrcheck.DEFAULT_EVM_RPC)
+  rpc: {}
+  # OKLink Onchain Data API (선택). 키 파일이 있으면 address-summary / entity-label 로 라벨을 보강한다.
+  oklink_key_env: OKLINK_API_KEY
+  oklink_key_file: ../vllm/oklink.txt

@@ -304,3 +304,9 @@ body { font-size: 14px; }
 .stat.plain .spark, .stat.plain .delta { display: none; }
 @media (max-width: 1100px) { .stat.plain.c4 { grid-column: span 4; } }
 @media (max-width: 600px) { .stat.plain.c4 { grid-column: span 12; } }
+/* 주소 종류 배지 (addrcheck) */
+.kind { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); background: var(--card-2); color: var(--ink-2); white-space: nowrap; }
+.kind.ca { color: var(--t-law); border-color: color-mix(in srgb, var(--t-law) 40%, transparent); }
+.kind.eoa { color: var(--ink); }
+.kind.other { color: var(--warn); }
+.ell { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
