@@ -316,3 +316,82 @@ body { font-size: 14px; }
 .lbl { display: inline-block; max-width: 200px; vertical-align: bottom; }
 .tbl td.nowrap .addr, .tbl td.addr.nowrap { white-space: nowrap; word-break: normal; }
 .tbl td.ell { max-width: 200px; }
+
+/* ================= LUMOS 스타일 (lumos.chainlight.io 케이스 패널 구조·톤) ================= */
+:root {
+  --sans: "Geist", "Inter", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --mono: "Geist Mono", "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --bg: #0f0f11; --card: #161618; --card-2: #1d1d20; --line: #252528; --line-2: #202022;
+  --ink: #edeef0; --ink-2: #a5b1b7; --ink-3: #696e77;
+  --accent: #8c61ff; --accent-ink: #fff; --accent-soft: rgba(114,67,239,.18);
+  --up: #fa5b72; --down: #34d399; --warn: #ffd74b;
+  --chart: #8c61ff; --chart-dim: #4a13dd; --grid: #222226; --weekend: rgba(255,255,255,.02);
+}
+:root[data-theme="light"] {
+  --bg: #ffffff; --card: #f9fafb; --card-2: #f1f3f6; --line: #e2e6ed; --line-2: #eceff3;
+  --ink: #0f0f11; --ink-2: #4b5563; --ink-3: #6b7280;
+  --accent: #5016eb; --accent-ink: #fff; --accent-soft: rgba(80,22,235,.12);
+  --up: #dc0003; --down: #00b53e; --warn: #b45309;
+  --chart: #5016eb; --chart-dim: #a560ff; --grid: #e6e9ee;
+}
+.brand .mark { background: linear-gradient(160deg, #a560ff, #5016eb 70%); }
+.btn.primary { background: #5016eb; color: #fff; box-shadow: none; } .btn.primary:hover { background: #682fff; border-color: transparent; }
+.nav-r .upd::before { background: var(--down); }
+/* 목록: 아바타·금액 */
+.avatar { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; margin-right: 9px; vertical-align: middle; font-size: 11px; font-weight: 700; color: var(--c, var(--ink-2)); background: color-mix(in srgb, var(--c, var(--ink-3)) 18%, transparent); border: 1px solid color-mix(in srgb, var(--c, var(--ink-3)) 35%, transparent); }
+.amt { font-family: var(--mono); font-variant-numeric: tabular-nums; } .amt .cur { color: var(--accent); margin-right: 2px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 999px; background: var(--card-2); border: 1px solid var(--line); font-size: 12px; white-space: nowrap; line-height: 17px; }
+.badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c, var(--accent)); }
+.code { font-family: var(--mono); font-size: 12px; padding: 2px 7px; border-radius: 6px; background: var(--card-2); border: 1px solid var(--line); }
+.min0 { min-width: 0; }
+/* 케이스 패널 */
+.case { min-width: 0; }
+.case-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--card); z-index: 2; }
+.case-id { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.case-id .avatar { width: 34px; height: 34px; font-size: 14px; margin: 0; }
+.case-name { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.case-sub { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 4px; color: var(--ink-2); font-size: 12px; }
+.case-sub .tag { margin-left: 0; }
+.case-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.case-close { width: 30px; height: 30px; border: 1px solid var(--line); border-radius: 7px; font-size: 18px; line-height: 1; color: var(--ink-2); } .case-close:hover { color: var(--ink); border-color: var(--ink-3); }
+.case-amt { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 18px 18px 14px; }
+.case-amt .l { font-size: 12px; color: var(--ink-2); margin-bottom: 4px; }
+.case-amt .v { font-family: var(--mono); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.05; }
+.case-amt .cur { color: var(--accent); font-size: 18px; margin-right: 4px; vertical-align: 8px; }
+.case-amt .s { font-size: 12px; color: var(--ink-3); margin-top: 5px; }
+.case-mini { display: flex; gap: 22px; text-align: right; }
+.case-mini .l { font-size: 11.5px; color: var(--ink-3); } .case-mini .v { font-family: var(--mono); font-size: 18px; font-weight: 600; margin-top: 2px; }
+.case-kv { display: grid; grid-template-columns: 1fr 1fr; gap: 0 28px; padding: 4px 18px 12px; border-bottom: 1px solid var(--line); }
+.case-kv > div { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line-2); font-size: 13px; min-width: 0; }
+.case-kv .k { color: var(--ink-3); white-space: nowrap; } .case-kv .val { font-family: var(--mono); font-weight: 500; text-align: right; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.case-kv .val .badge { font-family: var(--sans); font-weight: 500; }
+.case-sec { padding: 16px 18px; border-bottom: 1px solid var(--line); } .case-sec:last-child { border-bottom: 0; }
+.case-sec h3 { font-size: 13.5px; font-weight: 600; margin: 0 0 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.case-sec h3 .meta { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); font-weight: 400; text-align: right; }
+.case-sec .prose { font-size: 13.5px; }
+.case-sec .center { text-align: center; padding-top: 4px; }
+.tl { list-style: none; margin: 0; padding: 0 0 0 24px; position: relative; }
+.tl::before { content: ""; position: absolute; left: 6px; top: 8px; bottom: 10px; width: 2px; background: var(--line); }
+.tl li { position: relative; padding: 0 0 14px; } .tl li:last-child { padding-bottom: 0; }
+.tl li::before { content: ""; position: absolute; left: -23px; top: 4px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--line); background: var(--card); box-sizing: border-box; }
+.tl li.on::before { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.tl b { display: block; font-size: 13px; font-weight: 600; } .tl span { font-family: var(--mono); font-size: 12px; color: var(--ink-2); } .tl li:not(.on) span { color: var(--ink-3); }
+.tl a { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.case-tbl td { padding: 8px 10px; height: auto; } .case-tbl th { padding: 8px 10px; }
+.case-tbl .addr { font-size: 12px; word-break: break-all; } .case-tbl .addr .mono { font-size: 12px; }
+.icopy { margin-left: 6px; font-size: 12px; color: var(--ink-3); vertical-align: 0; } .icopy:hover { color: var(--ink); }
+.case-tbl .go, .case-row .go { color: var(--ink-3); font-size: 14px; } .case-tbl .go:hover, .case-row:hover .go { color: var(--accent); text-decoration: none; }
+.case-flow .pager { border-top: 0; padding: 8px 0 0; }
+.case-rows { display: grid; gap: 6px; }
+.case-row { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card-2); font-size: 13px; min-width: 0; }
+.case-row .who { font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; } .case-row .what { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.case-row:hover { border-color: var(--accent); text-decoration: none; }
+.case-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(760px, 100%); background: var(--card); border-left: 1px solid var(--line); box-shadow: -24px 0 60px rgba(0,0,0,.5); z-index: 40; overflow-y: auto; transform: translateX(100%); transition: transform .22s ease; }
+.case-drawer.open { transform: none; }
+.case-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.55); backdrop-filter: blur(2px); z-index: 39; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.case-backdrop.show { opacity: 1; pointer-events: auto; }
+body.case-open { overflow: hidden; }
+.page-case { max-width: 860px; margin: 0 auto; width: 100%; }
+.page-case .case { border: 1px solid var(--line); border-radius: 12px; background: var(--card); overflow: hidden; }
+.page-case .case-h { position: static; }
+@media (max-width: 700px) { .case-kv { grid-template-columns: 1fr; } .case-amt { flex-direction: column; align-items: flex-start; } .case-mini { text-align: left; } }

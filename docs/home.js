@@ -15,7 +15,7 @@
     render();
   }
   const shortAddr = (a) => (a.length > 20 ? a.slice(0, 8) + "…" + a.slice(-6) : a);
-  const amountCell = (i) => (i.amount_usd != null ? moneyFull(i.amount_usd) : `<span class="faint">${esc(t("unknown"))}</span>`);
+  const amountCell = (i) => (i.amount_usd != null ? `<span class="amt" title="${moneyFull(i.amount_usd)}"><span class="cur">$</span>${fmtInt(i.amount_usd)}</span>` : `<span class="faint">${esc(t("unknown"))}</span>`);
 
   let render = function () {
     renderNav("index.html", D.meta); renderFoot(); applyI18n(); bindChrome(() => render());
@@ -30,7 +30,7 @@
     // 최근 사건: 사건 · 금액($) · 체인 · 사건일
     const tb = $("#recentTable");
     tb.innerHTML = `<thead><tr><th>${esc(t("th_incident"))}</th><th class="num">${esc(t("th_amount"))}</th><th>${esc(t("th_chain"))}</th><th>${esc(t("th_date"))}</th></tr></thead><tbody>${
-      D.recent.map((i) => `<tr class="link" data-href="${detailUrl(i)}"><td>${sw(i.type)}<a class="name" href="${detailUrl(i)}">${esc(i.project)}</a>${i.followup_of ? ` <span class="tag">${esc(t("follow"))}</span>` : ""}</td><td class="num">${amountCell(i)}</td><td>${chainPills(i.chains, 2) || '<span class="faint">–</span>'}</td><td class="date">${esc(fmtDate(i.event_date || i.incident_date || i.day))}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
+      D.recent.map((i) => `<tr class="link" data-href="${detailUrl(i)}"><td class="nowrap">${KL.avatar ? KL.avatar(i) : sw(i.type)}<a class="name" href="${detailUrl(i)}">${esc(i.project)}</a>${i.followup_of ? ` <span class="tag">${esc(t("follow"))}</span>` : ""}</td><td class="num">${amountCell(i)}</td><td>${chainPills(i.chains, 2) || '<span class="faint">–</span>'}</td><td class="date">${esc(fmtDate(i.event_date || i.incident_date || i.day))}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
     bindRows(tb);
     // 최근 수집 주소: 주소 · 체인 · 역할 · 사건 (제재·공격자·세탁 우선)
     const pri = { sanctioned: 0, attacker: 1, laundering: 2, victim: 3, unknown: 4 };
@@ -43,7 +43,7 @@
   // ---- 상단 배너: 21st.dev "All about the Benjamins" 디더 효과 (배너 안에만) ----
   // 소스 = 검정 바탕 + 왼쪽 초상(docs/hero.jpg, 달러) + $ 코인 · ₿ 코인 · Ξ 다이아몬드(가상자산). 글자·숫자 텍스트 없음, 글리치 끔.
   let fxInst = null, heroImg = null, heroTried = false;
-  const FX_PARAMS = { renderMode: "dither", bgMode: "solid", cellSize: 8, coverage: 96, charSet: "binary", contrast: 115, edgeEmphasis: 40, tint: "#00ff66", tintOpacity: 45, overlayBlend: "overlay",
+  const FX_PARAMS = { renderMode: "dither", bgMode: "solid", cellSize: 8, coverage: 96, charSet: "binary", contrast: 115, edgeEmphasis: 40, tint: "#8c61ff", tintOpacity: 45, overlayBlend: "overlay",
     pfx: { vignette: { enabled: true, intensity: 38 }, scanLines: { enabled: true, intensity: 28 }, chromatic: { enabled: true, intensity: 25 }, bloom: { enabled: true, intensity: 60 }, filmGrain: { enabled: true, intensity: 40 }, glitch: { enabled: false, intensity: 0 } },
     animated: true, animStyle: "flicker", animSpeed: { enabled: true, intensity: 100 }, animIntensity: { enabled: true, intensity: 25 } };
   function coin(ctx, cx, cy, r, glyph) { // 밝은 코인 + 어두운 기호 (디더 후 기호가 구멍으로 읽힘)
