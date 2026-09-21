@@ -1,7 +1,7 @@
 {
  "summary": {
   "addresses": 309,
-  "checked": 115,
+  "checked": 0,
   "kinds": {
    "eoa": 213,
    "contract": 85,
@@ -23,7 +23,7 @@
   "changes": 0,
   "days": [],
   "rpc": {
-   "rpc_calls": 203,
+   "rpc_calls": 0,
    "rpc_errors": 0
   },
   "oklink": false
