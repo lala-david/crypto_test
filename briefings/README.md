@@ -7,7 +7,7 @@
 | 날짜 | 헤드라인 (KO) | Headline (EN) | 사건 | 리포트 |
 |---|---|---|---:|---|
 | [2026-09-21](2026-09/2026-09-21.md) | 9월 21일 브리핑 · 신규 2건 · 피해 $2M · 후속 1건 | Sep 21 briefing · 2 new · loss $2M · 1 follow-ups | 3/3 | [KO](../reports/2026-09/2026-09-21.ko.md) · [EN](../reports/2026-09/2026-09-21.en.md) |
-| [2026-09-20](2026-09/2026-09-20.md) | 9월 20일 브리핑 · 신규 8건 · 피해 $33K · 제재·수사 $559M · 후속 2건 | Sep 20 briefing · 8 new · loss $33K · enforcement $559M · 2 follow-ups | 9/16 | [KO](../reports/2026-09/2026-09-20.ko.md) · [EN](../reports/2026-09/2026-09-20.en.md) |
+| [2026-09-20](2026-09/2026-09-20.md) | 9월 20일 브리핑 · 신규 7건 · 피해 $33K · 제재·수사 $30K · 후속 2건 | Sep 20 briefing · 7 new · loss $33K · enforcement $30K · 2 follow-ups | 9/16 | [KO](../reports/2026-09/2026-09-20.ko.md) · [EN](../reports/2026-09/2026-09-20.en.md) |
 | [2026-09-19](2026-09/2026-09-19.md) | 9월 19일 브리핑 · 신규 3건 · 피해 $5.1M · 후속 1건 | Sep 19 briefing · 3 new · loss $5.1M · 1 follow-ups | 4/12 | [KO](../reports/2026-09/2026-09-19.ko.md) · [EN](../reports/2026-09/2026-09-19.en.md) |
 | [2026-09-18](2026-09/2026-09-18.md) | 9월 18일 브리핑 · 신규 5건 · 피해 $3.6M · 제재·수사 $25K · 후속 3건 | Sep 18 briefing · 5 new · loss $3.6M · enforcement $25K · 3 follow-ups | 8/22 | [KO](../reports/2026-09/2026-09-18.ko.md) · [EN](../reports/2026-09/2026-09-18.en.md) |
 | [2026-09-17](2026-09/2026-09-17.md) | 9월 17일 브리핑 · 신규 5건 · 피해 $9.9M · 제재·수사 $61M · 후속 2건 | Sep 17 briefing · 5 new · loss $9.9M · enforcement $61M · 2 follow-ups | 7/17 | [KO](../reports/2026-09/2026-09-17.ko.md) · [EN](../reports/2026-09/2026-09-17.en.md) |

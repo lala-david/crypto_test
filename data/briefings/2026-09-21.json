@@ -1,8 +1,8 @@
 {
  "headline_ko": "9월 21일 브리핑 · 신규 2건 · 피해 $2M · 후속 1건",
  "headline_en": "Sep 21 briefing · 2 new · loss $2M · 1 follow-ups",
- "briefing_ko": "- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$1.5M** · 9.19 — 개인키가 탈취돼 약 규모의 자산이 유출\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$463K** · 9.19 — 개인키가 탈취돼 약 규모의 이더리움 자산이 유출\n- **후속 1건** — [Nimiq](https://defillama.com/hacks) (첫 보도 9.18, 시그니처 검증 결함으로 손실 발생)\n- **시사점** — 개인키 탈취가 여전히 가장 흔한 자산 유출 수법으로 계속도 나타나고 있다.",
- "briefing_en": "- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · Key compromise · **$1.5M** · Sep 19 — Private key was compromised, causing a loss of million\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · Key compromise · **$463K** · Sep 19 — Private key was compromised, resulting in loss of about\n- **Follow-ups (1)** — [Nimiq](https://defillama.com/hacks) (first 9.18, Signature verification flaw caused a loss to…)\n- **Takeaway** — Private key theft remains the most common vector for crypto asset loss across recent incidents.",
+ "briefing_ko": "- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$1.5M** · 9.19 — 개인키가 탈취돼 공격자가 해당 주소의 모든 자금을 인출\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$463K** · 9.19 — 개인키가 탈취돼 공격자가 해당 주소의 모든 자금을 인출\n- **후속 1건** — [Nimiq](https://defillama.com/hacks) (첫 보도 9.18, 서명 검증 결함으로 공격자가 위조 서명으로 자금을 인출)\n- **시사점** — 개인키 탈취와 서명 검증 오류 등 인증 취약점이 계속 악용되고 있다.",
+ "briefing_en": "- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · Key compromise · **$1.5M** · Sep 19 — Private key was compromised, allowing the attacker to drain…\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · Key compromise · **$463K** · Sep 19 — Private key was compromised, allowing the attacker to drain…\n- **Follow-ups (1)** — [Nimiq](https://defillama.com/hacks) (first 9.18, Signature verification flaw let the attacker…)\n- **Takeaway** — Authentication flaws like key theft and signature bugs keep being exploited.",
  "counts": {
   "new": 2,
   "followups": 1,

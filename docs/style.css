@@ -293,3 +293,25 @@ body { font-size: 14px; }
 .src-row:hover .what { color: var(--ink); text-decoration: underline; }
 .grid.start { align-items: start; }
 .controls .search { min-width: 220px; }
+
+/* ================= 21st.dev ASCII/CRT 테마 (초록 tint, 스캔라인·비네트) ================= */
+:root {
+  --accent: #00ff66; --accent-ink: #001a0a; --accent-soft: rgba(0,255,102,.14); --chart: #00ff66; --chart-dim: #0a7a38;
+  --bg: #050706; --card: #0a0d0b; --card-2: #10150f; --line: #16261b; --line-2: #10190f; --ink: #e6f2ea; --ink-2: #93a89a; --ink-3: #5f7566;
+  --down: #00ff66; --good: #00ff66; --grid: #12201a;
+}
+:root[data-theme="light"] { --accent: #008f3a; --accent-ink: #fff; --accent-soft: rgba(0,143,58,.12); --chart: #008f3a; --chart-dim: #6cc794; }
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; opacity: .55;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.35) 2px 3px), radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%); }
+:root[data-theme="light"] body::after { opacity: .12; }
+.brand .mark { background: var(--accent); box-shadow: 0 0 12px rgba(0,255,102,.6); border-radius: 3px; }
+.nav-r .upd::before { box-shadow: 0 0 8px var(--accent); }
+.tab.on, .seg button.on { text-shadow: 0 0 8px rgba(0,255,102,.5); }
+.stat .value { text-shadow: 0 0 10px rgba(0,255,102,.25); }
+.plot .bar, .hb .bar { filter: drop-shadow(0 0 3px rgba(0,255,102,.45)); }
+.stat .spark .dot { filter: drop-shadow(0 0 4px var(--accent)); }
+.hero-fx { position: relative; height: 220px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #000; box-shadow: 0 0 0 1px rgba(0,255,102,.08), 0 0 40px -20px rgba(0,255,102,.5); }
+.hero-fx canvas { display: block; width: 100%; height: 100%; }
+.fx-overlay { position: absolute; left: 14px; bottom: 12px; z-index: 2; }
+.fx-pill { display: inline-block; font-family: var(--mono); font-size: 11.5px; color: #baffd4; background: rgba(0,0,0,.55); border: 1px solid rgba(0,255,102,.35); border-radius: 6px; padding: 4px 9px; letter-spacing: .02em; text-shadow: 0 0 6px rgba(0,255,102,.6); }
+@media (max-width: 700px) { .hero-fx { height: 150px; } }

@@ -144,12 +144,31 @@ async def http_error(req: Request, exc: HTTPException):
     return J({"detail": exc.detail}, exc.status_code)
 
 
+class NoStore:
+    """모든 응답에 Cache-Control: no-store — 로컬 대시보드라 항상 최신 HTML/JS/CSS 를 보게 한다."""
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            return await self.app(scope, receive, send)
+
+        async def send_wrapper(message):
+            if message["type"] == "http.response.start":
+                headers = [(k, v) for k, v in message.get("headers", []) if k.lower() != b"cache-control"]
+                headers.append((b"cache-control", b"no-store, max-age=0"))
+                message = {**message, "headers": headers}
+            await send(message)
+        await self.app(scope, receive, send_wrapper)
+
+
 app = Starlette(routes=[
     Route("/api", api_index), Route("/api/meta", meta), Route("/api/incidents", incidents), Route("/api/incidents/{uid}", incident),
     Route("/api/briefings", briefings), Route("/api/briefings/{day}", briefing), Route("/api/stats", stats),
     Route("/api/addresses", addresses), Route("/api/addresses/lookup", lookup), Route("/api/search", search),
     Mount("/", app=StaticFiles(directory=DOCS, html=True), name="static"),
 ], exception_handlers={HTTPException: http_error})
+app = NoStore(app)
 
 def main() -> int:
     import uvicorn
