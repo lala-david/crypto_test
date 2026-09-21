@@ -6,8 +6,8 @@ window.KL = (() => {
   const I18N = {
     ko: {
       nav_home: "개요", nav_incidents: "사건", nav_briefings: "브리핑", nav_stats: "통계", nav_addresses: "지갑 주소",
-      recent_addresses: "최근 수집 주소", all_addresses: "수집 주소", th_address: "주소", th_kind: "종류", th_label: "라벨", th_tx: "tx 수", kind_all: "전체 종류", kinds_map: { eoa: "EOA", contract: "CA", wallet: "지갑", txhash: "TX 해시", invalid: "무효", unfunded: "미사용", unknown: "미확인", unchecked: "미검증" }, ctypes_map: { token: "토큰", lp_pool: "풀(LP)", v3_pool: "풀(V3)", balancer_pool: "풀(Balancer)", vault: "볼트", atoken: "aToken", ctoken: "cToken", proxy: "프록시", safe: "멀티시그", router: "라우터", nft: "NFT", contract: "컨트랙트", program: "프로그램", mint: "토큰 민트", token_account: "토큰 계정" }, role_all: "전체 역할", lookup_title: "주소 조회", addr_list_hint: "사건에서 수집한 지갑 주소. 역할은 우선순위(제재 > 공격자 > 세탁 > 피해자)로 하나만 표시.", top_amount5: "금액 상위 5",
-      updated: "수집", all: "전체", unit: "건", no_data: "데이터 없음", search_ph: "사건·주소 검색", hide_follow: "후속 제외", days_n: "{n}일", collected_days: "수집 {n}일",
+      recent_addresses: "최근 수집 주소", all_addresses: "수집 주소", th_address: "주소", th_kind: "종류", th_label: "라벨", th_tx: "tx 수", detail_more: "자세히", kind_all: "전체 종류", kinds_map: { eoa: "EOA", contract: "CA", wallet: "지갑", txhash: "TX 해시", invalid: "무효", unfunded: "미사용", unknown: "미확인", unchecked: "미검증" }, ctypes_map: { token: "토큰", lp_pool: "풀(LP)", v3_pool: "풀(V3)", balancer_pool: "풀(Balancer)", vault: "볼트", atoken: "aToken", ctoken: "cToken", proxy: "프록시", safe: "멀티시그", router: "라우터", nft: "NFT", contract: "컨트랙트", program: "프로그램", mint: "토큰 민트", token_account: "토큰 계정" }, role_all: "전체 역할", lookup_title: "주소 조회", addr_list_hint: "사건에서 수집한 지갑 주소. 역할은 우선순위(제재 > 공격자 > 세탁 > 피해자)로 하나만 표시.", top_amount5: "금액 상위 5",
+      updated: "수집", all: "전체", unit: "건", no_data: "데이터 없음", search_ph: "사건·주소 검색", hide_follow: "후속 제외", days_n: "{n}일", collected_days: "{n}일",
       k_latest_new: "최근일 신규", k_new: "신규 사건", k_follow: "후속 보도", k_loss: "피해액", k_legal: "제재·수사 금액", k_addr: "주소", k_unknown_amt: "금액 미상", vs_prev: "이전 기간 대비",
       daily_count: "일별 사건 수", daily_amount: "일별 피해액", share_type: "유형 비중", share_chain: "대표 체인 비중", by_source: "출처별 사건", top_amount: "금액 상위 10", recent: "최근 사건", roles: "주소 역할",
       basis_new: "신규 기준", basis_collected: "수집일 기준", basis_event: "사건일 기준", basis_first_chain: "첫 체인 기준", daily_avg: "일평균", peak: "최대", coverage: "커버리지", legal_daily: "제재·수사 일별", event_date: "사건일", collected_date: "수집일",
@@ -19,16 +19,16 @@ window.KL = (() => {
       addr_ph: "지갑 주소 입력 (6자 이상)", addr_scope: "조회 범위: 사건 주소 · OFAC SDN · 블랙리스트", addr_found_in: "사건 내 주소", addr_sdn: "OFAC SDN", addr_bl: "블랙리스트", addr_none: "일치 없음", addr_role: "역할", lookup: "조회",
       th_entity: "제재 대상", th_programs: "프로그램", th_first_seen: "최초 등재",
       known_addresses: "전체 주소", sanctioned_addresses: "제재 주소 (OFAC)", incidents_total: "누적 사건", days_covered: "수집 일수", legal: "제재·수사", tab_value: "피해액", tab_type: "유형", tab_chain: "체인", mode_amount: "금액", mode_count: "건수",
-      day: "날짜", count: "건수", amount: "금액", type: "유형", chain: "체인", foot: "공개 소스 자동 수집 · LLM 요약 · 주소는 원문 재확인", load_error: "데이터를 불러오지 못했습니다", retry: "다시 시도",
-      a_theme: "테마 전환", a_lang: "언어 전환", a_prev: "이전 페이지", a_next: "다음 페이지", page_total: "총 {n}건", total_amount: "합계 {v} (후속 제외)",
+      day: "날짜", count: "건수", amount: "금액", type: "유형", chain: "체인", foot: "", load_error: "데이터를 불러오지 못했습니다", retry: "다시 시도",
+      a_theme: "테마 전환", a_lang: "언어 전환", a_prev: "이전 페이지", a_next: "다음 페이지", page_total: "{n}건", total_amount: "{v}",
       types: { hack_exploit: "해킹", private_key_compromise: "개인키 탈취", rug_pull: "러그풀", phishing_social_engineering: "피싱", scam_fraud: "사기", ransomware: "랜섬웨어", sanctions_designation: "제재", law_enforcement_action: "수사·기소", laundering_report: "세탁 분석", other: "기타" },
       types_full: { hack_exploit: "해킹 / 익스플로잇", private_key_compromise: "개인키 탈취", rug_pull: "러그풀", phishing_social_engineering: "피싱 / 드레이너", scam_fraud: "사기", ransomware: "랜섬웨어", sanctions_designation: "제재 지정", law_enforcement_action: "수사 / 기소 / 압수", laundering_report: "자금세탁 분석", other: "기타" },
       roles_map: { attacker: "공격자", laundering: "세탁·경유", victim: "피해자", sanctioned: "제재 대상", unknown: "미분류" },
     },
     en: {
       nav_home: "Overview", nav_incidents: "Incidents", nav_briefings: "Briefings", nav_stats: "Stats", nav_addresses: "Wallet addresses",
-      recent_addresses: "Recently collected addresses", all_addresses: "Collected addresses", th_address: "Address", th_kind: "Kind", th_label: "Label", th_tx: "Txs", kind_all: "All kinds", kinds_map: { eoa: "EOA", contract: "CA", wallet: "wallet", txhash: "tx hash", invalid: "invalid", unfunded: "unfunded", unknown: "unknown", unchecked: "unchecked" }, ctypes_map: { token: "token", lp_pool: "pool (LP)", v3_pool: "pool (V3)", balancer_pool: "pool (Balancer)", vault: "vault", atoken: "aToken", ctoken: "cToken", proxy: "proxy", safe: "multisig", router: "router", nft: "NFT", contract: "contract", program: "program", mint: "token mint", token_account: "token account" }, role_all: "All roles", lookup_title: "Address lookup", addr_list_hint: "Wallet addresses collected from incidents. One role per address by priority (sanctioned > attacker > laundering > victim).", top_amount5: "Top 5 by amount",
-      updated: "Collected", all: "All", unit: "", no_data: "No data", search_ph: "Search incidents / addresses", hide_follow: "Hide follow-ups", days_n: "{n}d", collected_days: "{n} days collected",
+      recent_addresses: "Recently collected addresses", all_addresses: "Collected addresses", th_address: "Address", th_kind: "Kind", th_label: "Label", th_tx: "Txs", detail_more: "Details", kind_all: "All kinds", kinds_map: { eoa: "EOA", contract: "CA", wallet: "wallet", txhash: "tx hash", invalid: "invalid", unfunded: "unfunded", unknown: "unknown", unchecked: "unchecked" }, ctypes_map: { token: "token", lp_pool: "pool (LP)", v3_pool: "pool (V3)", balancer_pool: "pool (Balancer)", vault: "vault", atoken: "aToken", ctoken: "cToken", proxy: "proxy", safe: "multisig", router: "router", nft: "NFT", contract: "contract", program: "program", mint: "token mint", token_account: "token account" }, role_all: "All roles", lookup_title: "Address lookup", addr_list_hint: "Wallet addresses collected from incidents. One role per address by priority (sanctioned > attacker > laundering > victim).", top_amount5: "Top 5 by amount",
+      updated: "Collected", all: "All", unit: "", no_data: "No data", search_ph: "Search incidents / addresses", hide_follow: "Hide follow-ups", days_n: "{n}d", collected_days: "{n} days",
       k_latest_new: "New (latest day)", k_new: "New incidents", k_follow: "Follow-ups", k_loss: "Loss", k_legal: "Enforcement amount", k_addr: "Addresses", k_unknown_amt: "Unknown amount", vs_prev: "vs previous period",
       daily_count: "Incidents per day", daily_amount: "Loss per day", share_type: "By type", share_chain: "By primary chain", by_source: "By source", top_amount: "Top 10 by amount", recent: "Recent incidents", roles: "Address roles",
       basis_new: "new only", basis_collected: "by collection day", basis_event: "by incident date", basis_first_chain: "first chain", daily_avg: "avg/day", peak: "peak", coverage: "coverage", legal_daily: "Enforcement per day", event_date: "Incident date", collected_date: "Collected",
@@ -40,8 +40,8 @@ window.KL = (() => {
       addr_ph: "Wallet address (6+ chars)", addr_scope: "Scope: incident addresses · OFAC SDN · blacklist", addr_found_in: "In incidents", addr_sdn: "OFAC SDN", addr_bl: "Blacklist", addr_none: "No match", addr_role: "Role", lookup: "Look up",
       th_entity: "Entity", th_programs: "Programs", th_first_seen: "First listed",
       known_addresses: "All addresses", sanctioned_addresses: "Sanctioned (OFAC)", incidents_total: "Incidents total", days_covered: "Days collected", legal: "Enforcement", tab_value: "Loss", tab_type: "Type", tab_chain: "Chain", mode_amount: "Amount", mode_count: "Count",
-      day: "Day", count: "Count", amount: "Amount", type: "Type", chain: "Chain", foot: "Auto-collected · LLM summaries · re-verify addresses at the source", load_error: "Could not load data", retry: "Retry",
-      a_theme: "Toggle theme", a_lang: "Toggle language", a_prev: "Previous page", a_next: "Next page", page_total: "{n} incidents", total_amount: "Total {v} (excl. follow-ups)",
+      day: "Day", count: "Count", amount: "Amount", type: "Type", chain: "Chain", foot: "", load_error: "Could not load data", retry: "Retry",
+      a_theme: "Toggle theme", a_lang: "Toggle language", a_prev: "Previous page", a_next: "Next page", page_total: "{n}", total_amount: "{v}",
       types: { hack_exploit: "Hack", private_key_compromise: "Key compromise", rug_pull: "Rug pull", phishing_social_engineering: "Phishing", scam_fraud: "Scam", ransomware: "Ransomware", sanctions_designation: "Sanctions", law_enforcement_action: "Enforcement", laundering_report: "Laundering", other: "Other" },
       types_full: { hack_exploit: "Hack / Exploit", private_key_compromise: "Private key compromise", rug_pull: "Rug pull", phishing_social_engineering: "Phishing / Drainer", scam_fraud: "Scam / Fraud", ransomware: "Ransomware", sanctions_designation: "Sanctions designation", law_enforcement_action: "Law enforcement action", laundering_report: "Laundering report", other: "Other" },
       roles_map: { attacker: "attacker", laundering: "laundering", victim: "victim", sanctioned: "sanctioned", unknown: "unknown" },
@@ -57,7 +57,7 @@ window.KL = (() => {
   const typeName = (k) => I18N[state.lang].types[k] || k;
   const typeFull = (k) => I18N[state.lang].types_full[k] || k;
   const roleName = (k) => I18N[state.lang].roles_map[k] || k;
-  const kindName = (a) => { const m = I18N[state.lang]; if (!a || !a.kind) return ""; if (a.kind === "contract") return `${m.kinds_map.contract} · ${m.ctypes_map[a.ctype] || m.ctypes_map.contract}`; return m.kinds_map[a.kind] || a.kind; };
+  const kindName = (a) => { const m = I18N[state.lang]; if (!a || !a.kind) return ""; if (a.kind === "contract") return a.ctype && a.ctype !== "contract" ? `${m.kinds_map.contract} · ${m.ctypes_map[a.ctype] || a.ctype}` : m.kinds_map.contract; return m.kinds_map[a.kind] || a.kind; };
   const kindCell = (a, compact = false) => { const k = kindName(a); if (!k) return '<span class="faint">–</span>'; const cls = a.kind === "contract" ? "kind ca" : a.kind === "eoa" || a.kind === "wallet" ? "kind eoa" : "kind other"; const short = compact && a.kind === "contract" ? (a.ctype && a.ctype !== "contract" ? `CA · ${I18N[state.lang].ctypes_map[a.ctype] || a.ctype}` : "CA") : k; return `<span class="${cls}" title="${esc(a.label ? k + " · " + a.label : k)}">${esc(short)}</span>`; };
   const labelCell = (a) => (a && a.label ? `<span class="lbl ell" title="${esc(a.label)}">${esc(a.label)}</span>` : '<span class="faint">–</span>');
   const txCell = (a) => (a && a.tx_count != null && a.kind !== "contract" ? fmtInt(a.tx_count) : '<span class="faint">–</span>');
@@ -103,7 +103,7 @@ window.KL = (() => {
       <div class="tabs">${PAGES.map(([h, k]) => `<a class="tab ${active === h ? "on" : ""}" href="${h}">${esc(t(k))}</a>`).join("")}</div>
       <div class="nav-r"><span class="upd" title="${esc(meta && meta.generated_at ? meta.generated_at.replace("T", " ") : "")}">${upd ? esc(t("updated")) + " " + esc(upd) : ""}</span><button id="themeBtn" class="ibtn" type="button" aria-label="${esc(t("a_theme"))}" title="${esc(t("a_theme"))}">◐</button><button id="langBtn" class="ibtn" type="button" aria-label="${esc(t("a_lang"))}">${state.lang === "ko" ? "EN" : "KO"}</button></div>`;
   }
-  function renderFoot() { const f = $("#foot"); if (f) f.innerHTML = `<span>${esc(t("foot"))}</span><span><a href="${REPO}" target="_blank" rel="noopener">GitHub</a> · <a href="/api" target="_blank" rel="noopener">API</a></span>`; }
+  function renderFoot() { const f = $("#foot"); if (f) f.innerHTML = `<span></span><span><a href="${REPO}" target="_blank" rel="noopener">GitHub</a> · <a href="/api" target="_blank" rel="noopener">API</a></span>`; }
   function applyI18n() { document.documentElement.lang = state.lang; $$("[data-i18n]").forEach((el) => { el.textContent = t(el.dataset.i18n); }); $$("[data-i18n-ph]").forEach((el) => { el.placeholder = t(el.dataset.i18nPh); }); $$("[data-i18n-aria]").forEach((el) => { el.setAttribute("aria-label", t(el.dataset.i18nAria)); }); }
   function applyTheme(th) { document.documentElement.dataset.theme = th; }
   function bindChrome(onLang) {
@@ -194,12 +194,12 @@ window.KL = (() => {
     const amt = `<td class="num">${amountCell(i)}</td>`;
     const ev = i.event_date || i.incident_date || i.day;
     if (compact) return `<tr class="link" data-href="${detailUrl(i)}">${name}${amt}<td>${pill(i)}</td><td class="date">${esc(fmtDate(ev))}</td></tr>`;
-    return `<tr class="link" data-href="${detailUrl(i)}">${name}${amt}<td class="date">${esc(fmtDate(ev))}</td><td class="date faint">${esc(fmtDate(i.day))}</td><td>${pill(i)}</td><td>${chainPills(i.chains, 2)}</td><td class="num">${zeroDash(i.addresses.length)}</td><td class="num">${zeroDash(i.sources.length)}</td></tr>`;
+    return `<tr class="link" data-href="${detailUrl(i)}">${name}${amt}<td>${pill(i)}</td><td>${chainPills(i.chains, 2)}</td><td class="date" title="${esc(t("th_report"))} ${esc(fmtDate(i.day))}">${esc(fmtDate(ev))}</td></tr>`;
   }
   const TABLE_HEAD = (compact = false) => compact
     ? `<thead><tr><th>${esc(t("th_incident"))}</th><th class="num">${esc(t("th_amount"))}</th><th>${esc(t("th_type"))}</th><th>${esc(t("th_date"))}</th></tr></thead>`
-    : `<thead><tr><th>${esc(t("th_incident"))}</th><th class="num">${esc(t("th_amount"))}</th><th>${esc(t("th_date"))}</th><th>${esc(t("th_report"))}</th><th>${esc(t("th_type"))}</th><th>${esc(t("th_chain"))}</th><th class="num">${esc(t("th_addr"))}</th><th class="num">${esc(t("th_src"))}</th></tr></thead>`;
-  const tableLegend = () => `<div class="legend-line"><span class="tag">${esc(t("follow"))}</span> ${esc(t("legend_follow"))} · <span class="tag warn">BL</span> ${esc(t("legend_bl"))}</div>`;
+    : `<thead><tr><th>${esc(t("th_incident"))}</th><th class="num">${esc(t("th_amount"))}</th><th>${esc(t("th_type"))}</th><th>${esc(t("th_chain"))}</th><th>${esc(t("th_date"))}</th></tr></thead>`;
+  const tableLegend = () => "";
   function bindRows(root) { $$("tr[data-href]", root).forEach((tr) => tr.addEventListener("click", (e) => { if (e.target.closest("a")) return; location.href = tr.dataset.href; })); }
   function fillSelect(sel, values, allLabel, current) { sel.innerHTML = `<option value="">${esc(allLabel)}</option>` + values.map((v) => `<option value="${esc(v.value)}"${v.value === current ? " selected" : ""}>${esc(v.label)}</option>`).join(""); }
   const typeColorHex = (k) => { const v = TYPE_COLOR[k] || "var(--t-other)"; return getComputedStyle(document.documentElement).getPropertyValue(v.slice(4, -1)).trim() || "#888"; };

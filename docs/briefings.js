@@ -15,12 +15,11 @@
     $$("#dayList li").forEach((li) => li.addEventListener("click", () => show(li.dataset.day)));
     if (!cur) return;
     $("#briefTitle").textContent = `${t("briefing")} · ${fmtDate(cur.day)}`;
-    $("#briefMeta").textContent = `${t("new_label")} ${cur.new}${t("unit")} · ${t("follow")} ${cur.followups}${t("unit")} · ${money(cur.amount_usd)}`;
+    $("#briefMeta").textContent = "";
     $("#briefHeadline").textContent = cur[`headline_${K.lang}`] || cur.headline_ko;
     $("#briefBody").innerHTML = mdToHtml(cur[`briefing_${K.lang}`] || cur.briefing_ko);
     $("#metaDay").textContent = `${cur.incidents.length}${t("unit")}`;
     const tb = $("#dayTable"); tb.innerHTML = TABLE_HEAD() + `<tbody>${cur.incidents.map((i) => incidentRow(i)).join("")}</tbody>`; bindRows(tb);
-    $("#dayLegend").innerHTML = tableLegend();
   }
   (async () => { meta = await api("/api/meta"); days = await api("/api/briefings"); if (days.length) await show(qs.get("day") && days.some((d) => d.day === qs.get("day")) ? qs.get("day") : days[0].day); else render(); })()
     .catch((e) => { $("main").insertAdjacentHTML("afterbegin", errorBox(e)); });

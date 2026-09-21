@@ -87,6 +87,9 @@ def _strip_line(s: str, project: str, max_len: int = 60) -> str:
     if project and s.lower().startswith(project.lower()):
         s = s[len(project):].lstrip(" -—:·,")
     s = re.sub(r"\s?\$[\d.,]+\s*[KMB]?\b", " ", s)  # 금액은 골격이 붙이므로 본문에서 제거(양쪽 공백은 하나로)
+    # "약 1,530,000달러", "150만 달러", "1.5M USD", "462,730 dollars" 같은 표기도 제거 (골격의 $ 금액과 중복)
+    s = re.sub(r"(?:약|around|about|approx\.?|roughly)?\s*\$?\d[\d,]*(?:\.\d+)?\s*(?:[KMB]|만|억|천만|백만)?\s*(?:달러|dollars?|USD|usd)(?:\s*(?:상당|어치|규모|worth))?", " ", s)
+    s = re.sub(r"약\s+(?=(?:규모|상당|어치|의\s))", "", s)
     s = re.sub(r"\s{2,}", " ", s).strip(" -—,·")
     # 로컬 LLM 이 한글 띄어쓰기를 통째로 빼먹는 경우 → 폴백 사용을 위해 빈 문자열
     if len(s) > 15 and re.search(r"[가-힣]", s) and s.count(" ") < len(s) / 15:
@@ -153,8 +156,10 @@ def assemble(day: str, cards: List[Incident], lines: Dict[str, dict], insight_ko
             l = lines.get(i.uid, {})
             note_ko = _strip_line(l.get("line_ko", ""), i.project, 40); note_en = _strip_line(l.get("line_en", ""), i.project, 48)
             first = md_short((i.followup_of or {}).get("day") or "")
-            f_ko.append(f"[{i.project or i.title}]({i.url}) (첫 보도 {first}{', ' + note_ko if note_ko and note_ko != '추가 정보 없음' else ''})")
-            f_en.append(f"[{i.project or i.title}]({i.url}) (first {first}{', ' + note_en if note_en and 'no further' not in note_en else ''})")
+            # 후속 줄은 이름과 첫 보도일만 (수법 요약을 덧붙이면 줄이 길어지고 잘려서 읽히지 않는다 — 2026-09-21)
+            del note_ko, note_en
+            f_ko.append(f"[{i.project or i.title}]({i.url}) (첫 보도 {first})")
+            f_en.append(f"[{i.project or i.title}]({i.url}) (first {first})")
         ko.append(f"- **후속 {len(follow)}건** — " + ", ".join(f_ko))
         en.append(f"- **Follow-ups ({len(follow)})** — " + ", ".join(f_en))
     if insight_ko:

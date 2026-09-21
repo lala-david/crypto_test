@@ -11,21 +11,14 @@
 <header class="nav" id="nav"></header>
 <main class="page">
   <div class="page-h"><div><h1 data-i18n="nav_stats">통계</h1><div class="sub" id="sub"></div></div>
-    <div class="controls"><label class="ctl"><select id="typeSel"></select></label><label class="ctl"><select id="chainSel"></select></label><div class="seg" id="rangeSeg"></div></div></div>
+    <div class="controls"><div class="seg" id="rangeSeg"></div></div></div>
   <section class="grid">
     <div class="card c12"><div class="card-h"><h2 id="tsTitle"></h2><div class="seg" id="valueMode"><button data-mode="amount" class="on" data-i18n="mode_amount">금액</button><button data-mode="count" data-i18n="mode_count">건수</button></div></div><div class="card-b plot" id="tsPlot"></div></div>
   </section>
   <section class="grid start">
-    <div class="c6" style="grid-column: span 6; display: grid; gap: 12px; min-width: 0">
-      <div class="card"><div class="card-h"><h2 data-i18n="tab_type">유형</h2><span class="meta" id="metaType"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="typeTable"></table></div></div>
-      <div class="card"><div class="card-h"><h2 data-i18n="daily_count">일별 사건 수</h2><span class="meta" id="metaDaily"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="dailyTable"></table></div></div>
-    </div>
-    <div class="c6" style="grid-column: span 6; display: grid; gap: 12px; min-width: 0">
-      <div class="card"><div class="card-h"><h2 data-i18n="tab_chain">체인</h2><span class="meta" id="metaChain"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="chainTable"></table></div></div>
-      <div class="card"><div class="card-h"><h2 data-i18n="legal_daily">제재·수사 일별</h2><span class="meta" id="metaLegal"></span></div><div class="card-b plot" id="legalPlot"></div></div>
-      <div class="card"><div class="card-h"><h2 data-i18n="roles">주소 역할</h2><span class="meta" id="metaRoles"></span></div><div class="card-b hb" id="rolesBars"></div></div>
-      <div class="card"><div class="card-h"><h2 data-i18n="by_source">출처별 사건</h2><span class="meta" id="metaSrc"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="srcTable"></table></div></div>
-    </div>
+    <div class="card c4"><div class="card-h"><h2 data-i18n="tab_type">유형</h2><span class="meta" id="metaType"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="typeTable"></table></div></div>
+    <div class="card c4"><div class="card-h"><h2 data-i18n="tab_chain">체인</h2><span class="meta" id="metaChain"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="chainTable"></table></div></div>
+    <div class="card c4"><div class="card-h"><h2 data-i18n="roles">주소 역할</h2><span class="meta" id="metaRoles"></span></div><div class="card-b hb" id="rolesBars"></div></div>
   </section>
 </main>
 <footer class="foot" id="foot"></footer>

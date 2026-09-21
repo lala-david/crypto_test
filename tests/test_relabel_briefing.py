@@ -62,3 +62,11 @@ def test_assemble_structure_and_dates():
     assert lines[4] == "- **시사점** — 오라클 조작이 반복."
     assert event_date(legal) == "2026-09-14" and event_date(big) == "2026-09-15"
     assert money(1_230_000_000) == "$1.23B" and money(750_000_000) == "$750M" and money(25_000) == "$25K"
+
+
+def test_strip_line_removes_amount_phrases():
+    from collector.briefing import _strip_line
+    assert "달러" not in _strip_line("개인키가 탈취돼 약 1,530,000달러가 유출되었습니다", "Fetch.ai")
+    assert "$" not in _strip_line("attacker drained $4.2M from the pool", "X")
+    assert "USD" not in _strip_line("lost about 1.5M USD worth of tokens", "X")
+    assert _strip_line("개인키가 탈취돼 약 462,730 달러 규모의 자산이 유출", "NuNet").startswith("개인키가 탈취돼")
