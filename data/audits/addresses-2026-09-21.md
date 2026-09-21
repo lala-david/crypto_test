@@ -1,49 +1,43 @@
 # 지갑 주소 검증 보고서 · 2026-09-21
 
-- 주소 312 · 이번 조회 198 · 카드 변경 15 (20건) · OKLink 미사용(키 없음)
-- 종류: EOA 209, CA · 컨트랙트 74, 미사용 18, 지갑 11
-- 컨트랙트 유형: 컨트랙트 40, 토큰 17, 풀(LP) 6, 프록시 3, 풀(V3) 2, aToken 2, cToken 1, 라우터 1, 멀티시그 1, NFT 1
+- 주소 309 · 이번 조회 0 · 카드 변경 1 (2건) · OKLink 미사용(키 없음)
+- 종류: EOA 210, CA · 컨트랙트 88, 지갑 11
+- 컨트랙트 유형: 컨트랙트 50, 토큰 21, 풀(LP) 6, 프록시 3, 풀(V3) 2, aToken 2, cToken 1, 라우터 1, 멀티시그 1, NFT 1
 
 ## 카드 교정
 
-- **Tectonic** (`f0e4a1ea4036f53c`): phantom_contract_removed 0xd3aac8a1a9e412e2… (Orchestrator Contract); phantom_contract_removed 0x2dc6a36f4e5eeefe… (Borrower Contract)
-- **YamFinance** (`6567b5179c6fb0bc`): truncated_tx_removed 0xf3c9b1d7094bd11e… (Proposal creation tx)
-- **ORB** (`b6fcaf1b9dca7c3a`): truncated_tx_removed 0x5e6b33b7d69b505d… (Attack tx)
-- **GDC** (`0ed4e6515f2dd3bd`): truncated_tx_removed 0xf12ccb683c51cc1c… (Attack tx)
-- **EtherFiAtomicQueue** (`90941b92547619e1`): truncated_tx_removed 0x7cbe0b4349513fed… (Attack tx)
-- **OMNI404** (`ec8baca30ce2ffb5`): truncated_tx_removed 0x4cbc3d8db832eb54… (Attack tx (run))
-- **UnifiProtocol** (`3f4e4a9ddb15a21d`): truncated_tx_removed 0x74634e4ccc7e8922… (Attack tx)
-- **BeatXswap** (`7dcbf0adc5dc94a7`): truncated_tx_removed 0xcc71a3bb131c7346… (Attack tx)
-- **EnsoFinance** (`80f0277fe88564a0`): truncated_tx_removed 0x63fbfc4b47e810d6… (Attack tx)
-- **OrderFactory** (`9fd024f79d7b0d8d`): truncated_tx_removed 0x201c7a9b4114c76f… (Attack tx)
-- **BonfireSwap** (`dd282a46ff0998df`): truncated_tx_removed 0xb4c00e8f3ba815b6… (Attack tx); truncated_tx_removed 0xb4c00e8f3ba815b6… (Attack tx)
-- **RsETHSafeModule** (`1a96fd35a33fe926`): truncated_tx_removed 0x0e7680b06cb8a6f8… (Example exploit tx)
-- **Likwid** (`5cda55e0d065f1f4`): truncated_tx_removed 0x83cbd07d59aedc2f… (attack tx); truncated_tx_removed 0x83cbd07d59aedc2f… (attack tx address)
-- **Flamincome** (`454f0ebc6282a922`): truncated_tx_removed 0x5ff8150482f5473b… (Attack tx); phantom_contract_removed 0x875da4Bd7b4a52a8… (Exploit contract)
-- **PrimeFinance** (`01dcf593b33091ff`): truncated_tx_removed 0xff990876d863a617… (exploit tx); phantom_contract_removed 0x817D33738D979eD8… (attacker contract)
+- **Osmosis** (`539f8d767d650de1`): chains += Osmosis; chains += Nomic
 
 ## 주소별 결과
 
 | 주소 | 체인 | 종류 | 라벨 | 역할 | 사건 | tx | 비고 |
 |---|---|---|---|---|---|---:|---|
 | `0x000000000004444c5dc75cB358380D2e3dE08A90` | Ethereum | CA · 컨트랙트 | - | unknown | EtherFiAtomicQueue | 1 |  |
+| `0x0000003B3E7b530b4f981aE80d9350392Defef90` | Ethereum | CA · 컨트랙트 | - | unknown | Startale | 21196 |  |
+| `0x00000072F286204Bb934eD49D8969E86F7dEC7b1` | Ethereum | CA · 컨트랙트 | ECDSAValidator | unknown | Startale | 1 |  |
+| `0x000000b8f5f723A680d3D7EE624Fe0bC84a6E05A` | Ethereum | CA · 컨트랙트 | - | unknown | Startale | 1 |  |
 | `0x04EDBF3904789d80B0C991e0B66577F2208A2bE6` | HyperEVM | CA · 컨트랙트 | - | unknown | PrimeFinance | 1 |  |
 | `0x065d449ec9D139740343990B7E1CF05fA830e4Ba` | BSC | CA · 컨트랙트 | - | victim | Likwid | 1 |  |
 | `0x085f3115ca368aa262246d22f9476e1e2c87e8be` | Cronos | CA · 컨트랙트 | - | attacker | Tectonic | 3 |  |
 | `0x0AaCfbeC6a24756c20D41914F2caba817C0d8521` | Ethereum | CA · 토큰 | YAM | victim | YamFinance | 1 | proxy→0x27c5736b49 |
 | `0x0C23C8BC3b7C565f3f9F4aC691A4Dc4275086F86` | Ethereum | CA · 컨트랙트 | - | unknown | SpiralHookV2 | 1 |  |
+| `0x0cFD862bE942846Cebad797d7c1BC6e47714959b` | Polygon | CA · 컨트랙트 | - | unknown | Nimiq | 1 |  |
 | `0x0f12d5048a6bed7ECc572fa7805D03Af7B5FB9d2` | BSC | CA · 토큰 | Likwid Dex | unknown | Likwid | 1 |  |
 | `0x10ED43C718714eb63d5aA57B78B54704E256024E` | BSC | CA · 라우터 | - | unknown | ORB | 1 |  |
+| `0x15C7B7CE10f3A9AE63554bCE7C54d0a818E967C7` | Polygon | CA · 컨트랙트 | - | unknown | Nimiq | 1 |  |
 | `0x1725577dC9B1ee2D95dB49c2193226471594aacc` | Ethereum | CA · 컨트랙트 | - | unknown | SpiralHookV2 | 1 |  |
 | `0x173cae63801b32752271e32147d0d2e3a77bebe8` | Ethereum | CA · 프록시 | - | victim | EnsoFinance | 1 | proxy→0xd8d22509c1 |
 | `0x17e801E17CeFC6334059189c178D4783830E03D3` | BSC | CA · 컨트랙트 | - | unknown | BonfireSwap | 1 |  |
 | `0x1b8c6808b48C7A9b6997b6dAEF6401307B2B419A` | BSC | CA · 컨트랙트 | - | unknown | UnifiProtocol | 1 |  |
 | `0x1e647FAADb05f2124BFCcFC003EDc06D1A90bf5D` | BSC | CA · 컨트랙트 | - | victim | BeatXswap | 1 |  |
+| `0x2258491525C21f334c5a2dc22CE55e55023FC45D` | Polygon | CA · 컨트랙트 | - | attacker | Nimiq | 11 |  |
 | `0x24B6308AB84B182d0598b73d21a42f4C2bb33C18` | BSC | CA · 컨트랙트 | - | unknown | ORB | 1 |  |
+| `0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174` | Polygon | CA · 토큰 | USD Coin (PoS) | unknown | Nimiq | 1 | proxy→0xdd9185db08 |
 | `0x28E976Ea7b83553d6D1D45CE81334156A2632127` | BSC | CA · 컨트랙트 | - | unknown | BonfireSwap | 1 |  |
 | `0x2D62109243b87C4bA3EE7bA1D91B0dD0A074d7b1` | Ethereum | CA · aToken | Aave Ethereum rsETH | unknown | RsETHSafeModule | 1 | proxy→0xadc45df3cf |
 | `0x2DA253835967D6E721C6c077157F9c9742934aeA` | Ethereum | CA · 컨트랙트 | YAM Governor Alpha | victim | YamFinance | 1 |  |
 | `0x36F20660b9947929Ab3edd8727B5Af60260333A7` | BSC | CA · 토큰 | UPbnb | unknown | UnifiProtocol | 1 |  |
+| `0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359` | Polygon | CA · 토큰 | USD Coin | unknown | Nimiq | 1 | proxy→0x235ae97b28 |
 | `0x40E93a52F6Af9fCD3b476aeDADD7FeABD9f7AbA8` | Ethereum | CA · 멀티시그 | - | victim | RsETHSafeModule | 1 |  |
 | `0x44ED72d81a32A284f3fb50f9c6E6f2EF739bb324` | BSC | CA · 풀(LP) | - | unknown | UnifiProtocol | 1 |  |
 | `0x4f0055926c839D1d960a82CBF84E2eE933958ebC` | Ethereum | CA · 컨트랙트 | - | victim | RsETHSafeModule | 1 |  |
@@ -61,16 +55,19 @@
 | `0x68e37dE8d93d3496ae143F2E900490f6280C57cD` | HyperEVM | CA · 컨트랙트 | - | unknown | PrimeFinance | 1 |  |
 | `0x6a77E39240dA69Ea788e4cF93663D2c41EA4b12b` | Ethereum | CA · 토큰 | Spiral | unknown | SpiralHookV2 | 1 |  |
 | `0x6bec0c1dc4898484b7f094566ddf8bc82ed7abe8` | BSC | CA · NFT | LIKWIDMarginPositionManager | victim | Likwid | 1 |  |
+| `0x6C28AfC105e65782D9Ea6F2cA68df84C9e7d750d` | Polygon | CA · 컨트랙트 | - | unknown | Nimiq | 1 |  |
 | `0x7BBCf1B600565AE023a1806ef637Af4739dE3255` | HyperEVM | CA · 컨트랙트 | - | unknown | PrimeFinance | 1 |  |
 | `0x882C173bC7Ff3b7786CA16dfeD3DFFfb9Ee7847B` | BSC | CA · cToken | Venus BTC | unknown | ORB | 1 | proxy→0xcdfea50f7c |
 | `0x890ed1ee6d435a35d51081ded97ff7ce53be5942` | Ethereum | CA · 토큰 | Enso DefiPulse Index | victim | EnsoFinance | 1 | proxy→0xbe90d1bae4 |
 | `0x8b4f1616751117C38a0f84F9A146cca191ea3EC5` | Ethereum | CA · 컨트랙트 | - | victim | YamFinance | 1 |  |
 | `0x8f73b65B4caAf64FBA2aF91cC5D4a2A1318E5D8C` | BSC | CA · 프록시 | - | unknown | ORB | 1 | proxy→0x9321587ea0; eip55_mismatch |
+| `0x901DafdE7057BC2478d1eF640fb5515EA4757AAB` | Ethereum | CA · 컨트랙트 | - | attacker | Startale | 17 |  |
 | `0x90480ce80186dcafb0f3f27df62caa47ef4c4a52` | Ethereum | CA · 컨트랙트 | - | victim | EnsoFinance | 1 |  |
 | `0x981F145a71Da6DF4A7cBe892807782c9CC9a5515` | HyperEVM | CA · 풀(LP) | SWAP-LP | unknown | PrimeFinance | 1 |  |
 | `0x9a7A92240FBAc4030b65A6E61239928d6Bcc716F` | BSC | CA · 컨트랙트 | - | victim | BeatXswap | 1 |  |
 | `0x9cd8d04c30ed78afef7ed00ab1a2a028d476331c` | BSC | CA · 풀(LP) | Cake-LP | unknown | GDC | 1 |  |
 | `0xA07c5b74C9B40447a954e1466938b865b6BBea36` | BSC | CA · 토큰 | Venus BNB | unknown | ORB | 1 |  |
+| `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48` | Ethereum | CA · 토큰 | USD Coin | unknown | Startale | 1 |  |
 | `0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7` | Ethereum | CA · 토큰 | rsETH | unknown | RsETHSafeModule | 1 | proxy→0x7159107483 |
 | `0xa27bcd590195b2a9bdc29379de4f040b2d8066e0` | Ethereum | CA · 컨트랙트 | - | victim | OrderFactory | 1 |  |
 | `0xA5Db84d7BCcb799fb31bd3c417D04d5bC29Da96D` | BSC | CA · 풀(V3) | - | victim | BeatXswap | 1 |  |
@@ -83,6 +80,7 @@
 | `0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c` | BSC | CA · 토큰 | Wrapped BNB | unknown | GDC | 1 |  |
 | `0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2` | Ethereum | CA · 토큰 | Wrapped Ether | unknown | OMNI404 | 1 |  |
 | `0xc0AE1e1e172ECD4C56fD8043FD5Afe5a473E9835` | Ethereum | CA · 컨트랙트 | - | victim | YamFinance | 1 |  |
+| `0xc2132D05D31c914a87C6611C10748AEb04B58e8F` | Polygon | CA · 토큰 | USDT0 | unknown | Nimiq | 1 | proxy→0x90040487a6 |
 | `0xC4D27261C06407053Cad16Cb825ecc0eEE7ee7d7` | BSC | CA · 토큰 | ORB | unknown | ORB | 1 |  |
 | `0xC63FB27F52ed8d06673c60c3075B2D3bD26Cf4AA` | BSC | CA · 컨트랙트 | - | attacker | Likwid | 1 |  |
 | `0xcb14a7ace59b7a7b19ba3fee0f3a37d23fa62157` | Ethereum | CA · 컨트랙트 | - | unknown | RsETHSafeModule | 1 |  |
@@ -91,59 +89,44 @@
 | `0xD45884B592E316eB816199615A95C182F75dea07` | Ethereum | CA · 컨트랙트 | - | victim | EtherFiAtomicQueue | 1 |  |
 | `0xd5C02bB3e40494D4674778306Da43a56138A383E` | Ethereum | CA · 토큰 | OMNI404 | victim | OMNI404 | 1 |  |
 | `0xdd3068d772764443e4c4b18b8c96aee153d83056` | Ethereum | CA · 컨트랙트 | - | unknown | OrderFactory | 2053 |  |
+| `0xe2719E3b28EeF69bf3C4A9D7FC7280c5a015EcdE` | Ethereum | CA · 컨트랙트 | - | unknown | Startale | 2 |  |
 | `0xe3342358e7ccbaebdd1139ad0274c53c5b3ef822` | BSC | CA · 토큰 | GDC | unknown | GDC | 1 |  |
 | `0xeA18B13d11f705a68F0954f637949e1eaA7AC4ca` | Ethereum | CA · 컨트랙트 | - | unknown | RsETHSafeModule | 1 |  |
 | `0xf0bb20865277aBd641a307eCe5Ee04E79073416C` | Ethereum | CA · 토큰 | Ether.Fi Liquid ETH | unknown | EtherFiAtomicQueue | 1 |  |
 | `0xf45d6dba93d0db2c849c280f45e60d6e11b3c4dd` | HyperEVM | CA · 컨트랙트 | - | unknown | PrimeFinance | 1 |  |
+| `0xF615bD7EA00C4Cc7F39Faad0895dB5f40891359f` | Polygon | CA · 컨트랙트 | - | unknown | Nimiq | 1 |  |
 | `0xf6BA170f3d50a21fAD30f2D02972ffd295F04e8C` | BSC | CA · 컨트랙트 | - | unknown | UnifiProtocol | 2 |  |
 | `0xfcf3d97c6db4c3bf6020a2b99af074b595bda163` | Ethereum | CA · 컨트랙트 | - | victim | OrderFactory | 1 |  |
 | `0xfD36E2c2a6789Db23113685031d7F16329158384` | BSC | CA · 컨트랙트 | - | unknown | ORB | 1 |  |
 | `0xFDe0d1575Ed8E06FBf36256bcdfA1F359281455A` | Ethereum | CA · 컨트랙트 | - | unknown | RsETHSafeModule | 49032 |  |
 | `0xffb607418dBEaB7A888e079A34Be28A30d8E1DE2` | Ethereum | CA · 컨트랙트 | - | victim | YamFinance | 1 |  |
 | `0x0dC2c5D6b05A317076CF501f7E7be36a5dfe9b66` | Ethereum | EOA | - | attacker | RsETHSafeModule | 19 |  |
-| `0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b0` | - | 미사용 | - |  |  | 0 |  |
 | `0x19bc1c7fD4Aa93F540498499b8f5B4FC3DDE5A52` | HyperEVM | EOA | - | attacker | PrimeFinance | 2 |  |
-| `0x201c7a9b4114c76fcda2b5de5d765505f4c5f7c1` | - | 미사용 | - |  |  | 0 |  |
 | `0x215adfc84332d8dfdd5afc77af69cceec0bcd3fc` | Cronos | EOA | - | laundering | Tectonic | 4 |  |
+| `0x24Cb173Ae221AeA93369f34bdcF0Ddb35b436773` | Polygon | EOA | - | victim | Nimiq | 8641 |  |
 | `0x26881EacC00Bcccd7c4ebE14BD7840dD989Bf982` | Ethereum | EOA | - | attacker | YamFinance | 62 |  |
 | `0x2B5bF7D9D9Dc1EEc68f40C6B7a8f197e65f9731a` | BSC | EOA | - | attacker | BonfireSwap | 10 |  |
-| `0x2dc6a36f4e5eeefe112c01569de96dea496bb618` | - | 미사용 | - |  |  | 0 |  |
 | `0x2f7e143e27F2fa26Ef3B8AC72698F1D321422f67` | Ethereum | EOA | - | attacker | RsETHSafeModule | 12 |  |
 | `0x3196398321D77a2511d369DCB6eCa9d2aD87b73A` | Ethereum | EOA | - | attacker | EnsoFinance | 34 |  |
 | `0x4266a0e6a0f0ef90abcff3bb089932ca0cce3652` | Cronos | EOA | - | attacker | Tectonic | 34 |  |
-| `0x4cbc3d8db832eb5442ce1c11d79fda05cafabfe7` | - | 미사용 | - |  |  | 0 |  |
-| `0x5e6b33b7d69b505d8ae6e50ca6967e13bf513b61` | - | 미사용 | - |  |  | 0 |  |
-| `0x5ff8150482f5473bff16b4a142a98a7f72b159df` | - | 미사용 | - |  |  | 0 |  |
-| `0x63fbfc4b47e810d604dbdab0db35b17366f42133` | - | 미사용 | - |  |  | 0 |  |
 | `0x67B2f08683A735cfE6f6E57fA86909b62218C2a1` | BSC | EOA | - | attacker | BeatXswap | 4 |  |
-| `0x74634e4ccc7e8922798c7043f839219b1a1a4d60` | - | 미사용 | - |  |  | 0 |  |
 | `0x77071d2bbd8f3c296c8cd7d0abd21bc172420cda` | Ethereum | EOA | - | attacker | OrderFactory | 8 |  |
-| `0x7cbe0b4349513fed6d03ba8bf9ed708e10e07a50` | - | 미사용 | - |  |  | 0 |  |
 | `0x7d4e7e5dcb0ccc66b4f0f8b0f30da5078ad4f2dc` | Cronos | EOA | - | attacker | Tectonic | 16 |  |
-| `0x817D33738D979eD899ff2f6e9332246a2F2a6Da1` | - | 미사용 | - |  |  | 0 |  |
 | `0x83381e7F7232775735169d72D237B858fFc36871` | Ethereum | EOA | - | attacker | Flamincome | 4 |  |
-| `0x83cbd07d59aedc2f114c351c568d3386ff5bc7ca` | - | 미사용 | - |  |  | 0 |  |
 | `0x859E69A29244A10800A34eE66919426C02afa2F0` | Ethereum | EOA | - | attacker | SpiralHookV2 | 5 | eip55_mismatch |
 | `0x86616ce5d1829beb030742e65bd3c1fbee8f082e` | Ethereum | EOA | - | laundering | Tectonic | 3 | 활동 체인: Cronos/Ethereum |
-| `0x875da4Bd7b4a52a806A533b1cf6D6fF92365d2E6` | - | 미사용 | - |  |  | 0 |  |
 | `0x8f36fd9ffc0a8ca373aa7a4787292536a489d2b5` | Ethereum | EOA | - | attacker | Osmosis | 35 |  |
 | `0x90bde1e0Bb16B3DEEb9d638aCf8D01F19fD2F31e` | BSC | EOA | - | attacker | Likwid | 62 |  |
 | `0x9AE755D23Fc948fE94C9364A2398fd508a2AB0d2` | Ethereum | EOA | - | attacker | Nesa | 28 |  |
 | `0x9ea6b75940de7c57bd1827001536e33ed667b55d` | Ethereum | EOA | - | laundering | Tectonic | 5 |  |
 | `0xa5CC6e490Bce9185fA47b421f2EaC677A83B64Ea` | Ethereum | EOA | - | attacker | EtherFiAtomicQueue | 12 |  |
-| `0xb4c00e8f3ba815b6c70f45026f8794d2c1f07964` | - | 미사용 | - |  |  | 0 |  |
 | `0xB78E77dEdDaf20f238e1D8f9d1De7606c23Cdd81` | BSC | EOA | - | attacker | UnifiProtocol | 1 |  |
 | `0xB92dF70F3d25eD25265c7C341C9D2550c42Ff83A` | Ethereum | EOA | - | laundering | Nesa | 10 |  |
 | `0xc404160b79bd8905061a1caecbeca2eeab3f72dd` | Ethereum | EOA | - | laundering | Tectonic | 90 | 활동 체인: Cronos/Ethereum |
-| `0xcc71a3bb131c73462b0f25533070113a63c85e94` | - | 미사용 | - |  |  | 0 |  |
-| `0xd3aac8a1a9e412e2c590463a8b6f90125e23f1f3` | - | 미사용 | - |  |  | 0 |  |
 | `0xd8B49172B1A33e77C2619a78e08471FaCFf5dAd3` | BSC | EOA | - | attacker | ORB | 11 |  |
 | `0xe327b58233DE729D58d35e36E4B6D45c8e00cDbb` | BSC | EOA | - | attacker | GDC | 14 |  |
-| `0xf12ccb683c51cc1c5907d362f3219b3a49a597be` | - | 미사용 | - |  |  | 0 |  |
-| `0xf3c9b1d7094bd11e6aa065c5efb009afa682a961` | - | 미사용 | - |  |  | 0 |  |
 | `0xFB26db4EAb18Cb50d29Ff431888dD643A7e9C9f8` | Ethereum | EOA | - | attacker | OMNI404 | 5 |  |
 | `0xfdb11781ee3818135eebd2acd2247c263e266652` | Cronos | EOA | - | laundering | Tectonic | 8 |  |
-| `0xff990876d863a61732779c341991215856c89420` | - | 미사용 | - |  |  | 0 |  |
 | `44dZUJ7w1T3fKAvFW8XyXUVoAGSbFvXef2wcbnsjNKGWYo` | Monero | 지갑 | - | sanctioned | Xinbi Guarantee |  |  |
 | `45ezvPejNsKYntjhyyeb7fbfzi1sxYQozc5Ffseh8jPGW4` | Monero | 지갑 | - | sanctioned | Xinbi Guarantee |  |  |
 | `47FVhkRkWgnLs81UBqgY8ui6axAB1627HJjkY2qPnWxMbG` | Monero | 지갑 | - | sanctioned | Xinbi Guarantee |  |  |

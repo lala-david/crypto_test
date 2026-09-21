@@ -649,6 +649,9 @@ def apply_to_incident(inc: Incident, results: Dict[str, dict]) -> List[str]:
         ch = r.get("chain")
         if ch and norm_chain(a.chain) != ch and r.get("kind") in ("eoa", "contract", "wallet"):
             changes.append(f"chain {a.address[:10]}… {norm_chain(a.chain) or '-'}→{ch}"); a.chain = ch
+        # 주소 형식만으로 체인이 확정되는 패밀리(BTC·Tron·Cosmos bech32·Solana)는 카드의 체인 목록에도 반영한다 (EVM 은 여러 체인에 같은 주소가 있어 제외)
+        if ch and r.get("family") in ("btc", "tron", "cosmos", "sol") and r.get("kind") in ("eoa", "contract", "wallet") and ch not in [norm_chain(c) for c in inc.chains]:
+            inc.chains.append(ch); changes.append(f"chains += {ch}")
         if r.get("kind") == "contract" and r.get("ctype") in INFRA_CTYPES and a.role == "attacker":
             changes.append(f"role {a.address[:10]}… attacker→unknown ({r.get('ctype')})"); a.role = "unknown"
             tag = CTYPE_KO.get(r.get("ctype"), r.get("ctype"))

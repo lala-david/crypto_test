@@ -1,4 +1,11 @@
 ﻿chain,address,role,note,source,project,incident_date,first_seen_at,url
+OSMOSIS,osmo1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8vtzltn,victim,Osmosis address holding frozen allBTC,rekt,Osmosis,2026-06-25,2026-09-21T15:36:29,https://rekt.news/nomic-rekt
+NOMIC,nomic1kq2rzz6fq2q7fsu75a9g7cpzjeanmk685ak9g7,unknown,Sender of all 25 outbound IBC packet transfers to Osmosis,rekt,Osmosis,2026-06-25,2026-09-21T15:36:29,https://rekt.news/nomic-rekt
+NOMIC,nomic1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8cgz4wt,unknown,Transaction signer for IBC packets,rekt,Osmosis,2026-06-25,2026-09-21T15:36:29,https://rekt.news/nomic-rekt
+NOBLE,noble1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8vny890,laundering,Receiver of USDC from Osmosis via IBC,rekt,Osmosis,2026-06-25,2026-09-21T15:36:29,https://rekt.news/nomic-rekt
+AXELAR,axelar1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8q788kq,unknown,Axelar address involved in IBC routing,rekt,Osmosis,2026-06-25,2026-09-21T15:36:29,https://rekt.news/nomic-rekt
+ETH,0x8f36fd9ffc0a8ca373aa7a4787292536a489d2b5,attacker,"Ethereum beneficiary of proceeds, also Tornado Cash router",rekt,Osmosis,2026-06-25,2026-09-21T15:36:29,https://rekt.news/nomic-rekt
+NOMIC,nomic1rk07saqmvfle50h4h9hul00g67xzrcc5ytfxjm,attacker,"Address circulated as ""the exploiter""",rekt,Osmosis,2026-06-25,2026-09-21T15:36:29,https://rekt.news/nomic-rekt
 Polygon,0x2258491525C21f334c5a2dc22CE55e55023FC45D,attacker,Attacker,defihacklabs,Nimiq,2026-09-16,2026-09-21T13:02:41,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Nimiq_exp.sol
 Polygon,0x24Cb173Ae221AeA93369f34bdcF0Ddb35b436773,victim,Victim,defihacklabs,Nimiq,2026-09-16,2026-09-21T13:02:41,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Nimiq_exp.sol
 Polygon,0x0cFD862bE942846Cebad797d7c1BC6e47714959b,unknown,HTLC handler #1 (USDC)       0x0cFD862bE942846Cebad797d7c1BC,defihacklabs,Nimiq,2026-09-16,2026-09-21T13:02:41,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Nimiq_exp.sol
@@ -115,13 +122,6 @@ ETH,0x0C23C8BC3b7C565f3f9F4aC691A4Dc4275086F86,unknown,Attack contract,defihackl
 ETH,0x1725577dC9B1ee2D95dB49c2193226471594aacc,unknown,SpiralHookV2,defihacklabs,SpiralHookV2,2026-09-12,2026-09-21T11:43:28,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
 ETH,0x6a77E39240dA69Ea788e4cF93663D2c41EA4b12b,unknown,SPIRAL token,defihacklabs,SpiralHookV2,2026-09-12,2026-09-21T11:43:28,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
 ETH,0x000000000004444c5dc75cB358380D2e3dE08A90,unknown,V4 PoolManager,defihacklabs,SpiralHookV2,2026-09-12,2026-09-21T11:43:28,https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/SpiralHookV2_exp.sol
-OSMOSIS,osmo1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8vtzltn,victim,Osmosis address holding frozen allBTC,rekt,Osmosis,2026-06-25,2026-09-21T11:43:28,https://rekt.news/nomic-rekt
-NOMIC,nomic1kq2rzz6fq2q7fsu75a9g7cpzjeanmk685ak9g7,unknown,Sender of all 25 outbound IBC packet transfers to Osmosis,rekt,Osmosis,2026-06-25,2026-09-21T11:43:28,https://rekt.news/nomic-rekt
-NOMIC,nomic1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8cgz4wt,unknown,Transaction signer for IBC packets,rekt,Osmosis,2026-06-25,2026-09-21T11:43:28,https://rekt.news/nomic-rekt
-NOBLE,noble1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8vny890,laundering,Receiver of USDC from Osmosis via IBC,rekt,Osmosis,2026-06-25,2026-09-21T11:43:28,https://rekt.news/nomic-rekt
-AXELAR,axelar1wq76r2mhqsa9yaygghuwyq4wy6dcsgf8q788kq,unknown,Axelar address involved in IBC routing,rekt,Osmosis,2026-06-25,2026-09-21T11:43:28,https://rekt.news/nomic-rekt
-ETH,0x8f36fd9ffc0a8ca373aa7a4787292536a489d2b5,attacker,"Ethereum beneficiary of proceeds, also Tornado Cash router",rekt,Osmosis,2026-06-25,2026-09-21T11:43:28,https://rekt.news/nomic-rekt
-NOMIC,nomic1rk07saqmvfle50h4h9hul00g67xzrcc5ytfxjm,attacker,"Address circulated as ""the exploiter""",rekt,Osmosis,2026-06-25,2026-09-21T11:43:28,https://rekt.news/nomic-rekt
 BTC,bc1ql4mfu6aundtkksxklfajs2h3t9nzcd6gyqjlte,attacker,actor-controlled consolidation and on-chain-messaging address; received ~598.5 BTC,rekt,Liquid Network,2026-09-06,2026-09-16T22:02:54,https://rekt.news/liquid-network-rekt
 BTC,bc1qdlld6antmv4xug242ed83q7k4rqw50cwfns38szx4qu2f4jwaxxsuhwxxr,victim,"Liquid Federation peg wallet; received 3,400 BTC returned",rekt,Liquid Network,2026-09-06,2026-09-16T22:02:54,https://rekt.news/liquid-network-rekt
 BTC,Bc1ql4mfu6aundtkksxklfajs2h3t9nzcd6gyqjlte,unknown,,rekt,Liquid Network,2026-09-06,2026-09-16T22:02:54,https://rekt.news/liquid-network-rekt
