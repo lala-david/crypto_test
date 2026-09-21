@@ -18,13 +18,14 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 import sys
 
 import yaml
 from starlette.applications import Starlette
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
-from starlette.responses import JSONResponse
+from starlette.responses import HTMLResponse, JSONResponse
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
@@ -162,10 +163,36 @@ class NoStore:
         await self.app(scope, receive, send_wrapper)
 
 
+
+_ASSET_RE = re.compile(r'((?:src|href)=")([A-Za-z0-9_\-]+\.(?:js|css))(")')
+
+
+def _versioned_html(name: str) -> str | None:
+    """docs/<name>.html 을 읽어 로컬 .js/.css 참조에 ?v=<파일 mtime> 을 붙인다 → 파일이 바뀌면 URL 도 바뀌어 옛 캐시를 쓰지 않는다."""
+    path = os.path.join(DOCS, name)
+    if not os.path.isfile(path):
+        return None
+    html = open(path, encoding="utf-8").read()
+
+    def sub(m):
+        f = os.path.join(DOCS, m.group(2))
+        v = int(os.path.getmtime(f)) if os.path.isfile(f) else 0
+        return f"{m.group(1)}{m.group(2)}?v={v}{m.group(3)}"
+    return _ASSET_RE.sub(sub, html)
+
+
+async def page(req: Request):
+    name = req.path_params.get("name") or "index"
+    html = _versioned_html(f"{name}.html")
+    if html is None:
+        raise HTTPException(404, "not found")
+    return HTMLResponse(html)
+
 app = Starlette(routes=[
     Route("/api", api_index), Route("/api/meta", meta), Route("/api/incidents", incidents), Route("/api/incidents/{uid}", incident),
     Route("/api/briefings", briefings), Route("/api/briefings/{day}", briefing), Route("/api/stats", stats),
     Route("/api/addresses", addresses), Route("/api/addresses/lookup", lookup), Route("/api/search", search),
+    Route("/", page), Route("/{name:str}.html", page),
     Mount("/", app=StaticFiles(directory=DOCS, html=True), name="static"),
 ], exception_handlers={HTTPException: http_error})
 app = NoStore(app)

@@ -57,24 +57,32 @@
     else { $("#briefHeadline").textContent = ""; $("#briefBody").innerHTML = `<div class="empty">${esc(t("no_data"))}</div>`; }
   };
   const $$ = KL.$$;
-  // ---- 상단 배너: 21st.dev ASCII/디더 효과 (docs/hero.jpg 가 있으면 사진, 없으면 수치·워드마크를 소스로 그린다) ----
-  let fxInst = null;
+  // ---- 상단 배너: 21st.dev "All about the Benjamins" ASCII/디더 효과 ----
+  // 소스 = 검정 바탕 + 왼쪽 초상(docs/hero.jpg, 없으면 생략) + 오른쪽 이번 기간 피해액(흰 굵은 글자 → 디더 후 픽셀 글자로 읽힘)
+  let fxInst = null, heroImg = null, heroTried = false;
+  const FX_PARAMS = { renderMode: "dither", bgMode: "solid", cellSize: 9, coverage: 96, charSet: "binary", contrast: 115, edgeEmphasis: 40, tint: "#00ff66", tintOpacity: 45, overlayBlend: "overlay",
+    pfx: { vignette: { enabled: true, intensity: 38 }, scanLines: { enabled: true, intensity: 28 }, chromatic: { enabled: true, intensity: 40 }, bloom: { enabled: true, intensity: 60 }, filmGrain: { enabled: true, intensity: 40 }, glitch: { enabled: true, intensity: 20 } },
+    animated: true, animStyle: "flicker", animSpeed: { enabled: true, intensity: 100 }, animIntensity: { enabled: true, intensity: 60 } };
   function heroSource(ctx, w, h) {
-    const c = D.cur; const big = money(c.loss_amount); const sub = `${fmtInt(c.new_count)} incidents · ${fmtInt(D.addrs.total)} addresses`;
-    const g = ctx.createRadialGradient(w * 0.32, h * 0.5, 0, w * 0.32, h * 0.5, h * 1.1); g.addColorStop(0, "#9a9a9a"); g.addColorStop(0.5, "#3a3a3a"); g.addColorStop(1, "#000");
-    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, w, h);
+    let x0 = 0;
+    if (heroImg && w > h * 2.6) { // 초상: 왼쪽에 높이 맞춤, 오른쪽 가장자리는 검정으로 페이드
+      ctx.drawImage(heroImg, 0, 0, h, h);
+      const g = ctx.createLinearGradient(h * 0.78, 0, h, 0); g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "#000");
+      ctx.fillStyle = g; ctx.fillRect(h * 0.78, 0, h * 0.22, h);
+      x0 = h;
+    }
+    const big = money(D.cur.loss_amount);
     ctx.fillStyle = "#fff"; ctx.textBaseline = "middle"; ctx.textAlign = "left";
-    ctx.font = `700 ${Math.round(h * 0.42)}px Inter, "Noto Sans KR", sans-serif`; ctx.fillText(big, w * 0.06, h * 0.46);
-    ctx.font = `600 ${Math.round(h * 0.13)}px "JetBrains Mono", monospace`; ctx.fillStyle = "#d8d8d8"; ctx.fillText(sub, w * 0.065, h * 0.8);
-    ctx.textAlign = "right"; ctx.font = `700 ${Math.round(h * 0.16)}px Inter, sans-serif`; ctx.fillStyle = "#e8e8e8"; ctx.fillText("INCIDENT LEDGER", w * 0.95, h * 0.5);
+    let size = Math.round(h * 0.5); ctx.font = `800 ${size}px Inter, "Noto Sans KR", sans-serif`;
+    const left = x0 + h * 0.16, avail = w - left - w * 0.03; const tw = ctx.measureText(big).width;
+    if (tw > avail) { size = Math.max(24, Math.floor(size * avail / tw)); ctx.font = `800 ${size}px Inter, "Noto Sans KR", sans-serif`; }
+    ctx.fillText(big, left, h * 0.5);
   }
   function initFx() {
     const cv = $("#fx"); if (!cv || !KL.ascii) return;
-    const params = { renderMode: "dither", bgMode: "solid", cellSize: 14, coverage: 96, charSet: "binary", contrast: 115, edgeEmphasis: 40, tint: "#00ff66", tintOpacity: 45, overlayBlend: "overlay",
-      pfx: { vignette: { enabled: true, intensity: 38 }, scanLines: { enabled: true, intensity: 28 }, chromatic: { enabled: true, intensity: 40 }, bloom: { enabled: true, intensity: 60 }, filmGrain: { enabled: true, intensity: 40 }, glitch: { enabled: true, intensity: 20 } },
-      animated: true, animStyle: "flicker", animSpeed: { enabled: true, intensity: 100 }, animIntensity: { enabled: true, intensity: 60 } };
-    const img = new Image(); img.onload = () => { fxInst = fxInst || KL.ascii(cv, { params, source: img }); fxInst.setSource(img); }; img.onerror = () => { fxInst = fxInst || KL.ascii(cv, { params, source: heroSource }); fxInst.setSource(heroSource); };
-    img.src = "hero.jpg?" + Date.now();
+    if (!fxInst) fxInst = KL.ascii(cv, { params: FX_PARAMS, source: heroSource }); else fxInst.setSource(heroSource);
+    if (!heroTried) { heroTried = true; const img = new Image(); img.onload = () => { heroImg = img; fxInst.setSource(heroSource); }; img.src = "hero.jpg"; }
     $("#fxPill").textContent = `${fmtDate(D.cur.range.from)} – ${fmtDate(D.cur.range.to)} · ${t("k_loss")} ${money(D.cur.loss_amount)} · ${t("k_new")} ${fmtInt(D.cur.new_count)}`;
   }
   const _render = render; render = function () { _render(); initFx(); };
