@@ -70,3 +70,9 @@ def test_strip_line_removes_amount_phrases():
     assert "$" not in _strip_line("attacker drained $4.2M from the pool", "X")
     assert "USD" not in _strip_line("lost about 1.5M USD worth of tokens", "X")
     assert _strip_line("개인키가 탈취돼 약 462,730 달러 규모의 자산이 유출", "NuNet").startswith("개인키가 탈취돼")
+
+
+def test_generic_phrase_rejects_noun_phrases():
+    from collector.relabel import generic_phrase
+    assert generic_phrase("software developers") and generic_phrase("crypto users") and generic_phrase("Iranian Government")
+    assert not generic_phrase("Fetch.ai") and not generic_phrase("rsETH") and not generic_phrase("Liquid Network") and not generic_phrase("Startale")

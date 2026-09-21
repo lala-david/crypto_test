@@ -111,7 +111,7 @@ def main() -> int:
         llm_cfg0 = dict(cfg.get("llm", {}))
         prov = build_provider(llm_cfg0, args.provider)
         log.info("=== 교차 감사 시작 (LLM: %s) ===", prov.describe())
-        summ = run_audit(store, prov, data_dir, days=30, max_tokens=int(llm_cfg0.get("max_tokens", 8000)))
+        summ = run_audit(store, prov, data_dir, days=30, max_tokens=max(20000, int(llm_cfg0.get("max_tokens", 8000))))  # 카드 60건 이상이면 추론 토큰이 8000 을 넘겨 JSON 이 잘린다
         log.info("교차 감사 결과: %s", json.dumps(summ, ensure_ascii=False))
         store.export_jsonl(); store.export_state()
         print(json.dumps(summ, ensure_ascii=False))

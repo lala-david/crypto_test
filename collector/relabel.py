@@ -181,6 +181,21 @@ def text_mentions(inc: Incident, text: str) -> bool:
     return sum(1 for w in toks if w in tl) >= max(1, int(len(toks) * 0.6))
 
 
+_GENERIC_WORDS = {"developers", "developer", "users", "user", "victims", "victim", "investors", "investor", "traders", "trader", "customers", "customer",
+                  "people", "individuals", "company", "companies", "exchange", "exchanges", "wallets", "wallet", "protocol", "platform", "government", "attackers", "hackers"}
+
+
+def generic_phrase(name: str) -> bool:
+    """'software developers'처럼 대문자·숫자가 없는 소문자 명사구이거나 마지막 단어가 일반 명사면 프로젝트 이름으로 받지 않는다."""
+    n = (name or "").strip()
+    if not n:
+        return True
+    words = re.findall(r"[A-Za-z]+", n)
+    if not re.search(r"[A-Z0-9가-힣]", n) and len(words) >= 2:
+        return True
+    return bool(words) and words[-1].lower() in _GENERIC_WORDS and len(words) <= 3
+
+
 def apply_verified(inc: Incident, out: dict, text: str) -> Tuple[List[str], List[str]]:
     """근거가 확인된 필드만 적용. (바뀐 필드 목록, 거부 이유 목록)"""
     changed, rejected = [], []
@@ -240,7 +255,7 @@ def apply_verified(inc: Incident, out: dict, text: str) -> Tuple[List[str], List
             rejected.append("chains: not in text")
     # 이름
     new_p = (out.get("project") or "").strip()
-    if new_p and new_p != inc.project and len(new_p) <= 60 and new_p.lower() != (inc.title or "").strip().lower():
+    if new_p and new_p != inc.project and len(new_p) <= 60 and new_p.lower() != (inc.title or "").strip().lower() and not generic_phrase(new_p):
         toks = [w for w in re.findall(r"[A-Za-z0-9가-힣]{3,}", new_p)]
         hit = sum(1 for w in toks if w.lower() in text.lower())
         if not toks or hit >= max(1, int(len(toks) * 0.6)):
@@ -503,8 +518,36 @@ def run_audit(store: Store, provider: LLMProvider, data_dir: str, days: int = 30
         "followup_of": (i.followup_of or {}).get("project") if i.followup_of else None,
         "summary": (i.summary_ko or i.summary_en or "")[:160],
     } for i in merged]
-    user = f"최근 {days}일 사건 {len(listing)}건:\n" + json.dumps(listing, ensure_ascii=False)
-    out = provider.complete_json(AUDIT_SYSTEM, user, AUDIT_SCHEMA, max_tokens)
+    def ask(items: List[dict]) -> Optional[dict]:
+        user = f"최근 {days}일 사건 {len(items)}건:\n" + json.dumps(items, ensure_ascii=False)
+        return provider.complete_json(AUDIT_SYSTEM, user, AUDIT_SCHEMA, max_tokens)
+
+    # gpt-oss 는 카드가 60건을 넘으면 추론 토큰이 폭주해 JSON 이 잘린다 → 추론 수준을 낮추고, 그래도 안 되면 겹치는 두 구간으로 나눠 묻는다
+    old_think = getattr(provider, "think", None)
+    if isinstance(old_think, (bool, str)):
+        provider.think = "low"
+    try:
+        out = ask(listing)
+        if not out and len(listing) > 30:
+            half = len(listing) // 2 + 8
+            parts = [x for x in (ask(listing[:half]), ask(listing[len(listing) - half:])) if x]
+            if parts:
+                out = {}
+                for key in ("duplicates", "wrong_amount", "wrong_type", "wrong_date", "not_incident", "naming"):
+                    seen = set()
+                    merged_items = []
+                    for part in parts:
+                        for it in (part.get(key) or []):
+                            sig = json.dumps(it, ensure_ascii=False, sort_keys=True)
+                            if sig not in seen:
+                                seen.add(sig)
+                                merged_items.append(it)
+                    out[key] = merged_items
+                out["overall"] = " / ".join(str(part.get("overall") or "") for part in parts if part.get("overall"))
+                out["_chunked"] = True
+    finally:
+        if isinstance(old_think, (bool, str)):
+            provider.think = old_think
     if not out:
         return {"error": "LLM 이 JSON 을 내놓지 않음", "listed": len(listing)}
     by_uid = {i.uid: i for i in merged}
