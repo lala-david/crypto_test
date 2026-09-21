@@ -304,6 +304,17 @@ def classify_contract(calls: Dict[str, Optional[str]], impl_slot: Optional[str] 
     return out
 
 
+def parse_code(code_hex: str) -> Tuple[int, Optional[str]]:
+    """eth_getCode 결과 → (컨트랙트 코드 길이, EIP-7702 위임 대상). 0xef0100+20바이트(23B)는 위임된 EOA 이므로 코드 길이 0 으로 본다."""
+    h = (code_hex or "").lower()
+    if not h.startswith("0x") or len(h) <= 2:
+        return 0, None
+    n = (len(h) - 2) // 2
+    if n == 23 and h.startswith("0xef0100"):
+        return 0, "0x" + h[8:48]
+    return n, None
+
+
 def pick_chain(active: Dict[str, dict], hints: List[str]) -> str:
     """활동 체인 중 하나를 고른다: 힌트 체인 우선(코드 > 활동), 없으면 코드가 있는 첫 체인, 없으면 nonce 가 가장 큰 체인."""
     if not active:
@@ -435,10 +446,10 @@ class AddrChecker:
         code, nonce, bal = self._rpc_batch(chain, [("eth_getCode", [addr, "latest"]), ("eth_getTransactionCount", [addr, "latest"]), ("eth_getBalance", [addr, "latest"])])
         if code is None and nonce is None:
             return None  # RPC 실패
-        code_len = max(0, (len(code) - 2) // 2) if isinstance(code, str) else 0
+        code_len, delegate = parse_code(code if isinstance(code, str) else "")
         n = int(nonce, 16) if isinstance(nonce, str) and nonce.startswith("0x") else 0
         b = int(bal, 16) if isinstance(bal, str) and bal.startswith("0x") else 0
-        return {"code": code_len, "nonce": n, "balance": b / 1e18}
+        return {"code": code_len, "nonce": n, "balance": b / 1e18, "delegate": delegate}
 
     def _classify_evm(self, chain: str, addr: str) -> dict:
         names = ["symbol", "name", "decimals", "totalSupply", "token0", "token1", "fee", "getPoolId", "asset", "underlying", "UNDERLYING_ASSET_ADDRESS",
@@ -473,6 +484,8 @@ class AddrChecker:
             out.update(self._classify_evm(chain, addr))
         else:
             out["kind"] = "eoa"
+            if a.get("delegate"):  # EIP-7702: EOA 가 스마트 계정 구현에 위임(0xef0100 + 주소). 컨트랙트가 아니다.
+                out["delegated"] = a["delegate"]
         return out
 
     def _check_btc(self, addr: str) -> dict:
@@ -729,6 +742,8 @@ def kind_text(r: dict) -> str:
     k = r.get("kind")
     if k == "contract":
         return "CA · " + CTYPE_KO.get(r.get("ctype") or "contract", r.get("ctype") or "컨트랙트")
+    if k == "eoa" and r.get("delegated"):
+        return "EOA · 7702"
     return {"eoa": "EOA", "wallet": "지갑", "txhash": "TX 해시", "invalid": "무효", "unfunded": "미사용", "unknown": "미확인"}.get(k or "", k or "-")
 
 

@@ -1,14 +1,14 @@
 {
  "summary": {
   "addresses": 309,
-  "checked": 0,
+  "checked": 3,
   "kinds": {
-   "eoa": 210,
-   "contract": 88,
+   "eoa": 213,
+   "contract": 85,
    "wallet": 11
   },
   "ctypes": {
-   "contract": 50,
+   "contract": 47,
    "token": 21,
    "lp_pool": 6,
    "proxy": 3,
@@ -19,25 +19,14 @@
    "atoken": 2,
    "nft": 1
   },
-  "cards_changed": 1,
-  "changes": 2,
-  "days": [
-   "2026-09-19"
-  ],
+  "cards_changed": 0,
+  "changes": 0,
+  "days": [],
   "rpc": {
-   "rpc_calls": 0,
+   "rpc_calls": 3,
    "rpc_errors": 0
   },
   "oklink": false
  },
- "changes": [
-  {
-   "uid": "539f8d767d650de1",
-   "project": "Osmosis",
-   "changes": [
-    "chains += Osmosis",
-    "chains += Nomic"
-   ]
-  }
- ]
+ "changes": []
 }

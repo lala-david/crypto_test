@@ -1,12 +1,8 @@
 # 지갑 주소 검증 보고서 · 2026-09-21
 
-- 주소 309 · 이번 조회 0 · 카드 변경 1 (2건) · OKLink 미사용(키 없음)
-- 종류: EOA 210, CA · 컨트랙트 88, 지갑 11
-- 컨트랙트 유형: 컨트랙트 50, 토큰 21, 풀(LP) 6, 프록시 3, 풀(V3) 2, aToken 2, cToken 1, 라우터 1, 멀티시그 1, NFT 1
-
-## 카드 교정
-
-- **Osmosis** (`539f8d767d650de1`): chains += Osmosis; chains += Nomic
+- 주소 309 · 이번 조회 3 · 카드 변경 0 (0건) · OKLink 미사용(키 없음)
+- 종류: EOA 213, CA · 컨트랙트 85, 지갑 11
+- 컨트랙트 유형: 컨트랙트 47, 토큰 21, 풀(LP) 6, 프록시 3, 풀(V3) 2, aToken 2, cToken 1, 라우터 1, 멀티시그 1, NFT 1
 
 ## 주소별 결과
 
@@ -30,7 +26,6 @@
 | `0x17e801E17CeFC6334059189c178D4783830E03D3` | BSC | CA · 컨트랙트 | - | unknown | BonfireSwap | 1 |  |
 | `0x1b8c6808b48C7A9b6997b6dAEF6401307B2B419A` | BSC | CA · 컨트랙트 | - | unknown | UnifiProtocol | 1 |  |
 | `0x1e647FAADb05f2124BFCcFC003EDc06D1A90bf5D` | BSC | CA · 컨트랙트 | - | victim | BeatXswap | 1 |  |
-| `0x2258491525C21f334c5a2dc22CE55e55023FC45D` | Polygon | CA · 컨트랙트 | - | attacker | Nimiq | 11 |  |
 | `0x24B6308AB84B182d0598b73d21a42f4C2bb33C18` | BSC | CA · 컨트랙트 | - | unknown | ORB | 1 |  |
 | `0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174` | Polygon | CA · 토큰 | USD Coin (PoS) | unknown | Nimiq | 1 | proxy→0xdd9185db08 |
 | `0x28E976Ea7b83553d6D1D45CE81334156A2632127` | BSC | CA · 컨트랙트 | - | unknown | BonfireSwap | 1 |  |
@@ -61,7 +56,6 @@
 | `0x890ed1ee6d435a35d51081ded97ff7ce53be5942` | Ethereum | CA · 토큰 | Enso DefiPulse Index | victim | EnsoFinance | 1 | proxy→0xbe90d1bae4 |
 | `0x8b4f1616751117C38a0f84F9A146cca191ea3EC5` | Ethereum | CA · 컨트랙트 | - | victim | YamFinance | 1 |  |
 | `0x8f73b65B4caAf64FBA2aF91cC5D4a2A1318E5D8C` | BSC | CA · 프록시 | - | unknown | ORB | 1 | proxy→0x9321587ea0; eip55_mismatch |
-| `0x901DafdE7057BC2478d1eF640fb5515EA4757AAB` | Ethereum | CA · 컨트랙트 | - | attacker | Startale | 17 |  |
 | `0x90480ce80186dcafb0f3f27df62caa47ef4c4a52` | Ethereum | CA · 컨트랙트 | - | victim | EnsoFinance | 1 |  |
 | `0x981F145a71Da6DF4A7cBe892807782c9CC9a5515` | HyperEVM | CA · 풀(LP) | SWAP-LP | unknown | PrimeFinance | 1 |  |
 | `0x9a7A92240FBAc4030b65A6E61239928d6Bcc716F` | BSC | CA · 컨트랙트 | - | victim | BeatXswap | 1 |  |
@@ -98,11 +92,11 @@
 | `0xf6BA170f3d50a21fAD30f2D02972ffd295F04e8C` | BSC | CA · 컨트랙트 | - | unknown | UnifiProtocol | 2 |  |
 | `0xfcf3d97c6db4c3bf6020a2b99af074b595bda163` | Ethereum | CA · 컨트랙트 | - | victim | OrderFactory | 1 |  |
 | `0xfD36E2c2a6789Db23113685031d7F16329158384` | BSC | CA · 컨트랙트 | - | unknown | ORB | 1 |  |
-| `0xFDe0d1575Ed8E06FBf36256bcdfA1F359281455A` | Ethereum | CA · 컨트랙트 | - | unknown | RsETHSafeModule | 49032 |  |
 | `0xffb607418dBEaB7A888e079A34Be28A30d8E1DE2` | Ethereum | CA · 컨트랙트 | - | victim | YamFinance | 1 |  |
 | `0x0dC2c5D6b05A317076CF501f7E7be36a5dfe9b66` | Ethereum | EOA | - | attacker | RsETHSafeModule | 19 |  |
 | `0x19bc1c7fD4Aa93F540498499b8f5B4FC3DDE5A52` | HyperEVM | EOA | - | attacker | PrimeFinance | 2 |  |
 | `0x215adfc84332d8dfdd5afc77af69cceec0bcd3fc` | Cronos | EOA | - | laundering | Tectonic | 4 |  |
+| `0x2258491525C21f334c5a2dc22CE55e55023FC45D` | Polygon | EOA · 7702 | - | attacker | Nimiq | 11 |  |
 | `0x24Cb173Ae221AeA93369f34bdcF0Ddb35b436773` | Polygon | EOA | - | victim | Nimiq | 8641 |  |
 | `0x26881EacC00Bcccd7c4ebE14BD7840dD989Bf982` | Ethereum | EOA | - | attacker | YamFinance | 62 |  |
 | `0x2B5bF7D9D9Dc1EEc68f40C6B7a8f197e65f9731a` | BSC | EOA | - | attacker | BonfireSwap | 10 |  |
@@ -116,6 +110,7 @@
 | `0x859E69A29244A10800A34eE66919426C02afa2F0` | Ethereum | EOA | - | attacker | SpiralHookV2 | 5 | eip55_mismatch |
 | `0x86616ce5d1829beb030742e65bd3c1fbee8f082e` | Ethereum | EOA | - | laundering | Tectonic | 3 | 활동 체인: Cronos/Ethereum |
 | `0x8f36fd9ffc0a8ca373aa7a4787292536a489d2b5` | Ethereum | EOA | - | attacker | Osmosis | 35 |  |
+| `0x901DafdE7057BC2478d1eF640fb5515EA4757AAB` | Ethereum | EOA · 7702 | - | attacker | Startale | 17 |  |
 | `0x90bde1e0Bb16B3DEEb9d638aCf8D01F19fD2F31e` | BSC | EOA | - | attacker | Likwid | 62 |  |
 | `0x9AE755D23Fc948fE94C9364A2398fd508a2AB0d2` | Ethereum | EOA | - | attacker | Nesa | 28 |  |
 | `0x9ea6b75940de7c57bd1827001536e33ed667b55d` | Ethereum | EOA | - | laundering | Tectonic | 5 |  |
@@ -127,6 +122,7 @@
 | `0xe327b58233DE729D58d35e36E4B6D45c8e00cDbb` | BSC | EOA | - | attacker | GDC | 14 |  |
 | `0xFB26db4EAb18Cb50d29Ff431888dD643A7e9C9f8` | Ethereum | EOA | - | attacker | OMNI404 | 5 |  |
 | `0xfdb11781ee3818135eebd2acd2247c263e266652` | Cronos | EOA | - | laundering | Tectonic | 8 |  |
+| `0xFDe0d1575Ed8E06FBf36256bcdfA1F359281455A` | Ethereum | EOA · 7702 | - | unknown | RsETHSafeModule | 49032 |  |
 | `44dZUJ7w1T3fKAvFW8XyXUVoAGSbFvXef2wcbnsjNKGWYo` | Monero | 지갑 | - | sanctioned | Xinbi Guarantee |  |  |
 | `45ezvPejNsKYntjhyyeb7fbfzi1sxYQozc5Ffseh8jPGW4` | Monero | 지갑 | - | sanctioned | Xinbi Guarantee |  |  |
 | `47FVhkRkWgnLs81UBqgY8ui6axAB1627HJjkY2qPnWxMbG` | Monero | 지갑 | - | sanctioned | Xinbi Guarantee |  |  |

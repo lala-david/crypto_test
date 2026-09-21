@@ -67,3 +67,10 @@ def test_apply_to_incident_fixes_cards():
     router = inc.addresses[0]; assert router.chain == "BSC" and router.role == "unknown" and "라우터" in router.note
     assert inc.addresses[1].address.startswith("nomic1") and inc.addresses[2].chain == "BSC"
     assert any(c.startswith("tx_hash_moved") for c in ch) and any(c.startswith("role ") for c in ch)
+
+
+def test_parse_code_eip7702_delegation_is_eoa():
+    from collector.addrcheck import parse_code
+    assert parse_code("0xef010063c0c19a282a1b52b07dd5a65b58948a07dae32b") == (0, "0x63c0c19a282a1b52b07dd5a65b58948a07dae32b")
+    assert parse_code("0x") == (0, None) and parse_code("") == (0, None)
+    assert parse_code("0x6080604052" + "00" * 100)[0] == 105 and parse_code("0x6080604052" + "00" * 100)[1] is None

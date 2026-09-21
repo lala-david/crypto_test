@@ -668,26 +668,19 @@
 "chains_active": [
 "Polygon"
 ],
-"checked_at": "2026-09-21T13:02:37",
-"code_size": 23,
-"ctype": "contract",
-"decimals": null,
+"checked_at": "2026-09-21T17:24:13",
+"code_size": 0,
+"delegated": "0x0404853a9d3fdd57073f06be08a72401e85ee251",
 "family": "evm",
 "fixed": null,
 "hints": [
 "Polygon",
-"Ethereum"
+"Polygon"
 ],
-"impl": null,
-"kind": "contract",
+"kind": "eoa",
 "label": "",
-"name": "",
-"proxy": false,
 "reason": "",
 "rpc_failed": [],
-"symbol": "",
-"token0": null,
-"token1": null,
 "tx_count": 11,
 "valid": true
 },
@@ -2129,26 +2122,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T13:02:37",
-"code_size": 23,
-"ctype": "contract",
-"decimals": null,
+"checked_at": "2026-09-21T17:24:13",
+"code_size": 0,
+"delegated": "0x63c0c19a282a1b52b07dd5a65b58948a07dae32b",
 "family": "evm",
 "fixed": null,
 "hints": [
 "Ethereum",
 "Ethereum"
 ],
-"impl": null,
-"kind": "contract",
+"kind": "eoa",
 "label": "",
-"name": "",
-"proxy": false,
 "reason": "",
 "rpc_failed": [],
-"symbol": "",
-"token0": null,
-"token1": null,
 "tx_count": 17,
 "valid": true
 },
@@ -3633,26 +3619,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:23",
-"code_size": 23,
-"ctype": "contract",
-"decimals": null,
+"checked_at": "2026-09-21T17:24:13",
+"code_size": 0,
+"delegated": "0x0913b172530805af05ff28814ca941bd28b5b4e9",
 "family": "evm",
 "fixed": null,
 "hints": [
 "Ethereum",
 "Ethereum"
 ],
-"impl": null,
-"kind": "contract",
+"kind": "eoa",
 "label": "",
-"name": "",
-"proxy": false,
 "reason": "",
 "rpc_failed": [],
-"symbol": "",
-"token0": null,
-"token1": null,
 "tx_count": 49032,
 "valid": true
 },
