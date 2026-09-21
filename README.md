@@ -51,7 +51,7 @@ run.py  (매시간)
 - 백엔드는 Starlette + uvicorn(FastAPI 는 설치된 starlette 1.6 과 충돌). SQLite `data/collector.db` 를 직접 읽어 병합·후속·블랙리스트 대조까지 계산하고, incidents 테이블의 (건수, 최신 collected_at) 서명이 바뀌면 캐시를 다시 만듭니다. 수집기가 돌면 페이지가 자동으로 최신이 됩니다.
 - API(JSON, 목록은 `/api`): `/api/meta`, `/api/incidents?days=30|all&type=&chain=&source=&q=&hide_followups=&page=&size=&sort=day|amount|date`, `/api/incidents/{uid}`(+related), `/api/briefings`, `/api/briefings/{day|latest}`, `/api/stats?days=…&type=&chain=`, `/api/addresses/lookup?q=`, `/api/search?q=`.
 - 집계 규칙: 후속 보도(`followup_of`)는 건수에만 포함하고 금액 합계·순위·비중에서는 제외합니다(같은 사건 이중 계산 방지).
-- 페이지: `index.html` 개요(지표 4개, 일별 피해액, 유형 비중, 최근 수집 주소, 금액 상위 5, 최근 사건, 최신 브리핑) · `incidents.html` 사건 표(검색·유형·체인·소스·정렬·기간·후속 제외·페이지) · `stats.html` 통계(시계열 금액/건수, 유형·체인 표: 신규·%·금액·%·평균, 일별 표, 제재·수사, 주소 역할, 출처별 사건) · `briefings.html` 날짜별 브리핑 · `addresses.html` 지갑 주소(기간·역할·체인별 수집 주소 목록 + 조회: 사건 카드·OFAC SDN·crimial_hunter 동시 대조; API `/api/addresses`) · `incident.html?id=` 상세(숫자 헤더, 요약, 접힌 수법·배경·자금흐름, 역할별 주소표, 출처, 관련 사건). 한/영, 다크(기본)/라이트.
+- 페이지: `index.html` 개요(ASCII 디더 배너, 지표 3개: 신규·피해액·주소, 최근 사건: 금액·체인·사건일, 최근 수집 주소) · `incidents.html` 사건 표(검색·유형·체인·소스·정렬·기간·후속 제외·페이지) · `stats.html` 통계(사건일 기준 고정; 시계열 금액/건수, 유형·체인 표: 신규·%·금액·%·평균, 일별 표, 제재·수사, 주소 역할, 출처별 사건) · `briefings.html` 날짜별 브리핑 · `addresses.html` 지갑 주소(기간·역할·체인별 수집 주소 목록 + 조회: 사건 카드·OFAC SDN·crimial_hunter 동시 대조; API `/api/addresses`) · `incident.html?id=` 상세(숫자 헤더, 요약, 접힌 수법·배경·자금흐름, 역할별 주소표, 출처, 관련 사건). 한/영, 다크(기본)/라이트.
 - 프런트는 빌드 없는 바닐라 JS(`common.js`: API·i18n·SVG 차트). 유형 9색은 색약 시뮬레이션 검증을 통과한 팔레트이며 항상 점+라벨을 함께 표기합니다.
 - `collector/site.py` 는 매 실행 `docs/data/*.json` 스냅샷을 남깁니다(GitHub 에서 데이터만 볼 때 용도). GitHub Pages 는 private+Free 플랜이라 쓰지 않습니다.
 
