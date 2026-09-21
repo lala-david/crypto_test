@@ -74,3 +74,21 @@ def test_parse_code_eip7702_delegation_is_eoa():
     assert parse_code("0xef010063c0c19a282a1b52b07dd5a65b58948a07dae32b") == (0, "0x63c0c19a282a1b52b07dd5a65b58948a07dae32b")
     assert parse_code("0x") == (0, None) and parse_code("") == (0, None)
     assert parse_code("0x6080604052" + "00" * 100)[0] == 105 and parse_code("0x6080604052" + "00" * 100)[1] is None
+
+
+def test_merge_explorer_rules():
+    from collector.addrcheck import merge_explorer
+    # 7702 위임 EOA: Blockscout 가 is_contract=True 라 해도 EOA 유지, 구현체 이름은 라벨로
+    r = merge_explorer({"kind": "eoa", "delegated": "0xabc", "tx_count": 17}, {"is_contract": True, "implementations": [{"name": "EIP7702StatelessDeleGator"}]})
+    assert r["kind"] == "eoa" and r["impl_name"] == "EIP7702StatelessDeleGator"
+    # 순수 EOA 인데 탐색기가 컨트랙트라 하고 nonce≥1 → 자기파괴 컨트랙트
+    r = merge_explorer({"kind": "eoa", "tx_count": 1}, {"is_contract": True})
+    assert r["kind"] == "contract" and r["ctype"] == "destroyed"
+    # 순수 EOA + 탐색기 EOA + 총 tx 4418 → tx_count 갱신, scam 플래그
+    r = merge_explorer({"kind": "eoa", "tx_count": 12}, {"is_contract": False, "is_scam": True, "_tx_total": 4418})
+    assert r["tx_count"] == 4418 and r["scam"] is True
+    # 컨트랙트 이름: Blockscout 이름 > 토큰 이름; Sourcify 는 이름 없을 때만
+    r = merge_explorer({"kind": "contract", "ctype": "contract"}, {"is_contract": True, "name": "GnosisSafeProxy", "is_verified": True}, "Other")
+    assert r["name"] == "GnosisSafeProxy" and r["verified"]
+    r = merge_explorer({"kind": "contract", "ctype": "contract"}, None, "PancakeRouter")
+    assert r["name"] == "PancakeRouter" and r["explorer"]["src"] == "sourcify"

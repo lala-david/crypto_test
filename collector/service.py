@@ -152,7 +152,7 @@ class DataService:
                     a.update(kind="", ctype="", kind_text="", label="", tx_count=None)
                     continue
                 a.update(kind=x.get("kind") or "", ctype=x.get("ctype") or "", kind_text=kind_text(x), label=x.get("label") or "",
-                         tx_count=x.get("tx_count"), symbol=x.get("symbol") or "", proxy=bool(x.get("proxy")), delegated=x.get("delegated") or "", checked_at=(x.get("checked_at") or "")[:10])
+                         tx_count=x.get("tx_count"), symbol=x.get("symbol") or "", proxy=bool(x.get("proxy")), delegated=x.get("delegated") or "", scam=bool(x.get("scam")), verified=bool(x.get("verified")), checked_at=(x.get("checked_at") or "")[:10])
 
     def refresh(self, force: bool = False) -> None:
         sig = self._signature()

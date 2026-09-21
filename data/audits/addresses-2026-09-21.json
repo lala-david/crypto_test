@@ -1,15 +1,15 @@
 {
  "summary": {
   "addresses": 309,
-  "checked": 3,
+  "checked": 115,
   "kinds": {
    "eoa": 213,
    "contract": 85,
    "wallet": 11
   },
   "ctypes": {
-   "contract": 47,
-   "token": 21,
+   "contract": 46,
+   "token": 22,
    "lp_pool": 6,
    "proxy": 3,
    "ctoken": 1,
@@ -23,7 +23,7 @@
   "changes": 0,
   "days": [],
   "rpc": {
-   "rpc_calls": 3,
+   "rpc_calls": 203,
    "rpc_errors": 0
   },
   "oklink": false

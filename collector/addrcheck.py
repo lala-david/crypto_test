@@ -70,9 +70,16 @@ EIP1967_IMPL_SLOT = "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505
 INFRA_CTYPES = {"token", "lp_pool", "v3_pool", "balancer_pool", "router", "atoken", "ctoken", "vault", "nft"}
 
 CTYPE_KO = {"token": "토큰", "lp_pool": "풀(LP)", "v3_pool": "풀(V3)", "balancer_pool": "풀(Balancer)", "vault": "볼트", "atoken": "aToken", "ctoken": "cToken",
-            "proxy": "프록시", "safe": "멀티시그", "router": "라우터", "nft": "NFT", "contract": "컨트랙트", "program": "프로그램", "mint": "토큰 민트", "token_account": "토큰 계정"}
+            "proxy": "프록시", "safe": "멀티시그", "router": "라우터", "nft": "NFT", "contract": "컨트랙트", "program": "프로그램", "mint": "토큰 민트", "token_account": "토큰 계정",
+            "destroyed": "소멸(selfdestruct)"}
 
 _TRON_GATE = threading.Semaphore(1)
+# 탐색기 교차 검증 (키 없이 되는 곳만): Blockscout v2 — 검증된 컨트랙트 이름·구현체 이름·토큰·scam 플래그·총 tx 수. Sourcify — 그 외 체인의 검증된 컨트랙트 이름.
+BLOCKSCOUT = {"Ethereum": "https://eth.blockscout.com", "Base": "https://base.blockscout.com", "Polygon": "https://polygon.blockscout.com",
+              "Arbitrum": "https://arbitrum.blockscout.com", "Optimism": "https://explorer.optimism.io"}
+SOURCIFY_CHAIN_ID = {"Ethereum": 1, "BSC": 56, "Base": 8453, "Arbitrum": 42161, "Optimism": 10, "Polygon": 137, "Avalanche": 43114, "HyperEVM": 999, "Cronos": 25, "Sonic": 146, "Linea": 59144}
+SYSTEM_ADDRS = {"0x0000000000000000000000000000000000000000": "zero address", "0x000000000000000000000000000000000000dead": "burn address",
+                **{"0x" + "0" * 39 + str(i): f"precompile {i}" for i in range(1, 10)}}
 # 주소 메모가 트랜잭션을 가리키는데(예: "attack tx") 어느 체인에도 활동이 없으면 → 64자리 tx 해시를 40자리로 잘라 쓴 것 (LLM 추출 오류)
 _TX_NOTE_RE = re.compile(r"(?i)\b(tx|txn|transaction|hash)\b")
 _PHANTOM_NOTE_RE = re.compile(r"(?i)\bcontract\b|exploit|orchestrator|borrower")
@@ -315,6 +322,50 @@ def parse_code(code_hex: str) -> Tuple[int, Optional[str]]:
     return n, None
 
 
+def merge_explorer(res: dict, bs: Optional[dict], sf_name: Optional[str] = None) -> dict:
+    """탐색기 결과를 판정에 합친다(순수 함수 — 테스트 가능).
+    - Blockscout is_contract 는 EIP-7702 위임 EOA 도 True 로 주므로 위임 EOA 는 EOA 유지.
+    - 우리가 EOA(코드 0, 위임 없음)로 봤는데 탐색기가 컨트랙트라 하고 nonce≥1 이면 자기파괴(selfdestruct)된 컨트랙트.
+    - 이름: 검증된 컨트랙트 이름 > 토큰 이름 > 구현체 이름. scam 플래그·총 tx 수도 기록."""
+    ex: Dict[str, object] = {}
+    if bs:
+        impl = [x.get("name") for x in (bs.get("implementations") or []) if isinstance(x, dict) and x.get("name")]
+        tok = bs.get("token") or {}
+        ex.update(is_contract=bool(bs.get("is_contract")), name=bs.get("name") or "", token=tok.get("symbol") or "", token_name=tok.get("name") or "",
+                  impl=impl[0] if impl else "", verified=bool(bs.get("is_verified")), scam=bool(bs.get("is_scam")), ens=bs.get("ens_domain_name") or "")
+        if bs.get("_tx_total") is not None:
+            ex["tx_total"] = bs["_tx_total"]
+    if sf_name and not ex.get("name"):
+        ex["name"] = sf_name; ex["verified"] = True; ex["src"] = "sourcify"
+    if not ex:
+        return res
+    res["explorer"] = ex
+    if ex.get("scam"):
+        res["scam"] = True
+    if ex.get("verified"):
+        res["verified"] = True
+    if res.get("kind") == "eoa" and not res.get("delegated") and ex.get("is_contract") and (res.get("tx_count") or 0) >= 1:
+        res["kind"] = "contract"; res["ctype"] = "destroyed"
+    if res.get("kind") == "eoa" and ex.get("tx_total") is not None:
+        try:
+            res["tx_count"] = max(int(res.get("tx_count") or 0), int(ex["tx_total"]))
+        except (TypeError, ValueError):
+            pass
+    if res.get("kind") == "contract":
+        nm = ex.get("name") or ex.get("token_name") or ""
+        if nm and not res.get("name"):
+            res["name"] = str(nm)[:60]
+        if ex.get("token") and not res.get("symbol"):
+            res["symbol"] = str(ex["token"])[:24]
+        if ex.get("impl") and not res.get("impl_name"):
+            res["impl_name"] = str(ex["impl"])[:60]
+    if res.get("delegated") and ex.get("impl"):
+        res["impl_name"] = str(ex["impl"])[:60]
+    if ex.get("ens"):
+        res["ens"] = ex["ens"]
+    return res
+
+
 def pick_chain(active: Dict[str, dict], hints: List[str]) -> str:
     """활동 체인 중 하나를 고른다: 힌트 체인 우선(코드 > 활동), 없으면 코드가 있는 첫 체인, 없으면 nonce 가 가장 큰 체인."""
     if not active:
@@ -486,7 +537,47 @@ class AddrChecker:
             out["kind"] = "eoa"
             if a.get("delegate"):  # EIP-7702: EOA 가 스마트 계정 구현에 위임(0xef0100 + 주소). 컨트랙트가 아니다.
                 out["delegated"] = a["delegate"]
+        # 탐색기 교차 검증(이름·scam·자기파괴·총 tx)
+        try:
+            merge_explorer(out, self._blockscout(chain, addr), self._sourcify(chain, addr) if out["kind"] == "contract" else None)
+        except Exception as e:  # 탐색기 장애는 판정을 막지 않는다
+            out["explorer_error"] = str(e)[:80]
         return out
+
+    def _blockscout(self, chain: str, addr: str) -> Optional[dict]:
+        base = BLOCKSCOUT.get(chain)
+        if not base:
+            return None
+        try:
+            r = self.s.get(f"{base}/api/v2/addresses/{addr}", timeout=15, allow_redirects=True)
+            if r.status_code != 200:
+                return None
+            d = r.json()
+            if not isinstance(d, dict) or "hash" not in d:
+                return None
+            try:
+                c = self.s.get(f"{base}/api/v2/addresses/{addr}/counters", timeout=15, allow_redirects=True)
+                if c.status_code == 200:
+                    d["_tx_total"] = int(float(c.json().get("transactions_count") or 0))
+            except Exception:
+                pass
+            time.sleep(0.15)
+            return d
+        except Exception:
+            return None
+
+    def _sourcify(self, chain: str, addr: str) -> Optional[str]:
+        cid = SOURCIFY_CHAIN_ID.get(chain)
+        if not cid:
+            return None
+        try:
+            r = self.s.get(f"https://sourcify.dev/server/v2/contract/{cid}/{addr}", params={"fields": "compilation"}, timeout=15)
+            if r.status_code != 200:
+                return None
+            d = r.json()
+            return ((d.get("compilation") or {}).get("name") or "") or None
+        except Exception:
+            return None
 
     def _check_btc(self, addr: str) -> dict:
         out = {"family": "btc", "chain": "Bitcoin", "kind": "wallet"}
@@ -575,6 +666,8 @@ class AddrChecker:
                "fixed": v["fixed"], "reason": v["reason"], "hints": hints}
         if v["kind_hint"] == "txhash":
             res.update(kind="txhash", chain="")
+        elif v["family"] == "evm" and address.lower() in SYSTEM_ADDRS:
+            res.update(kind="system", chain="", name=SYSTEM_ADDRS[address.lower()])
         elif not v["valid"]:
             res.update(kind="invalid", chain=v["chain"])
         elif v["family"] == "evm":
@@ -617,14 +710,23 @@ def _ms(v) -> str:
 
 
 def _label(r: dict) -> str:
-    """표시용 한 줄 라벨: OKLink 엔티티 > 컨트랙트 이름/심볼 > 풀 구성."""
+    """표시용 한 줄 라벨: OKLink 엔티티 > 검증된 컨트랙트 이름/토큰 심볼 > 풀 구성 > ENS > 7702 구현체."""
     if r.get("labels"):
         return r["labels"][0][:40]
+    if r.get("kind") == "system":
+        return r.get("name") or ""
     if r.get("kind") == "contract":
         sym, name = r.get("symbol") or "", r.get("name") or ""
         if r.get("ctype") in ("lp_pool", "v3_pool") and sym:
             return sym[:30]
-        return (name or sym)[:40]
+        out = (name or sym)[:40]
+        if not out and r.get("impl_name"):
+            out = f"proxy → {r['impl_name']}"[:40]
+        return out
+    if r.get("ens"):
+        return str(r["ens"])[:40]
+    if r.get("delegated") and r.get("impl_name"):
+        return f"7702 → {r['impl_name']}"[:40]
     return ""
 
 
@@ -744,7 +846,7 @@ def kind_text(r: dict) -> str:
         return "CA · " + CTYPE_KO.get(r.get("ctype") or "contract", r.get("ctype") or "컨트랙트")
     if k == "eoa" and r.get("delegated"):
         return "EOA · 7702"
-    return {"eoa": "EOA", "wallet": "지갑", "txhash": "TX 해시", "invalid": "무효", "unfunded": "미사용", "unknown": "미확인"}.get(k or "", k or "-")
+    return {"eoa": "EOA", "wallet": "지갑", "txhash": "TX 해시", "invalid": "무효", "unfunded": "미사용", "unknown": "미확인", "system": "시스템"}.get(k or "", k or "-")
 
 
 def write_report(data_dir: str, cards: List[Incident], results: Dict[str, dict], change_log, summ: dict) -> str:
@@ -758,6 +860,23 @@ def write_report(data_dir: str, cards: List[Incident], results: Dict[str, dict],
     L = [f"# 지갑 주소 검증 보고서 · {day}", "", f"- 주소 {summ['addresses']} · 이번 조회 {summ['checked']} · 카드 변경 {summ['cards_changed']} ({summ['changes']}건) · OKLink {'사용' if summ['oklink'] else '미사용(키 없음)'}",
          f"- 종류: " + ", ".join(f"{kind_text({'kind': k})} {v}" for k, v in sorted(summ["kinds"].items(), key=lambda x: -x[1])),
          f"- 컨트랙트 유형: " + (", ".join(f"{CTYPE_KO.get(k, k)} {v}" for k, v in sorted(summ["ctypes"].items(), key=lambda x: -x[1])) or "-"), ""]
+    review = []
+    for k, r in results.items():
+        proj, role, note = owner.get(k, ("", "", ""))
+        if not proj:
+            continue
+        if r.get("scam"):
+            review.append(f"- `{r.get('address', k)[:46]}` ({proj}) — 탐색기 scam 플래그")
+        if r.get("kind") == "contract" and r.get("ctype") == "destroyed":
+            review.append(f"- `{r.get('address', k)[:46]}` ({proj}) — 자기파괴된 컨트랙트(코드 없음, 탐색기는 컨트랙트)")
+        if r.get("kind") == "eoa" and role == "attacker" and not r.get("tx_count"):
+            review.append(f"- `{r.get('address', k)[:46]}` ({proj}) — 공격자 EOA 인데 보낸 tx 0건: 체인·주소 재확인")
+        if r.get("kind") == "system":
+            review.append(f"- `{r.get('address', k)[:46]}` ({proj}) — 시스템/소각 주소가 사건 주소로 들어감")
+        if r.get("kind") == "contract" and role == "attacker" and (r.get("verified") and (r.get("name") or "").lower() not in ("", "exploit", "attack")) and r.get("ctype") in ("token", "router", "safe", "proxy"):
+            review.append(f"- `{r.get('address', k)[:46]}` ({proj}) — 공격자 역할인데 검증된 {r.get('ctype')} 컨트랙트({r.get('name')})")
+    if review:
+        L += ["## 검토 필요", ""] + review + [""]
     if change_log:
         L += ["## 카드 교정", ""]
         for uid, proj, ch in change_log:
@@ -777,6 +896,12 @@ def write_report(data_dir: str, cards: List[Incident], results: Dict[str, dict],
             extra.append(r["reason"])
         if r.get("oklink", {}).get("isAaAddress"):
             extra.append("AA")
+        if r.get("delegated"):
+            extra.append("7702→" + r["delegated"][:12])
+        if r.get("verified"):
+            extra.append("verified")
+        if r.get("scam"):
+            extra.append("SCAM")
         L.append(f"| `{r.get('address', k)[:46]}` | {r.get('chain') or '-'} | {kind_text(r)} | {r.get('label') or '-'} | {role} | {proj[:24]} | {r.get('tx_count', '') if r.get('tx_count') is not None else ''} | {'; '.join(extra)} |")
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(L) + "\n")

@@ -1,15 +1,26 @@
 {
 "0x000000000004444c5dc75cb358380d2e3de08a90": {
 "address": "0x000000000004444c5dc75cB358380D2e3dE08A90",
-"balance": 41960.188671,
+"balance": 41879.30413,
 "chain": "Ethereum",
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:13",
+"checked_at": "2026-09-21T17:31:15",
 "code_size": 24009,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "PoolManager",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -18,8 +29,8 @@
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "PoolManager",
+"name": "PoolManager",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -27,7 +38,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x0000003b3e7b530b4f981ae80d9350392defef90": {
 "address": "0x0000003B3E7b530b4f981aE80d9350392Defef90",
@@ -36,10 +48,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T13:02:38",
+"checked_at": "2026-09-21T17:31:33",
 "code_size": 2929,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "StartaleAccountFactory",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -48,16 +71,17 @@
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "StartaleAccountFactory",
+"name": "StartaleAccountFactory",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
 "symbol": "",
 "token0": null,
 "token1": null,
-"tx_count": 21196,
-"valid": true
+"tx_count": 21248,
+"valid": true,
+"verified": true
 },
 "0x00000072f286204bb934ed49d8969e86f7dec7b1": {
 "address": "0x00000072F286204Bb934eD49D8969E86F7dEC7b1",
@@ -66,10 +90,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T13:02:38",
+"checked_at": "2026-09-21T17:31:33",
 "code_size": 5351,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "ECDSAValidator",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -87,7 +122,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x000000b8f5f723a680d3d7ee624fe0bc84a6e05a": {
 "address": "0x000000b8f5f723A680d3D7EE624Fe0bC84a6E05A",
@@ -96,10 +132,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T13:02:38",
+"checked_at": "2026-09-21T17:31:32",
 "code_size": 24399,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "StartaleSmartAccount",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -108,8 +155,8 @@
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "StartaleSmartAccount",
+"name": "StartaleSmartAccount",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -117,7 +164,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x04edbf3904789d80b0c991e0b66577f2208a2be6": {
 "address": "0x04EDBF3904789d80B0C991e0B66577F2208A2bE6",
@@ -126,7 +174,7 @@
 "chains_active": [
 "HyperEVM"
 ],
-"checked_at": "2026-09-21T11:43:28",
+"checked_at": "2026-09-21T17:31:27",
 "code_size": 4536,
 "ctype": "contract",
 "decimals": null,
@@ -134,7 +182,7 @@
 "fixed": null,
 "hints": [
 "HyperEVM",
-"Ethereum"
+"HyperEVM"
 ],
 "impl": null,
 "kind": "contract",
@@ -151,12 +199,12 @@
 },
 "0x065d449ec9d139740343990b7e1cf05fa830e4ba": {
 "address": "0x065d449ec9D139740343990B7E1CF05fA830e4Ba",
-"balance": 25.808637,
+"balance": 25.300818,
 "chain": "BSC",
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:25",
+"checked_at": "2026-09-21T17:31:27",
 "code_size": 23271,
 "ctype": "contract",
 "decimals": null,
@@ -164,7 +212,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -186,7 +234,7 @@
 "chains_active": [
 "Cronos"
 ],
-"checked_at": "2026-09-21T11:43:08",
+"checked_at": "2026-09-21T17:31:09",
 "code_size": 16569,
 "ctype": "contract",
 "decimals": null,
@@ -195,7 +243,7 @@
 "hints": [
 "Cronos",
 "Ethereum",
-"Ethereum"
+"Cronos"
 ],
 "impl": null,
 "kind": "contract",
@@ -217,10 +265,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:09",
+"checked_at": "2026-09-21T17:31:10",
 "code_size": 6374,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"ens": "",
+"impl": "YAMDelegate3",
+"is_contract": true,
+"name": "YAMDelegator",
+"scam": false,
+"token": "YAM",
+"token_name": "YAM",
+"tx_total": 36464,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -228,6 +287,7 @@
 "Ethereum"
 ],
 "impl": "0x27c5736b49b89d4765d03734a0a51c461f09672d",
+"impl_name": "YAMDelegate3",
 "kind": "contract",
 "label": "YAM",
 "name": "YAM",
@@ -238,7 +298,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x0c23c8bc3b7c565f3f9f4ac691a4dc4275086f86": {
 "address": "0x0C23C8BC3b7C565f3f9F4aC691A4Dc4275086F86",
@@ -247,10 +308,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:22",
+"checked_at": "2026-09-21T17:31:22",
 "code_size": 9146,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -277,20 +349,31 @@
 "chains_active": [
 "Polygon"
 ],
-"checked_at": "2026-09-21T13:02:37",
+"checked_at": "2026-09-21T17:31:29",
 "code_size": 22487,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "ERC20PermitHTLCHandler",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "Polygon",
-"Ethereum"
+"Polygon"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "ERC20PermitHTLCHandler",
+"name": "ERC20PermitHTLCHandler",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -298,7 +381,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x0dc2c5d6b05a317076cf501f7e7be36a5dfe9b66": {
 "address": "0x0dC2c5D6b05A317076CF501f7E7be36a5dfe9b66",
@@ -307,8 +391,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:23",
+"checked_at": "2026-09-21T17:31:26",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 19,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -322,24 +417,6 @@
 "tx_count": 19,
 "valid": true
 },
-"0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b0": {
-"address": "0x0e7680b06cb8a6f86c149d9ba90d98e3d334e7b0",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:53:13",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
 "0x0f12d5048a6bed7ecc572fa7805d03af7b5fb9d2": {
 "address": "0x0f12d5048a6bed7ECc572fa7805D03Af7B5FB9d2",
 "balance": 0.0,
@@ -347,7 +424,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:25",
+"checked_at": "2026-09-21T17:31:27",
 "code_size": 45,
 "ctype": "token",
 "decimals": 18,
@@ -355,7 +432,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -377,20 +454,25 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:14",
 "code_size": 21936,
 "ctype": "router",
 "decimals": null,
+"explorer": {
+"name": "PancakeRouter",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "PancakeRouter",
+"name": "PancakeRouter",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -398,7 +480,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x15c7b7ce10f3a9ae63554bce7c54d0a818e967c7": {
 "address": "0x15C7B7CE10f3A9AE63554bCE7C54d0a818E967C7",
@@ -407,20 +490,31 @@
 "chains_active": [
 "Polygon"
 ],
-"checked_at": "2026-09-21T13:02:37",
+"checked_at": "2026-09-21T17:31:30",
 "code_size": 4665,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "StakeManager",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "Polygon",
-"Ethereum"
+"Polygon"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "StakeManager",
+"name": "StakeManager",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -428,7 +522,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x1725577dc9b1ee2d95db49c2193226471594aacc": {
 "address": "0x1725577dC9B1ee2D95dB49c2193226471594aacc",
@@ -437,10 +532,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:22",
+"checked_at": "2026-09-21T17:31:22",
 "code_size": 22648,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "SpiralHookV2",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 31,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -449,8 +555,8 @@
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "SpiralHookV2",
+"name": "SpiralHookV2",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -458,7 +564,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x173cae63801b32752271e32147d0d2e3a77bebe8": {
 "address": "0x173cae63801b32752271e32147d0d2e3a77bebe8",
@@ -467,10 +574,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:20",
 "code_size": 1594,
 "ctype": "proxy",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 178,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -497,20 +615,25 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:22",
+"checked_at": "2026-09-21T17:31:24",
 "code_size": 15399,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"name": "BonfireSwap",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "BonfireSwap",
+"name": "BonfireSwap",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -518,7 +641,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x19bc1c7fd4aa93f540498499b8f5b4fc3dde5a52": {
 "address": "0x19bc1c7fD4Aa93F540498499b8f5B4FC3DDE5A52",
@@ -527,37 +651,19 @@
 "chains_active": [
 "HyperEVM"
 ],
-"checked_at": "2026-09-21T11:43:26",
+"checked_at": "2026-09-21T17:31:27",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "HyperEVM",
-"Ethereum"
+"HyperEVM"
 ],
 "kind": "eoa",
 "label": "",
 "reason": "",
 "rpc_failed": [],
 "tx_count": 2,
-"valid": true
-},
-"0x1a021a27c8db5ecd6428a567cedf008872f205c5": {
-"address": "0x1a021a27c8db5ecd6428a567cedf008872f205c5",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T13:02:37",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
 "valid": true
 },
 "0x1b8c6808b48c7a9b6997b6daef6401307b2b419a": {
@@ -567,20 +673,25 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:15",
+"checked_at": "2026-09-21T17:31:18",
 "code_size": 9281,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"name": "UPRedeemer",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "UPRedeemer",
+"name": "UPRedeemer",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -588,7 +699,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x1e647faadb05f2124bfccfc003edc06d1a90bf5d": {
 "address": "0x1e647FAADb05f2124BFCcFC003EDc06D1A90bf5D",
@@ -597,20 +709,25 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:19",
 "code_size": 10318,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"name": "LiquidityVestingConvert",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "LiquidityVestingConvert",
+"name": "LiquidityVestingConvert",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -618,25 +735,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
-},
-"0x201c7a9b4114c76fcda2b5de5d765505f4c5f7c1": {
-"address": "0x201c7a9b4114c76fcda2b5de5d765505f4c5f7c1",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:53:09",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x215adfc84332d8dfdd5afc77af69cceec0bcd3fc": {
 "address": "0x215adfc84332d8dfdd5afc77af69cceec0bcd3fc",
@@ -645,14 +745,14 @@
 "chains_active": [
 "Cronos"
 ],
-"checked_at": "2026-09-21T11:43:08",
+"checked_at": "2026-09-21T17:31:09",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "Cronos",
 "Ethereum",
-"Ethereum"
+"Cronos"
 ],
 "kind": "eoa",
 "label": "",
@@ -668,9 +768,20 @@
 "chains_active": [
 "Polygon"
 ],
-"checked_at": "2026-09-21T17:24:13",
+"checked_at": "2026-09-21T17:31:28",
 "code_size": 0,
 "delegated": "0x0404853a9d3fdd57073f06be08a72401e85ee251",
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -691,20 +802,25 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:13",
 "code_size": 19934,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"name": "ORBCore",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "ORBCore",
+"name": "ORBCore",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -712,7 +828,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x24cb173ae221aea93369f34bdcf0ddb35b436773": {
 "address": "0x24Cb173Ae221AeA93369f34bdcF0Ddb35b436773",
@@ -721,13 +838,24 @@
 "chains_active": [
 "Polygon"
 ],
-"checked_at": "2026-09-21T13:02:37",
+"checked_at": "2026-09-21T17:31:29",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 4,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "Polygon",
-"Ethereum"
+"Polygon"
 ],
 "kind": "eoa",
 "label": "",
@@ -743,8 +871,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:09",
+"checked_at": "2026-09-21T17:31:09",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 80,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -755,7 +894,7 @@
 "label": "",
 "reason": "",
 "rpc_failed": [],
-"tx_count": 62,
+"tx_count": 80,
 "valid": true
 },
 "0x2791bca1f2de4661ed88a30c99a7a9449aa84174": {
@@ -765,17 +904,29 @@
 "chains_active": [
 "Polygon"
 ],
-"checked_at": "2026-09-21T13:02:37",
+"checked_at": "2026-09-21T17:31:31",
 "code_size": 2037,
 "ctype": "token",
 "decimals": 6,
+"explorer": {
+"ens": "",
+"impl": "UChildAdministrableERC20",
+"is_contract": true,
+"name": "Bridged USDC (Polygon PoS Bridge)",
+"scam": false,
+"token": "USDC.E",
+"token_name": "Polygon Bridged USDC (Polygon PoS)",
+"tx_total": 134993,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "Polygon",
-"Ethereum"
+"Polygon"
 ],
 "impl": "0xdd9185db084f5c4fff3b4f70e7ba62123b812226",
+"impl_name": "UChildAdministrableERC20",
 "kind": "contract",
 "label": "USD Coin (PoS)",
 "name": "USD Coin (PoS)",
@@ -786,7 +937,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x28e976ea7b83553d6d1d45ce81334156a2632127": {
 "address": "0x28E976Ea7b83553d6D1D45CE81334156A2632127",
@@ -795,7 +947,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:22",
+"checked_at": "2026-09-21T17:31:23",
 "code_size": 63,
 "ctype": "contract",
 "decimals": null,
@@ -803,7 +955,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -825,13 +977,13 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:22",
+"checked_at": "2026-09-21T17:31:23",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "kind": "eoa",
 "label": "",
@@ -847,10 +999,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:23",
+"checked_at": "2026-09-21T17:31:25",
 "code_size": 1853,
 "ctype": "atoken",
 "decimals": 18,
+"explorer": {
+"ens": "",
+"impl": "ATokenInstance",
+"is_contract": true,
+"name": "InitializableImmutableAdminUpgradeabilityProxy",
+"scam": false,
+"token": "aEthrsETH",
+"token_name": "Aave Ethereum rsETH",
+"tx_total": 63,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -858,6 +1021,7 @@
 "Ethereum"
 ],
 "impl": "0xadc45df3cf1584624c97338bef33363bf5b97ada",
+"impl_name": "ATokenInstance",
 "kind": "contract",
 "label": "Aave Ethereum rsETH",
 "name": "Aave Ethereum rsETH",
@@ -869,7 +1033,8 @@
 "token1": null,
 "tx_count": 1,
 "underlying": "0xa1290d69c65a6fe4df752f95823fae25cb99e5a7",
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x2da253835967d6e721c6c077157f9c9742934aea": {
 "address": "0x2DA253835967D6E721C6c077157F9c9742934aeA",
@@ -878,10 +1043,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:09",
+"checked_at": "2026-09-21T17:31:10",
 "code_size": 14792,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "YamGovernorAlpha",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 362,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -899,26 +1075,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
-},
-"0x2dc6a36f4e5eeefe112c01569de96dea496bb618": {
-"address": "0x2dc6a36f4e5eeefe112c01569de96dea496bb618",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:46:46",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Cronos",
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x2f7e143e27f2fa26ef3b8ac72698f1d321422f67": {
 "address": "0x2f7e143e27F2fa26Ef3B8AC72698F1D321422f67",
@@ -927,8 +1085,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:23",
+"checked_at": "2026-09-21T17:31:27",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 12,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -949,8 +1118,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:19",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -971,15 +1151,20 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:15",
+"checked_at": "2026-09-21T17:31:18",
 "code_size": 11804,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"name": "UP",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -992,7 +1177,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x3c499c542cef5e3811e1192ce70d8cc03d5c3359": {
 "address": "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
@@ -1001,17 +1187,29 @@
 "chains_active": [
 "Polygon"
 ],
-"checked_at": "2026-09-21T13:02:37",
+"checked_at": "2026-09-21T17:31:31",
 "code_size": 1852,
 "ctype": "token",
 "decimals": 6,
+"explorer": {
+"ens": "",
+"impl": "FiatTokenV2_2",
+"is_contract": true,
+"name": "FiatTokenProxy",
+"scam": false,
+"token": "USDC",
+"token_name": "USDC",
+"tx_total": 0,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "Polygon",
-"Ethereum"
+"Polygon"
 ],
 "impl": "0x235ae97b28466db30469b89a9fe4cff0659f82cb",
+"impl_name": "FiatTokenV2_2",
 "kind": "contract",
 "label": "USD Coin",
 "name": "USD Coin",
@@ -1022,25 +1220,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
-},
-"0x3dc170230bbbaab36b0bbfb0201ba705d09448be9db973c3725a72577e54ae1a": {
-"address": "0x3dc170230bbbaab36b0bbfb0201ba705d09448be9db973c3725a72577e54ae1a",
-"chain": "",
-"checked_at": "2026-09-21T11:43:24",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Cosmos",
-"Ethereum",
-"Noble",
-"Axelar",
-"Ethereum"
-],
-"kind": "txhash",
-"label": "",
-"reason": "tx_hash",
-"valid": false
+"valid": true,
+"verified": true
 },
 "0x40e93a52f6af9fcd3b476aedadd7feabd9f7aba8": {
 "address": "0x40E93a52F6Af9fCD3b476aeDADD7FeABD9f7AbA8",
@@ -1049,10 +1230,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:23",
+"checked_at": "2026-09-21T17:31:24",
 "code_size": 171,
 "ctype": "safe",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "GnosisSafe",
+"is_contract": true,
+"name": "GnosisSafeProxy",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 890,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -1060,9 +1252,10 @@
 "Ethereum"
 ],
 "impl": null,
+"impl_name": "GnosisSafe",
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "GnosisSafeProxy",
+"name": "GnosisSafeProxy",
 "owners": 3,
 "proxy": false,
 "reason": "",
@@ -1071,7 +1264,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x4266a0e6a0f0ef90abcff3bb089932ca0cce3652": {
 "address": "0x4266a0e6a0f0ef90abcff3bb089932ca0cce3652",
@@ -1080,14 +1274,14 @@
 "chains_active": [
 "Cronos"
 ],
-"checked_at": "2026-09-21T11:43:08",
+"checked_at": "2026-09-21T17:31:09",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "Cronos",
 "Ethereum",
-"Ethereum"
+"Cronos"
 ],
 "kind": "eoa",
 "label": "",
@@ -1103,7 +1297,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:15",
+"checked_at": "2026-09-21T17:31:18",
 "code_size": 3680,
 "ctype": "lp_pool",
 "decimals": null,
@@ -1111,7 +1305,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -1126,24 +1320,6 @@
 "tx_count": 1,
 "valid": true
 },
-"0x4cbc3d8db832eb5442ce1c11d79fda05cafabfe7": {
-"address": "0x4cbc3d8db832eb5442ce1c11d79fda05cafabfe7",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:46:49",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
 "0x4f0055926c839d1d960a82cbf84e2ee933958ebc": {
 "address": "0x4f0055926c839D1d960a82CBF84E2eE933958ebC",
 "balance": 0.0,
@@ -1151,10 +1327,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:23",
+"checked_at": "2026-09-21T17:31:24",
 "code_size": 2127,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 284,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -1181,7 +1368,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:12",
 "code_size": 13190,
 "ctype": "contract",
 "decimals": null,
@@ -1189,7 +1376,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -1211,10 +1398,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:13",
+"checked_at": "2026-09-21T17:31:16",
 "code_size": 6559,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 4,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -1236,20 +1434,25 @@
 },
 "0x5555555555555555555555555555555555555555": {
 "address": "0x5555555555555555555555555555555555555555",
-"balance": 3072814.421055,
+"balance": 3113207.087049,
 "chain": "HyperEVM",
 "chains_active": [
 "HyperEVM"
 ],
-"checked_at": "2026-09-21T11:43:28",
+"checked_at": "2026-09-21T17:31:28",
 "code_size": 2041,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"name": "WHYPE9",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "HyperEVM",
-"Ethereum"
+"HyperEVM"
 ],
 "impl": null,
 "kind": "contract",
@@ -1262,7 +1465,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 0,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x55d398326f99059ff775485246999027b3197955": {
 "address": "0x55d398326f99059fF775485246999027B3197955",
@@ -1271,15 +1475,20 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:19",
 "code_size": 4413,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"name": "BEP20USDT",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -1292,7 +1501,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x58f876857a02d6762e0101bb5c46a8c1ed44dc16": {
 "address": "0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16",
@@ -1301,15 +1511,20 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:15",
+"checked_at": "2026-09-21T17:31:18",
 "code_size": 14981,
 "ctype": "lp_pool",
 "decimals": 18,
+"explorer": {
+"name": "PancakePair",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -1322,7 +1537,8 @@
 "token0": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
 "token1": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x5d8aa15505afec01bab0de21f9377673b5246eae": {
 "address": "0x5D8aA15505aFEc01Bab0dE21F9377673B5246EAE",
@@ -1331,7 +1547,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:15",
+"checked_at": "2026-09-21T17:31:18",
 "code_size": 21860,
 "ctype": "contract",
 "decimals": null,
@@ -1339,7 +1555,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -1354,24 +1570,6 @@
 "tx_count": 1,
 "valid": true
 },
-"0x5e6b33b7d69b505d8ae6e50ca6967e13bf513b61": {
-"address": "0x5e6b33b7d69b505d8ae6e50ca6967e13bf513b61",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:46:46",
-"family": "evm",
-"fixed": null,
-"hints": [
-"BSC",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
 "0x5e90253fbae4dab78aa351f4e6fed08a64ab5590": {
 "address": "0x5e90253fbae4Dab78aa351f4E6fed08A64AB5590",
 "balance": 232.033236,
@@ -1379,15 +1577,20 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:22",
+"checked_at": "2026-09-21T17:31:24",
 "code_size": 10804,
 "ctype": "token",
 "decimals": 9,
+"explorer": {
+"name": "Bonfire",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -1400,7 +1603,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x5fe1deb9d9a58e9424b7fafc77494ff782b7dc14": {
 "address": "0x5fe1deb9d9a58e9424b7fafc77494ff782b7dc14",
@@ -1409,7 +1613,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:14",
 "code_size": 69,
 "ctype": "contract",
 "decimals": null,
@@ -1417,7 +1621,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -1432,24 +1636,6 @@
 "tx_count": 2,
 "valid": true
 },
-"0x5ff8150482f5473bff16b4a142a98a7f72b159df": {
-"address": "0x5ff8150482f5473bff16b4a142a98a7f72b159df",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:53:15",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
 "0x60faa7fac949af392dfc858f5d97e3eefa07e9eb": {
 "address": "0x60faa7fac949af392dfc858f5d97e3eefa07e9eb",
 "balance": 0.0,
@@ -1457,7 +1643,7 @@
 "chains_active": [
 "HyperEVM"
 ],
-"checked_at": "2026-09-21T11:43:28",
+"checked_at": "2026-09-21T17:31:28",
 "code_size": 7009,
 "ctype": "contract",
 "decimals": null,
@@ -1465,7 +1651,7 @@
 "fixed": null,
 "hints": [
 "HyperEVM",
-"Ethereum"
+"HyperEVM"
 ],
 "impl": null,
 "kind": "contract",
@@ -1480,42 +1666,6 @@
 "tx_count": 1,
 "valid": true
 },
-"0x63fbfc4b47e810d604dbdab0db35b17366f42133": {
-"address": "0x63fbfc4b47e810d604dbdab0db35b17366f42133",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:46:52",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
-"0x6426edf655e833c2544a5541faceadb22d8d7c9a758432b409932155b6b4148f": {
-"address": "0x6426edf655e833c2544a5541faceadb22d8d7c9a758432b409932155b6b4148f",
-"chain": "",
-"checked_at": "2026-09-21T11:43:24",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Cosmos",
-"Ethereum",
-"Noble",
-"Axelar",
-"Ethereum"
-],
-"kind": "txhash",
-"label": "",
-"reason": "tx_hash",
-"valid": false
-},
 "0x64fad72e5dde70b2960497744b348fd64cb4788c": {
 "address": "0x64fad72e5dde70B2960497744B348FD64Cb4788c",
 "balance": 0.0,
@@ -1523,7 +1673,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:13",
 "code_size": 14981,
 "ctype": "lp_pool",
 "decimals": 18,
@@ -1531,7 +1681,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -1553,10 +1703,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:14",
 "code_size": 11920,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -1583,13 +1744,13 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:19",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "kind": "eoa",
 "label": "",
@@ -1605,7 +1766,7 @@
 "chains_active": [
 "HyperEVM"
 ],
-"checked_at": "2026-09-21T11:43:28",
+"checked_at": "2026-09-21T17:31:28",
 "code_size": 15582,
 "ctype": "contract",
 "decimals": null,
@@ -1613,7 +1774,7 @@
 "fixed": null,
 "hints": [
 "HyperEVM",
-"Ethereum"
+"HyperEVM"
 ],
 "impl": null,
 "kind": "contract",
@@ -1635,10 +1796,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:22",
+"checked_at": "2026-09-21T17:31:23",
 "code_size": 3267,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "Spiral",
+"scam": false,
+"token": "SPIRAL",
+"token_name": "Spiral",
+"tx_total": 2328,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -1656,7 +1828,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x6bec0c1dc4898484b7f094566ddf8bc82ed7abe8": {
 "address": "0x6bec0c1dc4898484b7f094566ddf8bc82ed7abe8",
@@ -1665,7 +1838,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:25",
+"checked_at": "2026-09-21T17:31:27",
 "code_size": 24483,
 "ctype": "nft",
 "decimals": null,
@@ -1673,7 +1846,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -1695,20 +1868,31 @@
 "chains_active": [
 "Polygon"
 ],
-"checked_at": "2026-09-21T13:02:37",
+"checked_at": "2026-09-21T17:31:30",
 "code_size": 14302,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "RelayHub",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 938,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "Polygon",
-"Ethereum"
+"Polygon"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "RelayHub",
+"name": "RelayHub",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -1716,43 +1900,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
-},
-"0x74634e4ccc7e8922798c7043f839219b1a1a4d60": {
-"address": "0x74634e4ccc7e8922798c7043f839219b1a1a4d60",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:46:49",
-"family": "evm",
-"fixed": null,
-"hints": [
-"BSC",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
-"0x75b42eceb283eaa88303d23bca8f9ccc6c5579cdfc1e8c757ea1e33118dd125b": {
-"address": "0x75b42eceb283eaa88303d23bca8f9ccc6c5579cdfc1e8c757ea1e33118dd125b",
-"chain": "",
-"checked_at": "2026-09-21T11:43:24",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Cosmos",
-"Ethereum",
-"Noble",
-"Axelar",
-"Ethereum"
-],
-"kind": "txhash",
-"label": "",
-"reason": "tx_hash",
-"valid": false
+"valid": true,
+"verified": true
 },
 "0x77071d2bbd8f3c296c8cd7d0abd21bc172420cda": {
 "address": "0x77071d2bbd8f3c296c8cd7d0abd21bc172420cda",
@@ -1761,8 +1910,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:21",
+"checked_at": "2026-09-21T17:31:21",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -1783,45 +1943,27 @@
 "chains_active": [
 "HyperEVM"
 ],
-"checked_at": "2026-09-21T11:43:28",
+"checked_at": "2026-09-21T17:31:28",
 "code_size": 12632,
-"ctype": "contract",
-"decimals": null,
+"ctype": "token",
+"decimals": 18,
 "family": "evm",
 "fixed": null,
 "hints": [
 "HyperEVM",
-"Ethereum"
+"HyperEVM"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "PRFI",
+"name": "PRFI",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
-"symbol": "",
+"symbol": "PRFI",
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
-},
-"0x7cbe0b4349513fed6d03ba8bf9ed708e10e07a50": {
-"address": "0x7cbe0b4349513fed6d03ba8bf9ed708e10e07a50",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:46:49",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
 "valid": true
 },
 "0x7d4e7e5dcb0ccc66b4f0f8b0f30da5078ad4f2dc": {
@@ -1831,12 +1973,78 @@
 "chains_active": [
 "Cronos"
 ],
-"checked_at": "2026-09-21T11:43:08",
+"checked_at": "2026-09-21T17:31:09",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "Cronos",
+"Ethereum",
+"Cronos"
+],
+"kind": "eoa",
+"label": "",
+"reason": "",
+"rpc_failed": [],
+"tx_count": 16,
+"valid": true
+},
+"0x83381e7f7232775735169d72d237b858ffc36871": {
+"address": "0x83381e7F7232775735169d72D237B858fFc36871",
+"balance": 5e-06,
+"chain": "Ethereum",
+"chains_active": [
+"Ethereum"
+],
+"checked_at": "2026-09-21T17:31:27",
+"code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 6,
+"verified": false
+},
+"family": "evm",
+"fixed": null,
+"hints": [
+"Ethereum",
+"Ethereum"
+],
+"kind": "eoa",
+"label": "",
+"reason": "",
+"rpc_failed": [],
+"tx_count": 6,
+"valid": true
+},
+"0x859e69a29244a10800a34ee66919426c02afa2f0": {
+"address": "0x859e69a29244a10800a34ee66919426c02afa2f0",
+"balance": 0.0,
+"chain": "Ethereum",
+"chains_active": [
+"Ethereum"
+],
+"checked_at": "2026-09-21T17:31:22",
+"code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 16,
+"verified": false
+},
+"family": "evm",
+"fixed": null,
+"hints": [
 "Ethereum",
 "Ethereum"
 ],
@@ -1847,86 +2055,6 @@
 "tx_count": 16,
 "valid": true
 },
-"0x817d33738d979ed899ff2f6e9332246a2f2a6da1": {
-"address": "0x817D33738D979eD899ff2f6e9332246a2F2a6Da1",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:53:17",
-"family": "evm",
-"fixed": null,
-"hints": [
-"HyperEVM",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
-"0x83381e7f7232775735169d72d237b858ffc36871": {
-"address": "0x83381e7F7232775735169d72D237B858fFc36871",
-"balance": 5e-06,
-"chain": "Ethereum",
-"chains_active": [
-"Ethereum"
-],
-"checked_at": "2026-09-21T11:43:25",
-"code_size": 0,
-"family": "evm",
-"fixed": null,
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "eoa",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 4,
-"valid": true
-},
-"0x83cbd07d59aedc2f114c351c568d3386ff5bc7ca": {
-"address": "0x83cbd07d59aedc2f114c351c568d3386ff5bc7ca",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:53:13",
-"family": "evm",
-"fixed": null,
-"hints": [
-"BSC",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
-"0x859e69a29244a10800a34ee66919426c02afa2f0": {
-"address": "0x859E69A29244A10800A34eE66919426C02afa2F0",
-"balance": 0.0,
-"chain": "Ethereum",
-"chains_active": [
-"Ethereum"
-],
-"checked_at": "2026-09-21T11:43:22",
-"code_size": 0,
-"family": "evm",
-"fixed": "0x859e69a29244a10800a34ee66919426c02afa2f0",
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "eoa",
-"label": "",
-"reason": "eip55_mismatch",
-"rpc_failed": [],
-"tx_count": 5,
-"valid": true
-},
 "0x86616ce5d1829beb030742e65bd3c1fbee8f082e": {
 "address": "0x86616ce5d1829beb030742e65bd3c1fbee8f082e",
 "balance": 0.000459,
@@ -1935,8 +2063,19 @@
 "Cronos",
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:09",
+"checked_at": "2026-09-21T17:31:09",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 8,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -1948,25 +2087,7 @@
 "label": "",
 "reason": "",
 "rpc_failed": [],
-"tx_count": 3,
-"valid": true
-},
-"0x875da4bd7b4a52a806a533b1cf6d6ff92365d2e6": {
-"address": "0x875da4Bd7b4a52a806A533b1cf6D6fF92365d2E6",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:53:15",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
+"tx_count": 8,
 "valid": true
 },
 "0x882c173bc7ff3b7786ca16dfed3dfffb9ee7847b": {
@@ -1976,15 +2097,20 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:13",
 "code_size": 4744,
 "ctype": "ctoken",
 "decimals": 8,
+"explorer": {
+"name": "VBep20Delegator",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": "0xcdfea50f7ceccb24fe804657db8e6c93b689941e",
 "kind": "contract",
@@ -1998,7 +2124,8 @@
 "token1": null,
 "tx_count": 1,
 "underlying": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x890ed1ee6d435a35d51081ded97ff7ce53be5942": {
 "address": "0x890ed1ee6d435a35d51081ded97ff7ce53be5942",
@@ -2007,10 +2134,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:20",
 "code_size": 1594,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "Enso DefiPulse Index",
+"scam": false,
+"token": "eDPI",
+"token_name": "Enso DefiPulse Index",
+"tx_total": 331,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2037,10 +2175,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:09",
+"checked_at": "2026-09-21T17:31:10",
 "code_size": 7125,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "Timelock",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2049,8 +2198,8 @@
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "Timelock",
+"name": "Timelock",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -2058,7 +2207,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x8f36fd9ffc0a8ca373aa7a4787292536a489d2b5": {
 "address": "0x8f36fd9ffc0a8ca373aa7a4787292536a489d2b5",
@@ -2067,8 +2217,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:24",
+"checked_at": "2026-09-21T17:31:27",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 39,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2076,44 +2237,52 @@
 "Ethereum",
 "Noble",
 "Axelar",
+"Osmosis",
+"Nomic",
 "Ethereum"
 ],
 "kind": "eoa",
 "label": "",
 "reason": "",
 "rpc_failed": [],
-"tx_count": 35,
+"tx_count": 39,
 "valid": true
 },
 "0x8f73b65b4caaf64fba2af91cc5d4a2a1318e5d8c": {
-"address": "0x8f73b65B4caAf64FBA2aF91cC5D4a2A1318E5D8C",
+"address": "0x8f73b65b4caaf64fba2af91cc5d4a2a1318e5d8c",
 "balance": 0.0,
 "chain": "BSC",
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:13",
 "code_size": 134,
 "ctype": "proxy",
 "decimals": null,
+"explorer": {
+"name": "ERC1967Proxy",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
-"fixed": "0x8f73b65b4caaf64fba2af91cc5d4a2a1318e5d8c",
+"fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": "0x9321587ea0dc8247f8f03e8696c047b2713bb79a",
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "ERC1967Proxy",
+"name": "ERC1967Proxy",
 "proxy": true,
-"reason": "eip55_mismatch",
+"reason": "",
 "rpc_failed": [],
 "symbol": "",
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x901dafde7057bc2478d1ef640fb5515ea4757aab": {
 "address": "0x901DafdE7057BC2478d1eF640fb5515EA4757AAB",
@@ -2122,21 +2291,34 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T17:24:13",
+"checked_at": "2026-09-21T17:31:31",
 "code_size": 0,
 "delegated": "0x63c0c19a282a1b52b07dd5a65b58948a07dae32b",
+"explorer": {
+"ens": "",
+"impl": "EIP7702StatelessDeleGator",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "Ethereum",
 "Ethereum"
 ],
+"impl_name": "EIP7702StatelessDeleGator",
 "kind": "eoa",
-"label": "",
+"label": "7702 → EIP7702StatelessDeleGator",
 "reason": "",
 "rpc_failed": [],
 "tx_count": 17,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x90480ce80186dcafb0f3f27df62caa47ef4c4a52": {
 "address": "0x90480ce80186dcafb0f3f27df62caa47ef4c4a52",
@@ -2145,10 +2327,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:20",
 "code_size": 5075,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2175,13 +2368,13 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:24",
+"checked_at": "2026-09-21T17:31:27",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "kind": "eoa",
 "label": "",
@@ -2197,7 +2390,7 @@
 "chains_active": [
 "HyperEVM"
 ],
-"checked_at": "2026-09-21T11:43:28",
+"checked_at": "2026-09-21T17:31:28",
 "code_size": 16003,
 "ctype": "lp_pool",
 "decimals": 18,
@@ -2205,7 +2398,7 @@
 "fixed": null,
 "hints": [
 "HyperEVM",
-"Ethereum"
+"HyperEVM"
 ],
 "impl": null,
 "kind": "contract",
@@ -2227,20 +2420,25 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:19",
 "code_size": 9911,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"name": "LiquidityVestingConvertOnce",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "LiquidityVestingConvertOnce",
+"name": "LiquidityVestingConvertOnce",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -2248,7 +2446,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0x9ae755d23fc948fe94c9364a2398fd508a2ab0d2": {
 "address": "0x9AE755D23Fc948fE94C9364A2398fd508a2AB0d2",
@@ -2257,8 +2456,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:09",
+"checked_at": "2026-09-21T17:31:12",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 50,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2270,7 +2480,7 @@
 "label": "",
 "reason": "",
 "rpc_failed": [],
-"tx_count": 28,
+"tx_count": 50,
 "valid": true
 },
 "0x9cd8d04c30ed78afef7ed00ab1a2a028d476331c": {
@@ -2280,7 +2490,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:14",
 "code_size": 14981,
 "ctype": "lp_pool",
 "decimals": 18,
@@ -2288,7 +2498,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -2310,8 +2520,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:09",
+"checked_at": "2026-09-21T17:31:09",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 7,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2323,25 +2544,30 @@
 "label": "",
 "reason": "",
 "rpc_failed": [],
-"tx_count": 5,
+"tx_count": 7,
 "valid": true
 },
 "0xa07c5b74c9b40447a954e1466938b865b6bbea36": {
 "address": "0xA07c5b74C9B40447a954e1466938b865b6BBea36",
-"balance": 484449.382527,
+"balance": 482545.259908,
 "chain": "BSC",
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:13",
 "code_size": 19906,
 "ctype": "token",
 "decimals": 8,
+"explorer": {
+"name": "VBNB",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -2354,7 +2580,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48": {
 "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -2363,10 +2590,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T13:02:38",
+"checked_at": "2026-09-21T17:31:33",
 "code_size": 2186,
 "ctype": "token",
 "decimals": 6,
+"explorer": {
+"ens": "",
+"impl": "FiatTokenV2_2",
+"is_contract": true,
+"name": "USDC",
+"scam": false,
+"token": "USDC",
+"token_name": "USDC",
+"tx_total": 1609436,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2374,6 +2612,7 @@
 "Ethereum"
 ],
 "impl": null,
+"impl_name": "FiatTokenV2_2",
 "kind": "contract",
 "label": "USD Coin",
 "name": "USD Coin",
@@ -2384,7 +2623,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xa1290d69c65a6fe4df752f95823fae25cb99e5a7": {
 "address": "0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7",
@@ -2393,10 +2633,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:23",
+"checked_at": "2026-09-21T17:31:25",
 "code_size": 2837,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"ens": "",
+"impl": "RSETH",
+"is_contract": true,
+"name": "Kelp DAO Restaked ETH",
+"scam": false,
+"token": "RSETH",
+"token_name": "Kelp DAO Restaked ETH",
+"tx_total": 110525,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2404,6 +2655,7 @@
 "Ethereum"
 ],
 "impl": "0x7159107483e623707c18c6e06cbc095bd0717783",
+"impl_name": "RSETH",
 "kind": "contract",
 "label": "rsETH",
 "name": "rsETH",
@@ -2414,7 +2666,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xa27bcd590195b2a9bdc29379de4f040b2d8066e0": {
 "address": "0xa27bcd590195b2a9bdc29379de4f040b2d8066e0",
@@ -2423,10 +2676,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:21",
+"checked_at": "2026-09-21T17:31:21",
 "code_size": 3958,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 14414,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2453,8 +2717,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:14",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 12,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2475,20 +2750,25 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:19",
 "code_size": 22962,
 "ctype": "v3_pool",
 "decimals": null,
+"explorer": {
+"name": "PancakeV3Pool",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "PancakeV3Pool",
+"name": "PancakeV3Pool",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -2496,7 +2776,8 @@
 "token0": "0x55d398326f99059ff775485246999027b3197955",
 "token1": "0xaa242a47f4cc074e59cbc7d65309b1f21202aaa3",
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xaa242a47f4cc074e59cbc7d65309b1f21202aaa3": {
 "address": "0xAa242a47F4cC074E59cbC7D65309B1F21202AaA3",
@@ -2505,15 +2786,20 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:19",
 "code_size": 3854,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"name": "BeatSwap",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -2526,7 +2812,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xab7505eb360ce0d63e8e88f7853677ecd5537dc0": {
 "address": "0xAb7505eB360cE0D63e8E88f7853677EcD5537DC0",
@@ -2535,10 +2822,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:20",
 "code_size": 3834,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2565,7 +2863,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:16",
+"checked_at": "2026-09-21T17:31:19",
 "code_size": 64,
 "ctype": "contract",
 "decimals": null,
@@ -2573,7 +2871,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -2588,42 +2886,6 @@
 "tx_count": 2,
 "valid": true
 },
-"0xb067efae73637f3564f58af7f6027afc497e81e4": {
-"address": "0xb067efae73637f3564f58af7f6027afc497e81e4",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T13:02:37",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Polygon",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
-"0xb2ca76dfbfe571742b4b66465b777ab1e06988a8": {
-"address": "0xb2ca76dfbfe571742b4b66465b777ab1e06988a8",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T13:02:37",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Polygon",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
 "0xb339448e13e273f6f46e3390e0932ab7ff9f113f": {
 "address": "0xb339448E13E273f6F46e3390e0932Ab7fF9F113F",
 "balance": 0.0,
@@ -2631,20 +2893,25 @@
 "chains_active": [
 "HyperEVM"
 ],
-"checked_at": "2026-09-21T11:43:28",
+"checked_at": "2026-09-21T17:31:28",
 "code_size": 1427,
 "ctype": "proxy",
 "decimals": null,
+"explorer": {
+"name": "InitializableImmutableAdminUpgradeabilityProxy",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "HyperEVM",
-"Ethereum"
+"HyperEVM"
 ],
 "impl": "0x88b60d926754accb8facadd092f68f066c0bb7d0",
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "InitializableImmutableAdminUpgradeabilit",
+"name": "InitializableImmutableAdminUpgradeabilityProxy",
 "proxy": true,
 "reason": "",
 "rpc_failed": [],
@@ -2652,7 +2919,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xb3f613b9bc84ddb29d78fa4685b01d98412bba0b": {
 "address": "0xB3f613b9Bc84ddB29D78fA4685b01d98412BBa0b",
@@ -2661,10 +2929,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:13",
+"checked_at": "2026-09-21T17:31:16",
 "code_size": 22142,
 "ctype": "v3_pool",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "UniswapV3Pool",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2673,8 +2952,8 @@
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "UniswapV3Pool",
+"name": "UniswapV3Pool",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -2682,25 +2961,8 @@
 "token0": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
 "token1": "0xd5c02bb3e40494d4674778306da43a56138a383e",
 "tx_count": 1,
-"valid": true
-},
-"0xb4c00e8f3ba815b6c70f45026f8794d2c1f07964": {
-"address": "0xb4c00e8f3ba815b6c70f45026f8794d2c1f07964",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:53:10",
-"family": "evm",
-"fixed": null,
-"hints": [
-"BSC",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xb78e77deddaf20f238e1d8f9d1de7606c23cdd81": {
 "address": "0xB78E77dEdDaf20f238e1D8f9d1De7606c23Cdd81",
@@ -2709,13 +2971,13 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:15",
+"checked_at": "2026-09-21T17:31:17",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "kind": "eoa",
 "label": "",
@@ -2731,8 +2993,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:10",
+"checked_at": "2026-09-21T17:31:12",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 20,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2744,7 +3017,7 @@
 "label": "",
 "reason": "",
 "rpc_failed": [],
-"tx_count": 10,
+"tx_count": 20,
 "valid": true
 },
 "0xba12222222228d8ba445958a75a0704d566bf2c8": {
@@ -2754,10 +3027,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:13",
+"checked_at": "2026-09-21T17:31:16",
 "code_size": 24512,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "Vault",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 590937,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2766,8 +3050,8 @@
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "Vault",
+"name": "Vault",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -2775,24 +3059,30 @@
 "token0": null,
 "token1": null,
 "tx_count": 2,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c": {
 "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
-"balance": 1555099.351883,
+"balance": 1565093.491042,
 "chain": "BSC",
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:14",
 "code_size": 3124,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"name": "WBNB",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -2805,19 +3095,31 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2": {
 "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-"balance": 2102767.375041,
+"balance": 2102723.770702,
 "chain": "Ethereum",
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:13",
+"checked_at": "2026-09-21T17:31:17",
 "code_size": 3124,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "WETH9",
+"scam": false,
+"token": "WETH",
+"token_name": "WETH",
+"tx_total": 1091994,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2835,7 +3137,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xc0ae1e1e172ecd4c56fd8043fd5afe5a473e9835": {
 "address": "0xc0AE1e1e172ECD4C56fD8043FD5Afe5a473E9835",
@@ -2844,10 +3147,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:09",
+"checked_at": "2026-09-21T17:31:12",
 "code_size": 9781,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "UMAFarmingFeb",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 4,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2856,8 +3170,8 @@
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "UMAFarmingFeb",
+"name": "UMAFarmingFeb",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -2865,7 +3179,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xc2132d05d31c914a87c6611c10748aeb04b58e8f": {
 "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
@@ -2874,17 +3189,29 @@
 "chains_active": [
 "Polygon"
 ],
-"checked_at": "2026-09-21T13:02:37",
+"checked_at": "2026-09-21T17:31:31",
 "code_size": 2949,
 "ctype": "token",
 "decimals": 6,
+"explorer": {
+"ens": "",
+"impl": "UChildUSDT0",
+"is_contract": true,
+"name": "USDT0",
+"scam": false,
+"token": "USDT0",
+"token_name": "USDT0",
+"tx_total": 122426,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "Polygon",
-"Ethereum"
+"Polygon"
 ],
 "impl": "0x90040487a6c9f949c4f07cadcfb0f3b8eeab4229",
+"impl_name": "UChildUSDT0",
 "kind": "contract",
 "label": "USDT0",
 "name": "USDT0",
@@ -2895,7 +3222,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xc404160b79bd8905061a1caecbeca2eeab3f72dd": {
 "address": "0xc404160b79bd8905061a1caecbeca2eeab3f72dd",
@@ -2905,8 +3233,19 @@
 "Cronos",
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:08",
+"checked_at": "2026-09-21T17:31:09",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 129,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -2918,7 +3257,7 @@
 "label": "",
 "reason": "",
 "rpc_failed": [],
-"tx_count": 90,
+"tx_count": 129,
 "valid": true
 },
 "0xc4d27261c06407053cad16cb825ecc0eee7ee7d7": {
@@ -2928,15 +3267,20 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:13",
 "code_size": 13891,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"name": "ORBToken",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -2949,7 +3293,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xc63fb27f52ed8d06673c60c3075b2d3bd26cf4aa": {
 "address": "0xC63FB27F52ed8d06673c60c3075B2D3bD26Cf4AA",
@@ -2958,7 +3303,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:24",
+"checked_at": "2026-09-21T17:31:27",
 "code_size": 2016,
 "ctype": "contract",
 "decimals": null,
@@ -2966,7 +3311,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -2988,10 +3333,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:23",
+"checked_at": "2026-09-21T17:31:24",
 "code_size": 3880,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3011,24 +3367,6 @@
 "tx_count": 1,
 "valid": true
 },
-"0xcc71a3bb131c73462b0f25533070113a63c85e94": {
-"address": "0xcc71a3bb131c73462b0f25533070113a63c85e94",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:46:52",
-"family": "evm",
-"fixed": null,
-"hints": [
-"BSC",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
 "0xcf4642ef89683d0299b59738b1cc3ac0177348ba": {
 "address": "0xCF4642EF89683D0299B59738b1Cc3AC0177348Ba",
 "balance": 0.0,
@@ -3036,7 +3374,7 @@
 "chains_active": [
 "HyperEVM"
 ],
-"checked_at": "2026-09-21T11:43:28",
+"checked_at": "2026-09-21T17:31:28",
 "code_size": 1427,
 "ctype": "atoken",
 "decimals": 18,
@@ -3044,7 +3382,7 @@
 "fixed": null,
 "hints": [
 "HyperEVM",
-"Ethereum"
+"HyperEVM"
 ],
 "impl": "0x1de97549d6ce6ab9e44a2f5468ae003a00826a82",
 "kind": "contract",
@@ -3060,25 +3398,6 @@
 "underlying": "0x5555555555555555555555555555555555555555",
 "valid": true
 },
-"0xd3aac8a1a9e412e2c590463a8b6f90125e23f1f3": {
-"address": "0xd3aac8a1a9e412e2c590463a8b6f90125e23f1f3",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:46:46",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Cronos",
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
 "0xd3f478f0d5e98b01f757bc6cb54db4c00b9838f2": {
 "address": "0xD3F478F0d5E98b01f757bc6cB54Db4C00b9838f2",
 "balance": 0.0,
@@ -3086,15 +3405,20 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:23",
+"checked_at": "2026-09-21T17:31:24",
 "code_size": 8666,
 "ctype": "lp_pool",
 "decimals": 18,
+"explorer": {
+"name": "PancakePair",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -3107,7 +3431,8 @@
 "token0": "0x5e90253fbae4dab78aa351f4e6fed08a64ab5590",
 "token1": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xd45884b592e316eb816199615a95c182f75dea07": {
 "address": "0xD45884B592E316eB816199615A95C182F75dea07",
@@ -3116,10 +3441,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:14",
 "code_size": 5944,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "AtomicQueue",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 127372,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3128,8 +3464,8 @@
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "AtomicQueue",
+"name": "AtomicQueue",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -3137,7 +3473,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xd5c02bb3e40494d4674778306da43a56138a383e": {
 "address": "0xd5C02bB3e40494D4674778306Da43a56138A383E",
@@ -3146,10 +3483,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:13",
+"checked_at": "2026-09-21T17:31:16",
 "code_size": 19610,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "OMNI404",
+"scam": false,
+"token": "O404",
+"token_name": "OMNI404",
+"tx_total": 948,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3167,7 +3515,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xd8b49172b1a33e77c2619a78e08471facff5dad3": {
 "address": "0xd8B49172B1A33e77C2619a78e08471FaCFf5dAd3",
@@ -3176,13 +3525,13 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:12",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "kind": "eoa",
 "label": "",
@@ -3198,10 +3547,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:21",
+"checked_at": "2026-09-21T17:31:22",
 "code_size": 5354,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3221,24 +3581,6 @@
 "tx_count": 2053,
 "valid": true
 },
-"0xe051dc2bbb37b1510faecaeace9288ca5bc0deda9562bdfe164643d268e69236": {
-"address": "0xe051dc2bbb37b1510faecaeace9288ca5bc0deda9562bdfe164643d268e69236",
-"chain": "",
-"checked_at": "2026-09-21T11:43:24",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Cosmos",
-"Ethereum",
-"Noble",
-"Axelar",
-"Ethereum"
-],
-"kind": "txhash",
-"label": "",
-"reason": "tx_hash",
-"valid": false
-},
 "0xe2719e3b28eef69bf3c4a9d7fc7280c5a015ecde": {
 "address": "0xe2719E3b28EeF69bf3C4A9D7FC7280c5a015EcdE",
 "balance": 0.0,
@@ -3246,10 +3588,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T13:02:37",
+"checked_at": "2026-09-21T17:31:32",
 "code_size": 64,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3276,13 +3629,13 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:14",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "kind": "eoa",
 "label": "",
@@ -3298,7 +3651,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:14",
 "code_size": 21908,
 "ctype": "token",
 "decimals": 18,
@@ -3306,7 +3659,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -3328,10 +3681,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:23",
+"checked_at": "2026-09-21T17:31:24",
 "code_size": 7070,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 135,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3358,10 +3722,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:15",
 "code_size": 7514,
 "ctype": "token",
 "decimals": 18,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "Ether.Fi Liquid ETH",
+"scam": false,
+"token": "LIQUIDETH",
+"token_name": "Ether.Fi Liquid ETH",
+"tx_total": 24089,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3379,43 +3754,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
-},
-"0xf12ccb683c51cc1c5907d362f3219b3a49a597be": {
-"address": "0xf12ccb683c51cc1c5907d362f3219b3a49a597be",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:46:49",
-"family": "evm",
-"fixed": null,
-"hints": [
-"BSC",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
-},
-"0xf3c9b1d7094bd11e6aa065c5efb009afa682a961": {
-"address": "0xf3c9b1d7094bd11e6aa065c5efb009afa682a961",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:46:46",
-"family": "evm",
-"fixed": null,
-"hints": [
-"Ethereum",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xf45d6dba93d0db2c849c280f45e60d6e11b3c4dd": {
 "address": "0xf45d6dba93d0db2c849c280f45e60d6e11b3c4dd",
@@ -3424,7 +3764,7 @@
 "chains_active": [
 "HyperEVM"
 ],
-"checked_at": "2026-09-21T11:43:28",
+"checked_at": "2026-09-21T17:31:28",
 "code_size": 7285,
 "ctype": "contract",
 "decimals": null,
@@ -3432,7 +3772,7 @@
 "fixed": null,
 "hints": [
 "HyperEVM",
-"Ethereum"
+"HyperEVM"
 ],
 "impl": null,
 "kind": "contract",
@@ -3454,20 +3794,31 @@
 "chains_active": [
 "Polygon"
 ],
-"checked_at": "2026-09-21T13:02:37",
+"checked_at": "2026-09-21T17:31:29",
 "code_size": 22271,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "ERC20MetaHTLCHandler",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 4,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "Polygon",
-"Ethereum"
+"Polygon"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "ERC20MetaHTLCHandler",
+"name": "ERC20MetaHTLCHandler",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -3475,7 +3826,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xf6ba170f3d50a21fad30f2d02972ffd295f04e8c": {
 "address": "0xf6BA170f3d50a21fAD30f2D02972ffd295F04e8C",
@@ -3484,7 +3836,7 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:15",
+"checked_at": "2026-09-21T17:31:17",
 "code_size": 929,
 "ctype": "contract",
 "decimals": null,
@@ -3492,7 +3844,7 @@
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
@@ -3514,8 +3866,19 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:13",
+"checked_at": "2026-09-21T17:31:15",
 "code_size": 0,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": false,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 0,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3536,10 +3899,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:21",
+"checked_at": "2026-09-21T17:31:21",
 "code_size": 1970,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 11,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3566,20 +3940,25 @@
 "chains_active": [
 "BSC"
 ],
-"checked_at": "2026-09-21T11:43:12",
+"checked_at": "2026-09-21T17:31:13",
 "code_size": 1508,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"name": "Unitroller",
+"src": "sourcify",
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
 "BSC",
-"Ethereum"
+"BSC"
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "Unitroller",
+"name": "Unitroller",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -3587,7 +3966,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "0xfdb11781ee3818135eebd2acd2247c263e266652": {
 "address": "0xfdb11781ee3818135eebd2acd2247c263e266652",
@@ -3596,14 +3976,14 @@
 "chains_active": [
 "Cronos"
 ],
-"checked_at": "2026-09-21T11:43:08",
+"checked_at": "2026-09-21T17:31:09",
 "code_size": 0,
 "family": "evm",
 "fixed": null,
 "hints": [
 "Cronos",
 "Ethereum",
-"Ethereum"
+"Cronos"
 ],
 "kind": "eoa",
 "label": "",
@@ -3619,9 +3999,20 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T17:24:13",
+"checked_at": "2026-09-21T17:31:26",
 "code_size": 0,
 "delegated": "0x0913b172530805af05ff28814ca941bd28b5b4e9",
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 49353,
+"verified": false
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3632,25 +4023,7 @@
 "label": "",
 "reason": "",
 "rpc_failed": [],
-"tx_count": 49032,
-"valid": true
-},
-"0xff990876d863a61732779c341991215856c89420": {
-"address": "0xff990876d863a61732779c341991215856c89420",
-"chain": "",
-"chains_active": [],
-"checked_at": "2026-09-21T11:53:16",
-"family": "evm",
-"fixed": null,
-"hints": [
-"HyperEVM",
-"Ethereum"
-],
-"kind": "unfunded",
-"label": "",
-"reason": "",
-"rpc_failed": [],
-"tx_count": 0,
+"tx_count": 49353,
 "valid": true
 },
 "0xffb607418dbeab7a888e079a34be28a30d8e1de2": {
@@ -3660,10 +4033,21 @@
 "chains_active": [
 "Ethereum"
 ],
-"checked_at": "2026-09-21T11:43:09",
+"checked_at": "2026-09-21T17:31:10",
 "code_size": 9873,
 "ctype": "contract",
 "decimals": null,
+"explorer": {
+"ens": "",
+"impl": "",
+"is_contract": true,
+"name": "UMAFarmingMar",
+"scam": false,
+"token": "",
+"token_name": "",
+"tx_total": 4,
+"verified": true
+},
 "family": "evm",
 "fixed": null,
 "hints": [
@@ -3672,8 +4056,8 @@
 ],
 "impl": null,
 "kind": "contract",
-"label": "",
-"name": "",
+"label": "UMAFarmingMar",
+"name": "UMAFarmingMar",
 "proxy": false,
 "reason": "",
 "rpc_failed": [],
@@ -3681,7 +4065,8 @@
 "token0": null,
 "token1": null,
 "tx_count": 1,
-"valid": true
+"valid": true,
+"verified": true
 },
 "44dZUJ7w1T3fKAvFW8XyXUVoAGSbFvXef2wcbnsjNKGWYorpLJBjth5VKSFhLGkpYKJb2J341tdZHBnbpv72WL7e8zuxfR2": {
 "address": "44dZUJ7w1T3fKAvFW8XyXUVoAGSbFvXef2wcbnsjNKGWYorpLJBjth5VKSFhLGkpYKJb2J341tdZHBnbpv72WL7e8zuxfR2",
