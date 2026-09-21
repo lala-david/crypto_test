@@ -1,11 +1,11 @@
 {
- "headline_ko": "9월 21일 브리핑 · 신규 2건 · 피해 $2M · 후속 1건",
- "headline_en": "Sep 21 briefing · 2 new · loss $2M · 1 follow-ups",
- "briefing_ko": "- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$1.5M** · 9.19 — 개인키가 탈취돼 공격자가 해당 주소의 모든 자금을 인출\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$463K** · 9.19 — 개인키가 탈취돼 공격자가 해당 주소의 모든 자금을 인출\n- **후속 1건** — [Nimiq](https://defillama.com/hacks) (첫 보도 9.18, 서명 검증 결함으로 공격자가 위조 서명으로 자금을 인출)\n- **시사점** — 개인키 탈취와 서명 검증 오류 등 인증 취약점이 계속 악용되고 있다.",
- "briefing_en": "- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · Key compromise · **$1.5M** · Sep 19 — Private key was compromised, allowing the attacker to drain…\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · Key compromise · **$463K** · Sep 19 — Private key was compromised, allowing the attacker to drain…\n- **Follow-ups (1)** — [Nimiq](https://defillama.com/hacks) (first 9.18, Signature verification flaw let the attacker…)\n- **Takeaway** — Authentication flaws like key theft and signature bugs keep being exploited.",
+ "headline_ko": "9월 21일 브리핑 · 신규 2건 · 피해 $2M · 후속 2건",
+ "headline_en": "Sep 21 briefing · 2 new · loss $2M · 2 follow-ups",
+ "briefing_ko": "- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$1.5M** · 9.19 — 개인키가 탈취돼 약 1,530,000달러가 유출되었습니다\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · 개인키 탈취 · **$463K** · 9.19 — 개인키가 탈취돼 약 462,730달러가 유출되었습니다\n- **후속 2건** — [Startale](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Startale_exp.sol) (첫 보도 9.17, 플래그 지속을 이용해 계정을 재초기화하고 delegatecall으로…), [Nimiq](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Nimiq_exp.sol) (첫 보도 9.18, GSN 포워더가 서명·nonce 건너뛰고 악성 페이마스터만 확인해 약…)\n- **시사점** — 키 관리 부실과 계약 초기화 검증 미비가 여러 프로젝트에서지속 악용됩니다.",
+ "briefing_en": "- **[Fetch.ai](https://defillama.com/hacks)** · Ethereum · Key compromise · **$1.5M** · Sep 19 — A compromised private key allowed theft of roughly million\n- **[NuNet](https://defillama.com/hacks)** · Ethereum · Key compromise · **$463K** · Sep 19 — The attacker stole the private key and drained about\n- **Follow-ups (2)** — [Startale](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Startale_exp.sol) (first 9.17, The attacker reused a lingering init flag to…), [Nimiq](https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/src/test/2026-09/Nimiq_exp.sol) (first 9.18, The GSN forwarder skipped signature checks…)\n- **Takeaway** — Poor key security and missing init-state checks continue to be repeatedly exploited across projects.",
  "counts": {
   "new": 2,
-  "followups": 1,
+  "followups": 2,
   "major": 2,
   "minor": 0,
   "loss_usd": 1992730,
