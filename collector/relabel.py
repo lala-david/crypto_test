@@ -495,6 +495,22 @@ AUDIT_SCHEMA = _obj({
 }, ["duplicates", "wrong_amount", "wrong_type", "wrong_date", "not_incident", "naming", "overall"])
 
 
+def mentions_amount(text: str, amount: Optional[float]) -> bool:
+    """근거 문장에 카드의 금액이 있는가: '$121,000' · '121,000' · '$121K' · '$0.12M' · '$118 M' 같은 표기를 ±1.5% 로 비교."""
+    if not text or not amount:
+        return False
+    for m in re.finditer(r"\$?\s?(\d[\d,]*(?:\.\d+)?)\s*(K|M|B|million|billion|thousand)?\b", text, flags=re.I):
+        try:
+            v = float(m.group(1).replace(",", ""))
+        except ValueError:
+            continue
+        unit = (m.group(2) or "").lower()
+        v *= {"k": 1e3, "thousand": 1e3, "m": 1e6, "million": 1e6, "b": 1e9, "billion": 1e9}.get(unit, 1)
+        if v > 0 and abs(v - amount) / amount <= 0.015:  # 3% 면 $118K 와 $121K 가 같다고 본다 → 1.5%
+            return True
+    return False
+
+
 def run_audit(store: Store, provider: LLMProvider, data_dir: str, days: int = 30, max_tokens: int = 8000, min_conf: float = 0.85, apply: bool = True) -> dict:
     """최근 days 일 병합 사건을 LLM 에 한 번에 보여 교차 검토. 자동 반영: 중복(merge_decisions), 사건 아님(제외 카테고리만), 금액 null 화, 이름·유형·날짜."""
     from datetime import date, timedelta
@@ -552,6 +568,7 @@ def run_audit(store: Store, provider: LLMProvider, data_dir: str, days: int = 30
         return {"error": "LLM 이 JSON 을 내놓지 않음", "listed": len(listing)}
     by_uid = {i.uid: i for i in merged}
     applied = {"duplicates": 0, "not_incident": 0, "amount": 0, "naming": 0, "type": 0, "date": 0}
+    applied_ids: Dict[str, set] = {k: set() for k in ("duplicates", "not_incident", "wrong_amount", "wrong_type", "wrong_date")}
     conf_of = lambda it: float(it.get("confidence") or 0)
     if apply:
         for g in out.get("duplicates") or []:
@@ -563,6 +580,7 @@ def run_audit(store: Store, provider: LLMProvider, data_dir: str, days: int = 30
                     if u != rep:
                         store.set_merge_decision(rep, u, True, "audit: " + (g.get("evidence") or "")[:160])
                 applied["duplicates"] += 1
+                applied_ids["duplicates"].add(tuple(sorted(uids)))
         for it in out.get("not_incident") or []:
             inc = by_uid.get(it.get("uid"))
             if inc and conf_of(it) >= min_conf and it.get("category") in EXCLUDE_CATEGORIES:
@@ -570,31 +588,40 @@ def run_audit(store: Store, provider: LLMProvider, data_dir: str, days: int = 30
                 inc.relevance_reason = ("LLM 교차감사: " + str(it.get("category")) + " — " + (it.get("evidence") or ""))[:220]
                 _save_retry(store, inc)
                 applied["not_incident"] += 1
+                applied_ids["not_incident"].add(inc.uid)
         for it in out.get("wrong_amount") or []:
             inc = by_uid.get(it.get("uid"))
-            if inc and conf_of(it) >= min_conf and it.get("suggested_amount_usd") is None and inc.amount_usd:
+            # 법집행 카드의 금액은 '제재·수사 금액'으로 따로 집계하므로 지우지 않는다. 근거가 카드의 금액을 언급해야 한다(다른 카드 요약을 잘못 대입한 경우 차단).
+            if (inc and conf_of(it) >= min_conf and it.get("suggested_amount_usd") is None and inc.amount_usd
+                    and inc.incident_type not in ("sanctions_designation", "law_enforcement_action", "laundering_report")
+                    and mentions_amount(it.get("evidence") or "", inc.amount_usd)):
                 inc.amount_text = inc.amount_text or ("$" + format(inc.amount_usd, ",.0f"))
                 inc.amount_usd = None
                 inc.enrich_note = (inc.enrich_note or "") + " | audit: amount not a loss"
                 _save_retry(store, inc)
                 applied["amount"] += 1
+                applied_ids["wrong_amount"].add(inc.uid)
         # 이름 제안은 LLM 이 장황한 설명형 이름을 내놓는 경우가 많아 자동 반영하지 않는다(보고서에서 사람이 판단).
         for it in out.get("wrong_type") or []:
             inc = by_uid.get(it.get("uid"))
             st = it.get("suggested_type")
-            if inc and st in INCIDENT_TYPES and conf_of(it) >= min_conf and st != inc.incident_type:
+            # 유형은 '해킹으로 잘못 분류된 법집행·피싱' 같은 hack_exploit 출발만 자동 반영(그 외는 보고). 확신도 0.9 이상.
+            if inc and st in INCIDENT_TYPES and conf_of(it) >= max(min_conf, 0.9) and st != inc.incident_type and inc.incident_type == "hack_exploit":
                 inc.enrich_note = (inc.enrich_note or "") + " | audit: type " + inc.incident_type + "->" + st
                 inc.incident_type = st
                 _save_retry(store, inc)
                 applied["type"] += 1
+                applied_ids["wrong_type"].add(inc.uid)
         for it in out.get("wrong_date") or []:
             inc = by_uid.get(it.get("uid"))
             nd = _iso(it.get("suggested_date"))
-            if inc and nd and conf_of(it) >= min_conf and (not inc.published_at or nd <= inc.published_at[:10]) and nd != inc.incident_date:
+            # 날짜는 비어 있을 때만 채운다(기존 날짜를 근거 없이 바꾸는 일이 있었다). 게시일 이후 날짜는 거부.
+            if inc and nd and conf_of(it) >= min_conf and (not inc.published_at or nd <= inc.published_at[:10]) and not inc.incident_date:
                 inc.enrich_note = (inc.enrich_note or "") + " | audit: date " + str(inc.incident_date) + "->" + nd
                 inc.incident_date = nd
                 _save_retry(store, inc)
                 applied["date"] += 1
+                applied_ids["wrong_date"].add(inc.uid)
     # 사람이 볼 보고서: 자동 반영 여부와 낮은 확신도 항목까지 전부
     def name(u):
         return (by_uid[u].project or by_uid[u].title) if u in by_uid else str(u)
@@ -605,7 +632,7 @@ def run_audit(store: Store, provider: LLMProvider, data_dir: str, days: int = 30
         lines.append("## " + title + " (" + str(len(items)) + ")")
         for it in items:
             conf = conf_of(it)
-            auto_ok = conf >= min_conf and apply and key in ("duplicates", "wrong_amount", "wrong_type", "wrong_date") or (key == "not_incident" and it.get("category") in EXCLUDE_CATEGORIES and conf >= min_conf and apply)
+            auto_ok = (tuple(sorted(u for u in (it.get("uids") or []) if u in by_uid)) in applied_ids["duplicates"]) if key == "duplicates" else (it.get("uid") in applied_ids.get(key, set()))
             tag = "자동 반영" if auto_ok else "검토 필요"
             if key == "duplicates":
                 lines.append("- [" + tag + " " + format(conf, ".2f") + "] " + " ↔ ".join(name(u) for u in it.get("uids") or []) + " — " + (it.get("evidence") or ""))

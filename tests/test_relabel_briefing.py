@@ -76,3 +76,12 @@ def test_generic_phrase_rejects_noun_phrases():
     from collector.relabel import generic_phrase
     assert generic_phrase("software developers") and generic_phrase("crypto users") and generic_phrase("Iranian Government")
     assert not generic_phrase("Fetch.ai") and not generic_phrase("rsETH") and not generic_phrase("Liquid Network") and not generic_phrase("Startale")
+
+
+def test_mentions_amount_guards_audit_amount_removal():
+    from collector.relabel import mentions_amount
+    assert mentions_amount("amount $121,000 appears to be the value of WETH", 121000)
+    assert mentions_amount("Amount $3 M is a demand, not an actual loss", 3_000_000)
+    assert mentions_amount("roughly $0.12M was moved", 121000)
+    assert not mentions_amount("amount $118,000 appears to be the value of WETH withdrawn", 121000)
+    assert not mentions_amount("no numbers here", 5000)
