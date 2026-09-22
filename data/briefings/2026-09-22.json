@@ -1,14 +1,14 @@
 {
- "headline_ko": "9월 22일 브리핑 · 신규 5건 · 피해 $1.8M",
- "headline_en": "Sep 22 briefing · 5 new · loss $1.8M",
- "briefing_ko": "- **[Balancer](https://www.tokenpost.kr/news/blockchain/411746)** · Ethereum · 해킹 · **$1.4M** · 8.31 — V1 풀 해킹으로 손실, DAO가 296 ETH 회수해 LP에게 배분 예정\n- **[Internet Token](https://x.com/DefimonAlerts/status/2101969009461567690)** · Base · 해킹 · **$265K** · 9.21 — 풀 콜백으로 9억2500만 INT·5.847 WETH 인출, 26만5천 달러 탈취\n- **[RWC Token](https://x.com/TenArmorAlert/status/2101925758214316524)** · BNB Smart Chain · 해킹 · **$109K** · 9.21 — RWC 소각·풀 동기화해 가격 상승, USDT 판매로 109천 달러 탈취\n- **소액·미상 2건** — [GaslessReservoirEnabler](https://x.com/SlowMist_Team/status/2102227043979313539) $23K, [캄보디아 가상자산 사기단](https://www.tokenpost.kr/news/briefing/411723) 금액 미상\n- **시사점** — 스마트컨트랙트 검증·권한 결함을 이용한 탈취 공격이 연이어 발생하고 있다.",
- "briefing_en": "- **[Balancer](https://www.tokenpost.kr/news/blockchain/411746)** · Ethereum · Hack · **$1.4M** · Aug 31 — V1 pool hack caused loss; DAO reclaimed 296 ETH for LP…\n- **[Internet Token](https://x.com/DefimonAlerts/status/2101969009461567690)** · Base · Hack · **$265K** · Sep 21 — Fake pool callback minted 925M INT and withdrew 5.847 WETH…\n- **[RWC Token](https://x.com/TenArmorAlert/status/2101925758214316524)** · BNB Smart Chain · Hack · **$109K** · Sep 21 — Flash loan burned RWC, synced pool to inflate price, sold…\n- **Smaller / unknown (2)** — [GaslessReservoirEnabler](https://x.com/SlowMist_Team/status/2102227043979313539) $23K, [캄보디아 가상자산 사기단](https://www.tokenpost.kr/news/briefing/411723) amount n/a\n- **Takeaway** — Exploits repeatedly target insufficient validation or permission checks in contracts.",
+ "headline_ko": "9월 22일 브리핑 · 신규 6건 · 피해 $1.8M",
+ "headline_en": "Sep 22 briefing · 6 new · loss $1.8M",
+ "briefing_ko": "- **[Balancer](https://www.tokenpost.kr/news/blockchain/411746)** · Ethereum · 해킹 · **$1.4M** · 8.31 — V1 풀 해킹으로 대규모 손실, DAO가 ETH 회수해 피해자에게 배분 계획\n- **[Internet Token](https://x.com/DefimonAlerts/status/2101969009461567690)** · Base · 해킹 · **$265K** · 9.21 — 가짜 풀 콜백으로 INT 대량 민팅, 공식 풀에서 WETH 인출, 265k 탈취\n- **[RWC Token](https://x.com/TenArmorAlert/status/2101925758214316524)** · BNB Smart Chain · 해킹 · **$109K** · 9.21 — 플래시론으로 RWC 소각·풀 동기화 후 가격 상승, USDT 판매로 109k 탈취\n- **소액·미상 3건** — [DoinGud](https://x.com/teddyctf/status/2102235278970933264) $35K, [GaslessReservoirEnabler](https://x.com/SlowMist_Team/status/2102227043979313539) $23K, [캄보디아 가상자산 사기단](https://www.tokenpost.kr/news/briefing/411723) 금액 미상\n- **시사점** — 플래시론과 계약 로직 결함을 이용한 탈취가 연속적으로 발생하고 있습니다.",
+ "briefing_en": "- **[Balancer](https://www.tokenpost.kr/news/blockchain/411746)** · Ethereum · Hack · **$1.4M** · Aug 31 — V1 pool hack caused large loss; DAO recovered ETH to…\n- **[Internet Token](https://x.com/DefimonAlerts/status/2101969009461567690)** · Base · Hack · **$265K** · Sep 21 — Minted massive INT via fake pool callback, withdrew WETH…\n- **[RWC Token](https://x.com/TenArmorAlert/status/2101925758214316524)** · BNB Smart Chain · Hack · **$109K** · Sep 21 — Used flash loan to burn RWC, sync pool, inflate price, then…\n- **Smaller / unknown (3)** — [DoinGud](https://x.com/teddyctf/status/2102235278970933264) $35K, [GaslessReservoirEnabler](https://x.com/SlowMist_Team/status/2102227043979313539) $23K, [캄보디아 가상자산 사기단](https://www.tokenpost.kr/news/briefing/411723) amount n/a\n- **Takeaway** — Flash loans and contract logic flaws are repeatedly exploited for large-scale crypto thefts.",
  "counts": {
-  "new": 5,
+  "new": 6,
   "followups": 0,
   "major": 3,
-  "minor": 2,
-  "loss_usd": 1791155.52,
+  "minor": 3,
+  "loss_usd": 1826641.52,
   "legal_usd": 0
  },
  "format": "structured-v2"
