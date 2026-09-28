@@ -101,8 +101,10 @@ window.KL = (() => {
     const upd = meta && meta.generated_at ? meta.generated_at.replace("T", " ").slice(5, 16) : "";
     nav.innerHTML = `<a class="brand" href="index.html"><span class="mark"></span><span>Incident Ledger</span></a>
       <div class="tabs">${PAGES.map(([h, k]) => `<a class="tab ${active === h ? "on" : ""}" href="${h}">${esc(t(k))}</a>`).join("")}</div>
-      <div class="nav-r"><button id="themeBtn" class="ibtn" type="button" aria-label="${esc(t("a_theme"))}" title="${esc(t("a_theme"))}">◐</button><button id="langBtn" class="ibtn" type="button" aria-label="${esc(t("a_lang"))}">${state.lang === "ko" ? "EN" : "KO"}</button></div>`;
+      <div class="nav-r"><span class="resbar" id="resBar"></span><button id="themeBtn" class="ibtn" type="button" aria-label="${esc(t("a_theme"))}" title="${esc(t("a_theme"))}">◐</button><button id="langBtn" class="ibtn" type="button" aria-label="${esc(t("a_lang"))}">${state.lang === "ko" ? "EN" : "KO"}</button></div>`;
+    if (KL.resourceBar) KL.resourceBar($("#resBar"));
   }
+  const _navHud = () => { if (KL.resourceBar) KL.resourceBar($("#resBar")); };
   function renderFoot() { const f = $("#foot"); if (!f) return;
     if (f.classList.contains("lumos-foot")) f.innerHTML = `<div class="foot-brand"><span class="ring">IL</span><b>Incident Ledger</b></div><div class="foot-links"><a href="${REPO}" target="_blank" rel="noopener">GitHub</a><a href="/api" target="_blank" rel="noopener">API</a></div>`;
     else f.innerHTML = `<span></span><span><a href="${REPO}" target="_blank" rel="noopener">GitHub</a> · <a href="/api" target="_blank" rel="noopener">API</a></span>`; }
@@ -192,15 +194,16 @@ window.KL = (() => {
     return `<span class="gauge" title="${esc(t("src_gauge_tip").replace("{n}", n || 0))}"><svg viewBox="0 0 60 35" width="52" height="30"><path d="M2.5 30 A27.5 27.5 0 0 1 57.5 30" class="g-muted"/><path d="M2.5 30 A27.5 27.5 0 0 1 57.5 30" class="g-val" style="stroke:${col}" stroke-dasharray="${GAUGE_L}" stroke-dashoffset="${(GAUGE_L * (1 - score)).toFixed(2)}"/></svg><b>${n || 0}</b></span>`; };
   const typeBadge = (type) => (KL.typeBadge ? KL.typeBadge(type) : `<span class="badge" style="--c:${TYPE_COLOR[type] || "var(--t-other)"}" title="${esc(typeFull(type))}"><span class="dot"></span>${esc(typeName(type))}</span>`);
   const badges = (i) => `${i.followup_of ? `<span class="tag" title="${esc(t("legend_follow"))} · ${esc(i.followup_of.day || "")}">${esc(t("follow"))}</span>` : ""}${(i.followups || []).length ? `<span class="tag" title="${esc(t("follow_reports").replace("{n}", i.followups.length))} · ${esc(i.followups.map((f) => f.day).join(", "))}">${esc(t("follow_n").replace("{n}", i.followups.length))}</span>` : ""}${i.blacklist_hits ? `<span class="tag warn" title="${esc(t("legend_bl"))}">BL ${i.blacklist_hits}</span>` : ""}${i.amount_revised_from ? `<span class="tag" title="${esc(t("revised_from"))} ${moneyFull(i.amount_revised_from)}">↑</span>` : ""}`;
-  const amountCell = (i) => i.amount_usd != null ? `<span class="amt" title="${moneyFull(i.amount_usd)}"><span class="cur">$</span>${fmtInt(i.amount_usd)}</span>` : `<span class="faint" title="${esc(i.amount_text || "")}">${esc(t("unknown"))}</span>`;
+  const amountCell = (i) => i.amount_usd != null ? `${KL.tierChip ? KL.tierChip(i.amount_usd) : ""}<span class="amt" title="${moneyFull(i.amount_usd)}"><span class="cur">$</span>${fmtInt(i.amount_usd)}</span>` : `<span class="faint" title="${esc(i.amount_text || "")}">${esc(t("unknown"))}</span>`;
   const zeroDash = (n) => (n ? fmtInt(n) : '<span class="faint">–</span>');
   function incidentRow(i, compact = false) {
     compact = compact === true;
     const name = `<td class="nowrap">${KL.avatar ? KL.avatar(i) : sw(i.type)}<a class="name" href="${detailUrl(i)}">${esc(i.project)}</a>${badges(i)}</td>`;
     const amt = `<td class="num">${amountCell(i)}</td>`;
     const ev = i.event_date || i.incident_date || i.day;
-    if (compact) return `<tr class="link" data-href="${detailUrl(i)}">${name}${amt}<td>${pill(i)}</td><td class="date">${esc(fmtDate(ev))}</td></tr>`;
-    return `<tr class="link" data-href="${detailUrl(i)}">${name}${amt}<td class="date" title="${esc(t("th_report"))} ${esc(fmtDate(i.day))}">${esc(fmtDate(ev))}</td><td class="nowrap">${typeBadge(i.type)}</td><td>${chainPills(i.chains, 2) || '<span class="faint">–</span>'}</td><td class="center">${gauge((i.sources || []).length)}</td></tr>`;
+    const tk = KL.tier ? KL.tier(i.amount_usd) : "";
+    if (compact) return `<tr class="link ${tk ? "row-" + tk : ""}" data-href="${detailUrl(i)}">${name}${amt}<td>${pill(i)}</td><td class="date">${esc(fmtDate(ev))}</td></tr>`;
+    return `<tr class="link ${tk ? "row-" + tk : ""}" data-href="${detailUrl(i)}">${name}${amt}<td class="date" title="${esc(t("th_report"))} ${esc(fmtDate(i.day))}">${esc(fmtDate(ev))}</td><td class="nowrap">${typeBadge(i.type)}</td><td>${chainPills(i.chains, 2) || '<span class="faint">–</span>'}</td><td class="center">${gauge((i.sources || []).length)}</td></tr>`;
   }
   const TABLE_HEAD = (compact = false) => compact
     ? `<thead><tr><th>${esc(t("th_incident"))}</th><th class="num">${esc(t("th_amount"))}</th><th>${esc(t("th_type"))}</th><th>${esc(t("th_date"))}</th></tr></thead>`

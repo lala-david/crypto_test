@@ -26,8 +26,9 @@
     $("#chainTable").innerHTML = head(t("chain")) + rows(chains, (r) => `<span class="chain">${esc(r._other ? r.key : chainName(r.key))}</span>`);
     $("#metaChain").textContent = `${chainsAll.filter((r) => r.key !== "unknown").length}`;
     const roles = Object.entries(st.roles || {}).sort((a, b) => b[1] - a[1]); const rt = roles.reduce((a, r) => a + r[1], 0) || 1;
-    $("#rolesBars").innerHTML = `<div class="rgrid">${roles.map(([k, v]) => `<div class="rcell ${esc(k)}"><span class="ic">${KL.roleIcon(k)}</span><b>${fmtInt(v)}</b><span class="l">${esc(roleName(k))}</span><span class="p">${fmtPct(v / rt, 0)}</span></div>`).join("")}</div>`;
+    $("#rolesBars").innerHTML = `<div class="rgrid">${roles.map(([k, v]) => `<div class="rcell ${esc(k)}"><span class="ic">${KL.roleIcon(k)}</span><b data-countup="${v}">0</b><span class="l">${esc(roleName(k))}</span><span class="p">${fmtPct(v / rt, 0)}</span></div>`).join("")}</div>`;
     $("#metaRoles").textContent = `${fmtInt(st.addresses)} ${t("addresses")}`;
+    KL.countUpAll();
   }
   $$("#valueMode button").forEach((b) => b.addEventListener("click", () => { S.mode = b.dataset.mode; render(); }));
   api("/api/meta").then((m) => { meta = m; return load(); }).catch((e) => { $("main").insertAdjacentHTML("afterbegin", errorBox(e)); });

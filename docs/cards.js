@@ -31,7 +31,7 @@
   }
 
   /* series: [{key, color, data:[number…]}], labels: [string…] (x 라벨), metrics: [{icon:'diamond'|'circle'|'triangle', label, value, up, good}] */
-  function reportCard(el, { title = "Incident Report", series, labels, metrics = [], wide = false }) {
+  function reportCard(el, { title = "Incident Report", series, labels, metrics = [], wide = false, hud = "" }) {
     const W = wide ? 1040 : 448, H = wide ? 300 : 200, m = { l: 14, r: 14, t: 12, b: 28 };
     const n = labels.length; const pw = W - m.l - m.r, ph = H - m.t - m.b;
     const max = Math.max(1, ...series.flatMap((s) => s.data));
@@ -46,15 +46,33 @@
     });
     const step = Math.max(1, Math.ceil(n / (wide ? 13 : 7)));
     labels.forEach((lb, i) => { if (i % step === 0 || i === n - 1) svg += `<text class="rc-tick" x="${x(i)}" y="${H - 8}" text-anchor="middle">${esc(lb)}</text>`; });
+    // 호버: 세로 기준선 + 시리즈별 점 + 툴팁(라벨·값). 버킷마다 투명 히트 영역
+    svg += `<g class="rc-hover" style="display:none"><line class="rc-x" y1="${m.t}" y2="${base}" x1="0" x2="0"/>${series.map((s) => `<circle class="rc-dot" r="4" fill="${s.color}" cx="0" cy="0"/>`).join("")}</g>`;
+    const slot = n > 1 ? pw / (n - 1) : pw;
+    labels.forEach((lb, i) => { svg += `<rect class="rc-hit" data-i="${i}" x="${x(i) - slot / 2}" y="${m.t}" width="${slot}" height="${ph}"/>`; });
     svg += "</svg>";
     el.innerHTML = `<div class="rc ${wide ? "rc-wide" : ""}">
-      <h3 class="rc-title">${esc(title)}</h3>
+      <div class="rc-head"><h3 class="rc-title">${esc(title)}</h3>${hud}</div>
       <div class="rc-legend">${series.map((s) => `<div class="rc-li"><span class="rc-sw" style="background:${s.color}"></span><span>${esc(s.key)}</span></div>`).join("")}</div>
-      <div class="rc-chart">${svg}</div>
+      <div class="rc-chart">${svg}<div class="rc-tip"></div></div>
       ${metrics.length ? `<div class="rc-metrics">${metrics.map((mt, k) => { const base = mt.good ? "#40E5D1" : "#E84045", stroke = mt.good ? "#40E5D1" : "#F08083";
         return `<div class="rc-row" style="animation-delay:${(k * 0.05).toFixed(2)}s"><div class="rc-lbl">${ICON[mt.icon] || ICON.circle}<span title="${esc(mt.tooltip || mt.label)}">${esc(mt.label)}</span></div><div class="rc-val"><span>${esc(mt.value)}</span>${trendIcon(mt.up, base, stroke)}</div></div>`; }).join("")}</div>` : ""}
     </div>`;
+    // ---- 호버 동작 ----
+    const svgEl = el.querySelector(".rc-svg"), tip = el.querySelector(".rc-tip"), hov = svgEl.querySelector(".rc-hover"), xline = hov.querySelector(".rc-x"), dots = [...hov.querySelectorAll(".rc-dot")];
+    const unitLbl = (KL.t && KL.t("unit")) || "";
+    const show = (i, ev) => {
+      hov.style.display = ""; const cx = x(i); xline.setAttribute("x1", cx); xline.setAttribute("x2", cx);
+      series.forEach((s, k) => { dots[k].setAttribute("cx", cx); dots[k].setAttribute("cy", y(s.data[i])); });
+      tip.innerHTML = `<div class="d">${esc(labels[i])}</div>${series.map((s) => `<div class="r"><span><i style="background:${s.color}"></i>${esc(s.key)}</span><b>${fmtNum(s.data[i])}${esc(unitLbl)}</b></div>`).join("")}`;
+      const box = el.querySelector(".rc-chart").getBoundingClientRect(); const px = ev.clientX - box.left, py = ev.clientY - box.top;
+      const tw = tip.offsetWidth || 160; tip.style.left = `${Math.min(box.width - tw - 6, Math.max(6, px + 14))}px`; tip.style.top = `${Math.max(6, py - 12)}px`; tip.classList.add("show");
+    };
+    const hide = () => { hov.style.display = "none"; tip.classList.remove("show"); };
+    svgEl.querySelectorAll(".rc-hit").forEach((r) => { r.addEventListener("mousemove", (ev) => show(parseInt(r.dataset.i, 10), ev)); r.addEventListener("mouseenter", (ev) => show(parseInt(r.dataset.i, 10), ev)); });
+    svgEl.addEventListener("mouseleave", hide);
   }
+  const fmtNum = (v) => (Math.abs(v) >= 1000 ? Math.round(v).toLocaleString() : String(Math.round(v * 10) / 10));
 
   /* opts: {mainColor, secondaryColor, gridColor, mainPct, hoverMainPct, hoverSecondaryPct, badgeTitle, badgeSub, pills:[string×6], title, description} */
   function animatedCard(el, o) {

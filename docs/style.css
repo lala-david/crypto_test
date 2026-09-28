@@ -595,3 +595,50 @@ body.case-open { overflow: hidden; }
 .rtile b { font-family: var(--mono); font-size: 20px; font-weight: 600; line-height: 1.1; } .rtile .l { font-size: 12px; color: var(--ink-2); }
 #typeTable td, #chainTable td, #typeTable th, #chainTable th { padding-left: 10px; padding-right: 10px; }
 #typeTable .avatar, #chainTable .avatar { margin-right: 8px; }
+
+/* ================= 게임 HUD 요소 (아이콘·등급·게이지·카운터) — 전체 톤은 LUMOS 유지 ================= */
+/* 육각 아이콘 프레임 */
+.avatar { border-radius: 0; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); box-shadow: none; border: 0; background: color-mix(in srgb, var(--c, var(--ink-3)) 22%, transparent); }
+.avatar.lg { width: 44px; height: 44px; } .avatar.lg svg { width: 22px; height: 22px; }
+/* 등급 칩: S 금 · A 보라 · B 파랑 · C 초록 · D 회색 (육각) */
+.tier { display: inline-grid; place-items: center; width: 20px; height: 20px; margin-right: 8px; font-family: var(--mono); font-size: 11px; font-weight: 700; line-height: 1; color: #fff; vertical-align: middle;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); background: #4b5d6b; }
+.tier.t-S { background: linear-gradient(160deg, #ffd166, #ff8c00); color: #2b1600; animation: tierPulse 2.4s ease-in-out infinite; }
+.tier.t-A { background: linear-gradient(160deg, #c48bff, #7a2cff); }
+.tier.t-B { background: linear-gradient(160deg, #4dc3ff, #1a6fd6); }
+.tier.t-C { background: linear-gradient(160deg, #4fe3b0, #149a6d); }
+.tier.t-D { background: #3c4c58; color: #c9d6de; }
+@keyframes tierPulse { 0%, 100% { filter: drop-shadow(0 0 2px rgba(255,179,0,.4)); } 50% { filter: drop-shadow(0 0 6px rgba(255,179,0,.9)); } }
+.tbl tbody tr.row-S td:first-child { box-shadow: inset 3px 0 0 #ffb300; }
+.tbl tbody tr.row-A td:first-child { box-shadow: inset 3px 0 0 #a560ff; }
+/* 상단 자원 카운터 (사건·피해액·주소) */
+.resbar { display: inline-flex; gap: 14px; align-items: center; margin-right: 10px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card-2); }
+.res { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; } .res b { font-family: var(--mono); font-weight: 600; color: var(--ink); min-width: 30px; text-align: right; }
+.res svg { flex-shrink: 0; } .r-crystal { color: #35d3ff; } .r-gas { color: #27e3a1; } .r-supply { color: #ffb300; }
+.r-gas b { color: #ffb300; }
+/* 위협 게이지 (Report 카드 헤더) */
+.rc-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-right: 32px; }
+.threat { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--ink-2); }
+.threat .segs { display: inline-flex; gap: 3px; } .threat .segs i { width: 18px; height: 10px; background: rgba(140,97,255,.12); border: 1px solid rgba(140,97,255,.3); clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%); }
+.threat .segs i.on { background: var(--accent); box-shadow: 0 0 8px rgba(140,97,255,.7); }
+.threat.lv4 .segs i.on { background: #ffb300; box-shadow: 0 0 8px rgba(255,179,0,.8); }
+.threat.lv5 .segs i.on { background: #ff4d4d; box-shadow: 0 0 10px rgba(255,77,77,.9); animation: tierPulse 1.2s ease-in-out infinite; }
+.threat .tn { font-weight: 700; color: var(--ink); } .threat.lv4 .tn { color: #ffb300; } .threat.lv5 .tn { color: #ff4d4d; }
+.rc .threat { color: #9ca3af; } .rc .threat .tn { color: #fff; } :root[data-theme="light"] .rc .threat .tn { color: #000; }
+/* 막대 성장 */
+.tbl .bar > i, .dl-bar > i, .hb .bar { transform-origin: left; animation: growX .8s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes growX { from { transform: scaleX(0); } }
+.plot .bar { transform-origin: bottom; animation: growY .7s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes growY { from { transform: scaleY(0); } }
+/* Report 차트 호버 */
+.rc-chart { position: relative; }
+.rc-svg .rc-hit { fill: transparent; } .rc-svg .rc-x { stroke: rgba(255,255,255,.35); stroke-dasharray: 3 3; } :root[data-theme="light"] .rc-svg .rc-x { stroke: rgba(0,0,0,.3); }
+.rc-svg .rc-dot { stroke: #000; stroke-width: 2; } :root[data-theme="light"] .rc-svg .rc-dot { stroke: #fff; }
+.rc-tip { position: absolute; z-index: 5; pointer-events: none; min-width: 150px; padding: 8px 10px; border-radius: 8px; background: rgba(15,15,17,.96); border: 1px solid #2a2a2d; color: #edeef0; font-size: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.45); opacity: 0; transition: opacity .1s; }
+.rc-tip.show { opacity: 1; }
+.rc-tip .d { font-family: var(--mono); font-size: 11px; color: #a5b1b7; margin-bottom: 4px; }
+.rc-tip .r { display: flex; justify-content: space-between; gap: 14px; align-items: center; padding: 2px 0; } .rc-tip .r i { display: inline-block; width: 10px; height: 10px; margin-right: 7px; vertical-align: -1px; }
+.rc-tip .r b { font-family: var(--mono); font-weight: 600; }
+:root[data-theme="light"] .rc-tip { background: rgba(255,255,255,.97); color: #0f0f11; border-color: #e2e6ed; } :root[data-theme="light"] .rc-tip .d { color: #4b5563; }
+@media (prefers-reduced-motion: reduce) { .tier.t-S, .threat.lv5 .segs i.on, .tbl .bar > i, .dl-bar > i, .hb .bar, .plot .bar { animation: none; } }
+@media (max-width: 900px) { .resbar { display: none; } }

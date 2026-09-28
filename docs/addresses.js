@@ -17,8 +17,9 @@
     const tiles = $("#roleTiles");
     if (tiles && list) {
       const total = Object.values(list.roles || {}).reduce((a, b) => a + b, 0);
-      tiles.innerHTML = [["", total], ...ROLES.filter(Boolean).map((r) => [r, list.roles[r] || 0])].map(([r, n]) => `<button class="rtile ${r || "all"} ${S.role === r ? "on" : ""}" data-role="${r}" type="button"><span class="ic">${r ? KL.roleIcon(r) : KL.roleIcon("unknown").replace("unknown", "")}</span><b>${fmtInt(n)}</b><span class="l">${esc(r ? roleName(r) : t("role_all"))}</span></button>`).join("");
+      tiles.innerHTML = [["", total], ...ROLES.filter(Boolean).map((r) => [r, list.roles[r] || 0])].map(([r, n]) => `<button class="rtile ${r || "all"} ${S.role === r ? "on" : ""}" data-role="${r}" type="button"><span class="ic">${r ? KL.roleIcon(r) : KL.roleIcon("unknown").replace("unknown", "")}</span><b data-countup="${n}">0</b><span class="l">${esc(r ? roleName(r) : t("role_all"))}</span></button>`).join("");
       $$("button", tiles).forEach((b) => b.addEventListener("click", () => { S.role = b.dataset.role; S.page = 1; loadList(); }));
+      KL.countUpAll(tiles);
     }
     if (list) fillSelect($("#chainSel"), Object.keys(list.chains).map((v) => ({ value: v, label: `${v} (${list.chains[v]})` })), t("all_chains"), S.chain);
     if (list) { const km = KL.state.lang === "ko" ? { eoa: "EOA", contract: "CA", wallet: "지갑", unchecked: "미검증", txhash: "TX", invalid: "무효", unfunded: "미사용", unknown: "미확인" } : { eoa: "EOA", contract: "CA", wallet: "wallet", unchecked: "unchecked", txhash: "tx", invalid: "invalid", unfunded: "unfunded", unknown: "unknown" };

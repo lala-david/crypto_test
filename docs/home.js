@@ -22,7 +22,7 @@
   const TYPE_SHADES = ["#5B14C5", "#B58BF3", "#DAC5F9"];  // area-chart-1 원본 팔레트(DLP · SysLog · Threat Intel)
   function bucketize(rows, from, to) {
     const d0 = new Date(from + "T00:00:00"), d1 = new Date(to + "T00:00:00"); const days = Math.max(1, Math.round((d1 - d0) / 86400000) + 1);
-    const step = days <= 14 ? 1 : days <= 100 ? 7 : 30; const nb = Math.ceil(days / step);
+    const step = days <= 21 ? 1 : days <= 70 ? 3 : days <= 200 ? 7 : 30; const nb = Math.ceil(days / step);
     const labels = []; for (let k = 0; k < nb; k++) { const d = new Date(d0.getTime() + k * step * 86400000); labels.push(fmtMD(d.toISOString().slice(0, 10))); }
     const idx = (r) => Math.min(nb - 1, Math.max(0, Math.floor((new Date((r.event_date || r.day) + "T00:00:00") - d0) / 86400000 / step)));
     return { labels, idx };
@@ -31,9 +31,12 @@
     // (1) Incident Report: 상위 3개 유형의 기간별 신규 건수(스무스 그룹 영역) + 지표 3행(이전 같은 길이 기간 대비 추세)
     const byType = {}; flowRows.forEach((r) => { byType[r.type] = (byType[r.type] || 0) + 1; });
     const top3 = Object.entries(byType).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k]) => k);
-    const { labels, idx } = bucketize(flowRows, st.range.from, st.range.to);
+    // x 범위: 선택 기간이 아니라 실제 첫 사건일부터 (앞쪽 빈 구간 제거) — 버킷 폭은 남은 일수에 맞춰 1/7/30일
+    const firstDay = flowRows.map((r) => r.event_date || r.day).filter(Boolean).sort()[0];
+    const from = firstDay && firstDay > st.range.from ? firstDay : st.range.from;
+    const { labels, idx } = bucketize(flowRows, from, st.range.to);
     const series = top3.map((tp, k) => { const data = new Array(labels.length).fill(0); flowRows.forEach((r) => { if (r.type === tp) data[idx(r)] += 1; }); return { key: typeName(tp), color: TYPE_SHADES[k], data }; });
-    KL.reportCard($("#reportCard"), { title: "Incident Report", series, labels, metrics: [], wide: true });
+    KL.reportCard($("#reportCard"), { title: "Incident Report", series, labels, metrics: [], wide: true, hud: KL.threatBar(st.loss_amount) });
     // (2) AnimatedCard × 3: 도넛 = 1위 비중(호버: 1+2위 누적), 알약 = 상위 6 항목
     const mk = (id, list, name, opts) => {
       const total = list.reduce((a, r) => a + r.v, 0) || 1; const sorted = list.slice().sort((a, b) => b.v - a.v);

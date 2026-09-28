@@ -59,7 +59,7 @@
     const more = [["method", t("method")], ["background", t("background")], ["fund_flow", t("flow")]].filter(([k]) => txt(inc, k === "method" ? "attack_method" : k));
     return `<div class="case" data-uid="${esc(inc.uid)}">
       <div class="case-h">
-        <div class="case-id">${avatar(inc, "lg")}<div class="min0"><div class="case-name">${esc(inc.project)}</div><div class="case-sub">${badge(typeName(inc.type), TYPE_COLOR[inc.type] || "var(--t-other)")}${chainPills(inc.chains, 3)}${inc.followup_of ? `<span class="tag">${esc(t("follow"))}</span>` : ""}</div></div></div>
+        <div class="case-id">${avatar(inc, "lg")}<div class="min0"><div class="case-name">${esc(inc.project)}</div><div class="case-sub">${KL.tierChip(inc.amount_usd)}${badge(typeName(inc.type), TYPE_COLOR[inc.type] || "var(--t-other)")}${chainPills(inc.chains, 3)}${inc.followup_of ? `<span class="tag">${esc(t("follow"))}</span>` : ""}</div></div></div>
         <div class="case-actions">${opts.standalone ? "" : `<a class="btn" href="incident.html?id=${esc(inc.uid)}" title="${esc(t("open_page"))}">${esc(t("open_page"))}</a>`}<button class="btn primary" data-share type="button">${esc(t("share"))}</button>${opts.standalone ? "" : `<button class="case-close" data-close type="button" aria-label="close">×</button>`}</div>
       </div>
       <div class="case-amt">
