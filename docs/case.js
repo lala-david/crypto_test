@@ -13,7 +13,7 @@
 
   function timeline(inc) {
     const rel = inc.related || [];
-    const follow = rel.filter((o) => o.followup_of && o.followup_of.uid === inc.uid).sort((a, b) => (a.day > b.day ? 1 : -1));
+    const follow = (inc.followups || []).slice().sort((a, b) => (a.day > b.day ? 1 : -1));
     const blSrc = [...new Set(Object.values(inc.blacklist_detail || {}).flatMap((b) => b.sources || []))];
     const checked = inc.addresses.map((a) => a.checked_at || "").filter(Boolean).sort().pop();
     const eoa = inc.addresses.filter((a) => a.kind === "eoa" || a.kind === "wallet").length, ca = inc.addresses.filter((a) => a.kind === "contract").length;
@@ -21,7 +21,7 @@
     const items = [
       { on: !!inc.incident_date, k: t("ev_occurred"), v: inc.incident_date ? fmtDate(inc.incident_date) : t("not_yet") },
       { on: true, k: t("ev_reported"), v: `${fmtDate(first)} · ${srcLabel(inc.source)}` },
-      { on: follow.length > 0, k: t("ev_followup"), v: follow.length ? follow.map((o) => `<a href="incident.html?id=${esc(o.uid)}">${esc(fmtDate(o.day))}</a>`).join(" · ") : t("none") },
+      { on: follow.length > 0, k: t("ev_followup"), v: follow.length ? follow.map((f) => `<a href="${esc(f.url || "#")}" target="_blank" rel="noopener" title="${esc(f.title || "")}">${esc(fmtDate(f.day))} · ${esc(srcLabel(f.source))}</a>`).join("<br>") : t("none") },
       { on: inc.blacklist_hits > 0, k: t("ev_blacklist"), v: inc.blacklist_hits ? `${fmtInt(inc.blacklist_hits)}${t("unit_addr")} · ${esc(blSrc.slice(0, 3).join(", "))}` : t("none") },
       { on: !!checked, k: t("ev_verified"), v: checked ? `${fmtDate(checked)} · EOA ${eoa} · CA ${ca}` : t("not_yet") },
     ];

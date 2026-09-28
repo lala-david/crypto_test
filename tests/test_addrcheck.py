@@ -92,3 +92,21 @@ def test_merge_explorer_rules():
     assert r["name"] == "GnosisSafeProxy" and r["verified"]
     r = merge_explorer({"kind": "contract", "ctype": "contract"}, None, "PancakeRouter")
     assert r["name"] == "PancakeRouter" and r["explorer"]["src"] == "sourcify"
+
+
+def test_collapse_followups_folds_into_original():
+    from collector.service import collapse_followups
+    o = {"uid": "a", "day": "2026-09-15", "event_date": "2026-09-14", "project": "X", "title": "X hacked", "source": "slowmist", "url": "u1", "amount_usd": 1.0,
+         "sources": [{"source": "slowmist", "url": "u1"}], "addresses": [{"address": "0xAA", "role": "victim"}], "tx_hashes": ["0x1"], "blacklist_detail": {}, "blacklist_hits": 0, "followup_of": None}
+    f = {"uid": "b", "day": "2026-09-17", "event_date": "2026-09-14", "project": "X", "title": "X follow", "source": "rekt", "url": "u2", "amount_usd": 2.0,
+         "sources": [{"source": "rekt", "url": "u2"}, {"source": "slowmist", "url": "u1"}], "addresses": [{"address": "0xaa", "role": "attacker"}, {"address": "0xBB", "role": "unknown"}],
+         "tx_hashes": ["0x1", "0x2"], "blacklist_detail": {"0xBB": {"sources": ["x"]}}, "blacklist_hits": 1, "followup_of": {"uid": "a"}}
+    orphan = {"uid": "c", "day": "2026-09-18", "event_date": None, "project": "Y", "title": "Y", "source": "doj", "url": "u3", "amount_usd": None,
+              "sources": [], "addresses": [], "tx_hashes": [], "blacklist_detail": {}, "blacklist_hits": 0, "followup_of": {"uid": "zzz"}}
+    out = collapse_followups([f, o, orphan])
+    assert [r["uid"] for r in out] == ["a", "c"]
+    a = out[0]
+    assert a["followup_count"] == 1 and a["followups"][0]["uid"] == "b" and a["last_day"] == "2026-09-17"
+    assert [x["source"] for x in a["sources"]] == ["slowmist", "rekt"]            # URL 기준 중복 제거
+    assert len(a["addresses"]) == 2 and a["addresses"][0]["role"] == "attacker"   # 역할 우선순위 승격
+    assert a["tx_hashes"] == ["0x1", "0x2"] and a["blacklist_hits"] == 1

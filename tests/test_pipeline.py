@@ -260,3 +260,21 @@ def test_notifiers_format_and_dedupe_per_channel(tmp_path):
     tg.send = lambda text: True
     assert tg.alert_incidents(st, [inc], "2026-09-15") == 1                    # 다른 채널은 별도 기록
     assert tm.alert_briefing(st, "2026-09-15", b, [inc]) and not tm.alert_briefing(st, "2026-09-15", b, [inc])
+
+
+def test_consensus_amount_prefers_majority_then_latest():
+    from collector.merge import consensus_amount
+    from collector.models import Incident
+    def inc(uid, src, amt, pub, text=""):
+        return Incident(uid=uid, source=src, source_id=uid, url="u" + uid, title="Bitget", published_at=pub, collected_at=pub, project="Bitget",
+                        incident_type="hack_exploit", amount_usd=amt, amount_text=text)
+    members = [inc("1", "defillama", 387_000_000, "2026-09-24"), inc("2", "slowmist", 387_500_000, "2026-09-24", "$387,500,000"),
+               inc("3", "rss:cointelegraph_hacks", 352_000_000, "2026-09-24", "$352M"), inc("4", "trm", 351_600_000, "2026-09-25", "$351.6 million"),
+               inc("5", "rss:cointelegraph_hacks", 388_000_000, "2026-09-25", "$388M"), inc("6", "rss:tokenpost", 387_500_000, "2026-09-27", "$387.5 million")]
+    amt, text = consensus_amount(members)
+    assert amt == 387_500_000 and text == "$387.5 million"
+    assert consensus_amount(members[:1]) is None                       # 1개면 기존 규칙
+    tie = [inc("a", "slowmist", 100, "2026-09-02", "$100"), inc("b", "defillama", 200, "2026-09-03", "$200")]
+    assert consensus_amount(tie)[0] == 100                             # 동수 → 출처 우선순위(slowmist > defillama)
+    tie2 = [inc("a", "rss:x", 100, "2026-09-01", "$100"), inc("b", "rss:y", 200, "2026-09-02", "$200")]
+    assert consensus_amount(tie2)[0] == 200                            # 우선순위도 같으면 늦은 보도

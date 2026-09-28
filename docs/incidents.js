@@ -15,7 +15,7 @@
     fillSelect($("#typeSel"), Object.keys(facets.types).map((v) => ({ value: v, label: `${typeName(v)} (${facets.types[v]})` })), t("all_types"), S.type);
     fillSelect($("#chainSel"), Object.keys(facets.chains).map((v) => ({ value: v, label: `${v} (${facets.chains[v]})` })), t("all_chains"), S.chain);
     $("#sortSel").innerHTML = [["date", t("sort_date")], ["day", t("sort_day")], ["amount", t("sort_amount")]].map(([v, l]) => `<option value="${v}"${S.sort === v ? " selected" : ""}>${esc(t("sort"))}: ${esc(l)}</option>`).join("");
-    $("#sub").innerHTML = `<span class="m">${esc(t("page_total").replace("{n}", fmtInt(res.total)))}</span><span class="m">${esc(t("new_label"))} ${fmtInt(res.new_total)}</span><span class="m" title="${moneyFull(res.amount_total)}">${esc(t("total_amount").replace("{v}", money(res.amount_total)))}</span>`;
+    $("#sub").innerHTML = `<span class="m">${esc(t("page_total").replace("{n}", fmtInt(res.total)))}</span>${res.followup_total ? `<span class="m">${esc(t("follow_n").replace("{n}", fmtInt(res.followup_total)))}</span>` : ""}<span class="m" title="${moneyFull(res.amount_total)}">${esc(t("total_amount").replace("{v}", money(res.amount_total)))}</span>`;
     const tb = $("#incTable");
     tb.innerHTML = TABLE_HEAD() + `<tbody>${res.items.length ? res.items.map((i) => incidentRow(i)).join("") : `<tr><td colspan="5" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
     bindRows(tb);

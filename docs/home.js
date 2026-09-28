@@ -30,7 +30,7 @@
     // 최근 사건: 사건 · 금액($) · 체인 · 사건일
     const tb = $("#recentTable");
     tb.innerHTML = `<thead><tr><th>${esc(t("th_incident"))}</th><th class="num">${esc(t("th_amount"))}</th><th>${esc(t("th_chain"))}</th><th>${esc(t("th_date"))}</th></tr></thead><tbody>${
-      D.recent.map((i) => `<tr class="link" data-href="${detailUrl(i)}"><td class="nowrap">${KL.avatar ? KL.avatar(i) : sw(i.type)}<a class="name" href="${detailUrl(i)}">${esc(i.project)}</a>${i.followup_of ? ` <span class="tag">${esc(t("follow"))}</span>` : ""}</td><td class="num">${amountCell(i)}</td><td>${chainPills(i.chains, 2) || '<span class="faint">–</span>'}</td><td class="date">${esc(fmtDate(i.event_date || i.incident_date || i.day))}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
+      D.recent.map((i) => `<tr class="link" data-href="${detailUrl(i)}"><td class="nowrap">${KL.avatar ? KL.avatar(i) : sw(i.type)}<a class="name" href="${detailUrl(i)}">${esc(i.project)}</a>${(i.followups || []).length ? ` <span class="tag">${esc(t("follow_n").replace("{n}", i.followups.length))}</span>` : ""}</td><td class="num">${amountCell(i)}</td><td>${chainPills(i.chains, 2) || '<span class="faint">–</span>'}</td><td class="date">${esc(fmtDate(i.event_date || i.incident_date || i.day))}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
     bindRows(tb);
     // 최근 수집 주소: 주소 · 체인 · 역할 · 사건 (제재·공격자·세탁 우선)
     const pri = { sanctioned: 0, attacker: 1, laundering: 2, victim: 3, unknown: 4 };

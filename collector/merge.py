@@ -204,6 +204,30 @@ def _rank(i: Incident) -> tuple:
     return (1 if i.enriched else 0, -pri, len(i.addresses), len(i.summary_ko) + len(i.summary_en))
 
 
+def consensus_amount(members: List[Incident], tol: float = 0.05) -> Optional[tuple]:
+    """금액이 있는 카드가 2개 이상이면 ±tol 로 묶어 (가장 많은 출처 수, 가장 늦은 게시일) 순으로 고른다. 1개 이하면 None(기존 규칙)."""
+    have = [m for m in members if m.amount_usd]
+    if len(have) < 2:
+        return None
+    clusters: List[List[Incident]] = []
+    for m in sorted(have, key=lambda x: x.amount_usd):
+        for c in clusters:
+            center = sum(x.amount_usd for x in c) / len(c)
+            if abs(m.amount_usd - center) / center <= tol:
+                c.append(m)
+                break
+        else:
+            clusters.append([m])
+    def prio(x: Incident) -> int:  # 출처 우선순위(높을수록 신뢰): rekt·chainalysis·trm·… > rss
+        return -(SOURCE_PRIORITY.index(x.source) if x.source in SOURCE_PRIORITY else len(SOURCE_PRIORITY) + (0 if x.source.startswith("rss:") else 1) + 1)
+    def latest(c):
+        return max((x.published_at or "") for x in c)
+    # 다수 → 동수면 출처 우선순위(정확한 사후 분석 소스) → 그래도 같으면 늦은 보도(정정치)
+    best = max(clusters, key=lambda c: (len(c), max(prio(x) for x in c), latest(c)))
+    pick = max(best, key=lambda x: (x.published_at or "", 1 if x.amount_text else 0))
+    return pick.amount_usd, pick.amount_text or ""
+
+
 def merge_group(members: List[Incident]) -> Incident:
     members = sorted(members, key=_rank, reverse=True)
     rep = replace(members[0])
@@ -221,7 +245,12 @@ def merge_group(members: List[Incident]) -> Incident:
             if a and a.lower() not in {x.lower() for x in actors}:
                 actors.append(a)
     rep.actors = actors
-    if rep.amount_usd is None:
+    # 금액은 대표 카드 하나가 아니라 출처 합의로 정한다: ±5% 로 묶은 값 중 가장 많은 출처가 말한 값, 동수면 더 늦게 보도된 값(정정 반영).
+    # 예: Bitget — 초기 보도 $352M(2건) 이 뒤에 $387.5M(5건)로 정정됨 → $387.5M
+    cons = consensus_amount(members)
+    if cons is not None:
+        rep.amount_usd, rep.amount_text = cons
+    elif rep.amount_usd is None:
         amts = [m.amount_usd for m in members if m.amount_usd is not None]
         rep.amount_usd = max(amts) if amts else None
         rep.amount_text = rep.amount_text or next((m.amount_text for m in members if m.amount_text), "")

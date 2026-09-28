@@ -85,7 +85,7 @@ async def incidents(req: Request):
     if _int(req, "light", 1):
         items = [{k: v for k, v in r.items() if k not in LIGHT_DROP} for r in items]
     base = [r for r in rows if not r["followup_of"]]
-    return J({"total": len(rows), "new_total": len(base), "amount_total": sum(r["amount_usd"] or 0 for r in base),
+    return J({"total": len(rows), "new_total": len(base), "followup_total": sum(len(r.get("followups") or []) for r in rows), "amount_total": sum(r["amount_usd"] or 0 for r in base),
               "page": page, "size": size, "items": items, "facets": svc.facets(rows)})
 
 
@@ -94,6 +94,9 @@ async def incident(req: Request):
     r = svc.by_uid.get(req.path_params["uid"])
     if not r:
         raise HTTPException(404, "incident not found")
+    o = svc.by_uid.get((r.get("followup_of") or {}).get("uid")) if r.get("followup_of") else None
+    if o is not None and o.get("followups"):
+        r = o  # 후속 보도 카드는 원 사건(후속 접힘)으로 보여준다
     return J({**r, "related": svc.related(r)})
 
 
@@ -110,7 +113,7 @@ async def briefing(req: Request):
     b = next((x for x in svc.briefings if x["day"] == day), None)
     if not b:
         raise HTTPException(404, "briefing not found")
-    rows = [{k: v for k, v in r.items() if k not in LIGHT_DROP} for r in svc.incidents if r["day"] == day]
+    rows = [{k: v for k, v in r.items() if k not in LIGHT_DROP} for r in svc.rows_all if r["day"] == day]
     return J({**b, "incidents": rows})
 
 

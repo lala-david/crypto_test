@@ -24,7 +24,7 @@ from typing import Dict, List, Optional, Tuple
 from .addrcheck import AddrChecker, kind_text
 from .crimial import CrimialHunter
 from .dedupe import LLMJudge
-from .merge import mark_followups, merge_incidents, normalize_name
+from .merge import consensus_amount, mark_followups, merge_incidents, normalize_name
 from .models import INCIDENT_TYPE_KO, Address, Incident
 from .store import Store
 
@@ -112,6 +112,48 @@ def inc_json(i: Incident, day: str) -> dict:
     }
 
 
+def collapse_followups(rows: List[dict]) -> List[dict]:
+    """후속 보도(followup_of) 행을 원 사건 행에 접는다 → 사건당 한 행. 원 사건에는 followups[] · 출처·주소·tx·블랙리스트 병합 · last_day 가 붙는다.
+    원 사건이 목록에 없는 후속 행은 그대로 남긴다(그 사건의 유일한 표현)."""
+    by_uid = {r["uid"]: r for r in rows}
+    for r in rows:
+        r.setdefault("followups", [])
+        r.setdefault("last_day", r["day"])
+    out: List[dict] = []
+    for r in rows:
+        f = r.get("followup_of") or {}
+        o = by_uid.get(f.get("uid")) if f else None
+        if o is None or o is r:
+            out.append(r)
+            continue
+        o["followups"].append({"uid": r["uid"], "day": r["day"], "event_date": r.get("event_date"), "source": r["source"], "url": r["url"],
+                               "title": r["title"], "amount_usd": r["amount_usd"], "sources": [x["source"] for x in r["sources"] if x.get("source")]})
+        seen_urls = {(x.get("url") or "").split("?")[0].rstrip("/") for x in o["sources"]}
+        for x in r["sources"]:
+            u = (x.get("url") or "").split("?")[0].rstrip("/")
+            if u not in seen_urls:
+                seen_urls.add(u); o["sources"].append(x)
+        have = {a["address"].lower(): a for a in o["addresses"]}
+        for a in r["addresses"]:
+            k = a["address"].lower()
+            if k not in have:
+                o["addresses"].append(a); have[k] = a
+            elif ROLE_PRIORITY.get(a["role"], 9) < ROLE_PRIORITY.get(have[k]["role"], 9):
+                have[k]["role"] = a["role"]
+        for h in r.get("tx_hashes") or []:
+            if h not in o["tx_hashes"]:
+                o["tx_hashes"].append(h)
+        det = dict(o.get("blacklist_detail") or {}); det.update(r.get("blacklist_detail") or {})
+        o["blacklist_detail"] = det
+        o["blacklist_hits"] = max(int(o.get("blacklist_hits") or 0), len(det))
+        if r["day"] > o["last_day"]:
+            o["last_day"] = r["day"]
+    for r in out:
+        r["followups"].sort(key=lambda x: x["day"])
+        r["followup_count"] = len(r["followups"])
+    return out
+
+
 class DataService:
     def __init__(self, root: str, cfg: dict):
         self.root = root
@@ -121,7 +163,8 @@ class DataService:
         self.crimial = CrimialHunter(cfg.get("crimial_hunter") or {}, root)
         self._lock = threading.Lock()
         self._sig = None
-        self.incidents: List[dict] = []      # 병합 사건(전체), 최신 먼저
+        self.incidents: List[dict] = []      # 병합 사건(후속은 원 사건에 접힘), 최신 먼저
+        self.rows_all: List[dict] = []       # 후속 행 포함
         self.by_uid: Dict[str, dict] = {}
         self.briefings: List[dict] = []
         self.meta: dict = {}
@@ -166,22 +209,35 @@ class DataService:
                 "SELECT DISTINCT substr(collected_at,1,10) d FROM incidents WHERE relevant=1 ORDER BY d")]
             history: List[Incident] = []
             per_day: Dict[str, List[Incident]] = {}
+            raw_by_uid: Dict[str, Incident] = {}
             for d in days:
-                merged = [i for i in merge_incidents(self.store.incidents_collected_on(d), judge) if i.relevant]
+                raw = self.store.incidents_collected_on(d)
+                raw_by_uid.update({i.uid: i for i in raw})
+                merged = [i for i in merge_incidents(raw, judge) if i.relevant]
                 mark_followups(merged, history, judge)
                 for i in merged:
                     i.blacklist_hits = self.crimial.hits(i.addresses)
                 per_day[d] = merged
                 history = history + merged
-            # 후속 보도의 금액 상향 → 원 사건 갱신
+            # 원 사건 + 후속 보도의 금액을 출처 합의로 정한다(±5% 묶음 → 다수 → 동수면 늦은 보도). 단일 후속이 더 큰 금액을 내면 그 값이 되고,
+            # 후속 2건이 원래 금액을 재확인하면 원래 값이 유지된다. 바뀌면 amount_revised_from 에 이전 값을 남긴다.
             originals: Dict[str, Incident] = {i.uid: i for lst in per_day.values() for i in lst}
+            follows: Dict[str, List[Incident]] = defaultdict(list)
             for lst in per_day.values():
                 for i in lst:
-                    if i.followup_of and i.amount_usd:
-                        o = originals.get((i.followup_of or {}).get("uid"))
-                        if o is not None and (o.amount_usd or 0) < i.amount_usd:
-                            o._amount_revised_from = o.amount_usd  # type: ignore[attr-defined]
-                            o.amount_usd = i.amount_usd
+                    if i.followup_of and (i.followup_of or {}).get("uid") in originals:
+                        follows[i.followup_of["uid"]].append(i)
+            def raw_members(i: Incident) -> List[Incident]:
+                # 병합 카드는 출처 수만큼 표를 가진다: 대표 uid + merged_from uid 의 원본 카드(금액 있는 것만)
+                ids = [i.uid] + [m.get("uid") for m in (i.merged_from or []) if m.get("uid")]
+                out = [raw_by_uid[u] for u in ids if u in raw_by_uid and raw_by_uid[u].amount_usd]
+                return out or ([i] if i.amount_usd else [])
+            for uid, fl in follows.items():
+                o = originals[uid]
+                cons = consensus_amount(raw_members(o) + [x for f in fl for x in raw_members(f)])
+                if cons and cons[0] and cons[0] != o.amount_usd:
+                    o._amount_revised_from = o.amount_usd  # type: ignore[attr-defined]
+                    o.amount_usd, o.amount_text = cons[0], (cons[1] or o.amount_text)
             merged_all: List[dict] = []
             for d in days:
                 merged_all += [inc_json(i, d) for i in per_day[d]]
@@ -200,12 +256,14 @@ class DataService:
             briefings.sort(key=lambda b: b["day"], reverse=True)
             run = self.store.conn.execute("SELECT run_at, collected, new_items FROM runs ORDER BY run_at DESC LIMIT 1").fetchone()
             src_runs = [dict(r) for r in self.store.conn.execute("SELECT name, last_run_at, last_count FROM source_runs ORDER BY last_run_at DESC")]
-            self.incidents, self.by_uid, self.briefings = merged_all, {r["uid"]: r for r in merged_all}, briefings
+            collapsed = collapse_followups(merged_all)
+            self.rows_all = merged_all                      # 후속 행 포함(브리핑 '당일 사건' 표)
+            self.incidents, self.by_uid, self.briefings = collapsed, {r["uid"]: r for r in merged_all}, briefings
             self.meta = {
                 "generated_at": (run[0] if run else sig[1]) or "", "days": len(days), "first_day": days[0] if days else None,
-                "last_day": days[-1] if days else None, "incidents_total": len(merged_all),
+                "last_day": days[-1] if days else None, "incidents_total": len(collapsed),
                 "first_event_day": min((r["event_date"] for r in merged_all if r.get("event_date")), default=None),
-                "new_total": sum(1 for r in merged_all if not r["followup_of"]),
+                "new_total": sum(1 for r in merged_all if not r["followup_of"]), "followups_total": sum(len(r.get("followups") or []) for r in collapsed),
                 "addresses_total": len({a["address"].lower() for r in merged_all for a in r["addresses"]}),
                 "sdn_addresses": self.store.sdn_count(),
                 "sources": sorted({s["source"] for r in merged_all for s in r["sources"] if s.get("source")}),
@@ -318,7 +376,7 @@ class DataService:
         collected_days = sum(1 for v in daily.values() if v["count"])
         return {
             "range": {"from": lo, "to": hi, "calendar_days": len(daily), "collected_days": collected_days, "basis": basis},
-            "total_count": len(rows), "new_count": len(base), "followup_count": len(rows) - len(base),
+            "total_count": len(rows), "new_count": len(base), "followup_count": (len(rows) - len(base)) + sum(len(r.get("followups") or []) for r in base),
             "known_amount_count": len(known), "unknown_amount_count": len(base) - len(known),
             "total_amount": loss + legal_amt, "loss_amount": loss, "legal_amount": legal_amt,
             "legal_count": sum(1 for r in base if r["type"] in LEGAL),
@@ -337,6 +395,8 @@ class DataService:
         out = []
         for o in self.incidents:
             if o["uid"] == r["uid"]:
+                continue
+            if any(f["uid"] == o["uid"] for f in r.get("followups") or []):
                 continue
             ok = (o.get("followup_of") or {}).get("uid") == r["uid"] or (r.get("followup_of") or {}).get("uid") == o["uid"]
             if not ok and key and len(key) >= 3:
