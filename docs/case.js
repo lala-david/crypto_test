@@ -6,7 +6,7 @@
   const PAGE = 6;
   const pageState = new Map(); // uid → { page, detail }
 
-  const avatar = (i) => `<span class="avatar" style="--c:${TYPE_COLOR[i.type] || "var(--t-other)"}">${esc((i.project || i.title || "?").trim().charAt(0).toUpperCase())}</span>`;
+  const avatar = (i, size = "") => (KL.avatar ? KL.avatar(i, size) : `<span class="avatar ${size}" style="--c:${TYPE_COLOR[i.type] || "var(--t-other)"}">${esc((i.project || i.title || "?").trim().charAt(0).toUpperCase())}</span>`);
   const badge = (label, color) => `<span class="badge"${color ? ` style="--c:${color}"` : ""}><span class="dot"></span>${esc(label)}</span>`;
   const shortText = (s, n) => { s = (s || "").trim(); if (!s) return ""; const cut = s.split(/(?<=[.。!?])\s|,|;|\(/)[0].trim(); return (cut.length > n ? cut.slice(0, n - 1) + "…" : cut); };
   const d10 = (s) => (s || "").slice(0, 10);
@@ -37,7 +37,7 @@
     const body = slice.map((r) => {
       if (r.kind === "tx") { const url = txExplorer(primary, r.h); return `<tr><td class="addr" title="tx"><span class="mono">${esc(r.h)}</span><button class="icopy" data-copy="${esc(r.h)}" type="button" title="${esc(t("copy"))}">⧉</button></td><td><span class="kind other">TX</span></td><td class="faint">–</td><td class="num">${url ? `<a class="go" href="${url}" target="_blank" rel="noopener">↗</a>` : ""}</td></tr>`; }
       const a = r.a; const url = explorer(a.chain, a.address); const bl = inc.blacklist_detail && inc.blacklist_detail[a.address]; const k = kindName(a);
-      return `<tr><td class="addr" title="${esc(stripAddr(a.note))}"><span class="mono">${esc(a.address)}</span><button class="icopy" data-copy="${esc(a.address)}" type="button" title="${esc(t("copy"))}">⧉</button>${bl ? `<span class="tag warn" title="${esc((bl.sources || []).join(", "))}">BL</span>` : ""}${a.label ? `<div class="faint small ell">${esc(a.label)}</div>` : ""}</td><td class="nowrap">${k ? `<span class="kind ${a.kind === "contract" ? "ca" : "eoa"}">${esc(k)}</span>` : '<span class="faint">–</span>'}</td><td class="nowrap"><span class="role ${esc(a.role)}">${esc(roleName(a.role))}</span></td><td class="num">${url ? `<a class="go" href="${url}" target="_blank" rel="noopener" title="${esc(a.chain)}">↗</a>` : `<span class="faint">${esc(a.chain)}</span>`}</td></tr>`;
+      return `<tr><td class="addr" title="${esc(stripAddr(a.note))}"><span class="mono">${esc(a.address)}</span><button class="icopy" data-copy="${esc(a.address)}" type="button" title="${esc(t("copy"))}">⧉</button>${bl ? `<span class="tag warn" title="${esc((bl.sources || []).join(", "))}">BL</span>` : ""}${a.label ? `<div class="faint small ell">${esc(a.label)}</div>` : ""}</td><td class="nowrap">${k ? `<span class="kind ${a.kind === "contract" ? "ca" : "eoa"}">${esc(k)}</span>` : '<span class="faint">–</span>'}</td><td class="nowrap">${KL.roleBadge(a.role)}</td><td class="num">${url ? `<a class="go" href="${url}" target="_blank" rel="noopener" title="${esc(a.chain)}">↗</a>` : `<span class="faint">${esc(a.chain)}</span>`}</td></tr>`;
     }).join("");
     const pager = total > PAGE ? `<div class="pager"><span>${(page - 1) * PAGE + 1}–${Math.min(total, page * PAGE)} / ${total}</span><button data-cpage="${page - 1}" type="button" ${page <= 1 ? "disabled" : ""}>‹</button><span>${page}/${pages}</span><button data-cpage="${page + 1}" type="button" ${page >= pages ? "disabled" : ""}>›</button></div>` : "";
     return `<div class="table-wrap"><table class="tbl case-tbl"><thead><tr><th>${esc(t("th_addr_tx"))}</th><th>${esc(t("th_kind"))}</th><th>${esc(t("addr_role"))}</th><th class="num">${esc(t("th_link"))}</th></tr></thead><tbody>${body || `<tr><td colspan="4" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody></table></div>${pager}`;
@@ -59,7 +59,7 @@
     const more = [["method", t("method")], ["background", t("background")], ["fund_flow", t("flow")]].filter(([k]) => txt(inc, k === "method" ? "attack_method" : k));
     return `<div class="case" data-uid="${esc(inc.uid)}">
       <div class="case-h">
-        <div class="case-id">${avatar(inc)}<div class="min0"><div class="case-name">${esc(inc.project)}</div><div class="case-sub">${badge(typeName(inc.type), TYPE_COLOR[inc.type] || "var(--t-other)")}${chainPills(inc.chains, 3)}${inc.followup_of ? `<span class="tag">${esc(t("follow"))}</span>` : ""}</div></div></div>
+        <div class="case-id">${avatar(inc, "lg")}<div class="min0"><div class="case-name">${esc(inc.project)}</div><div class="case-sub">${badge(typeName(inc.type), TYPE_COLOR[inc.type] || "var(--t-other)")}${chainPills(inc.chains, 3)}${inc.followup_of ? `<span class="tag">${esc(t("follow"))}</span>` : ""}</div></div></div>
         <div class="case-actions">${opts.standalone ? "" : `<a class="btn" href="incident.html?id=${esc(inc.uid)}" title="${esc(t("open_page"))}">${esc(t("open_page"))}</a>`}<button class="btn primary" data-share type="button">${esc(t("share"))}</button>${opts.standalone ? "" : `<button class="case-close" data-close type="button" aria-label="close">×</button>`}</div>
       </div>
       <div class="case-amt">
@@ -134,5 +134,5 @@
   window.addEventListener("popstate", () => { const uid = new URLSearchParams(location.search).get("case"); if (uid) openCase(uid, false); else closeCase(); });
   const boot = new URLSearchParams(location.search).get("case"); if (boot) setTimeout(() => openCase(boot, false), 0);
 
-  Object.assign(KL, { caseView, bindCase, openCase, closeCase, avatar });
+  Object.assign(KL, { caseView, bindCase, openCase, closeCase });
 })();

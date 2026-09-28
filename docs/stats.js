@@ -1,7 +1,7 @@
 /* 통계: 기간·유형·체인 필터 → 시계열 + 유형/체인 표(신규 기준) + 일별 표 + 제재·수사 + 주소 역할 */
 (() => {
   "use strict";
-  const { $, $$, t, typeName, typeFull, roleName, esc, fmtInt, fmtPct, money, moneyFull, fmtDate, fmtMD, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, columns, hbars, fillSelect, sw, chainName, errorBox } = KL;
+  const { $, $$, t, typeName, typeFull, roleName, esc, fmtInt, fmtPct, money, moneyFull, fmtDate, fmtMD, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, columns, typeColorHex, hbars, fillSelect, sw, chainName, errorBox } = KL;
   const S = { days: "30", mode: "amount" };
   let meta = null, st = null;
 
@@ -14,19 +14,19 @@
     const byAmt = S.mode === "amount"; const cnt = (v) => String(Math.round(v));
     $("#tsTitle").textContent = byAmt ? t("daily_amount") : t("daily_count");
     columns($("#tsPlot"), st.daily.map((d) => ({ label: fmtMD(d.day), v: byAmt ? d.amount : d.count, extra: byAmt ? `${d.count}${t("unit")}` : money(d.amount) })), byAmt ? money : cnt, $("#tsTitle").textContent, { height: 240 });
-    const rows = (list, key) => { const n = list.reduce((a, r) => a + r.new, 0) || 1;
-      return `<tbody>${list.map((r) => `<tr><td>${key(r)}</td><td class="num">${fmtInt(r.new)}</td><td class="num">${fmtPct(r.new / n)}</td><td class="num">${r.known ? money(r.amount) : '<span class="faint">–</span>'}</td></tr>`).join("")}</tbody>`; };
-    const head = (k) => `<thead><tr><th>${esc(k)}</th><th class="num">${esc(t("th_new"))}</th><th class="num">${esc(t("th_share"))}</th><th class="num">${esc(t("th_amount"))}</th></tr></thead>`;
+    const rows = (list, key, color) => { const n = list.reduce((a, r) => a + r.new, 0) || 1; const mx = Math.max(...list.map((r) => r.new), 1);
+      return `<tbody>${list.map((r) => `<tr><td class="nowrap">${key(r)}</td><td class="num">${fmtInt(r.new)}</td><td class="barcol"><div class="bar"><i style="width:${(r.new / mx * 100).toFixed(1)}%;background:${color ? color(r) : "var(--chart)"}"></i></div></td><td class="num">${fmtPct(r.new / n)}</td><td class="num">${r.known ? money(r.amount) : '<span class="faint">–</span>'}</td></tr>`).join("")}</tbody>`; };
+    const head = (k) => `<thead><tr><th>${esc(k)}</th><th class="num">${esc(t("th_new"))}</th><th></th><th class="num">${esc(t("th_share"))}</th><th class="num">${esc(t("th_amount"))}</th></tr></thead>`;
     const types = st.by_type.filter((r) => r.new).sort((a, b) => b.new - a.new);
-    $("#typeTable").innerHTML = head(t("type")) + rows(types, (r) => `<span title="${esc(typeFull(r.key))}">${sw(r.key)}${esc(typeName(r.key))}</span>`);
+    $("#typeTable").innerHTML = head(t("type")) + rows(types, (r) => `${KL.avatar({ type: r.key })}<span title="${esc(typeFull(r.key))}">${esc(typeName(r.key))}</span>`, (r) => typeColorHex(r.key));
     $("#metaType").textContent = `${types.length}`;
     const chainsAll = st.by_chain.filter((r) => r.new).sort((a, b) => b.new - a.new);
     const TOP = 8; const chains = chainsAll.slice(0, TOP);
     if (chainsAll.length > TOP) { const rest = chainsAll.slice(TOP); chains.push({ key: `${t("other")} (${rest.length})`, new: rest.reduce((a, r) => a + r.new, 0), known: rest.reduce((a, r) => a + r.known, 0), amount: rest.reduce((a, r) => a + r.amount, 0), _other: true }); }
-    $("#chainTable").innerHTML = head(t("chain")) + rows(chains, (r) => esc(r._other ? r.key : chainName(r.key)));
+    $("#chainTable").innerHTML = head(t("chain")) + rows(chains, (r) => `<span class="chain">${esc(r._other ? r.key : chainName(r.key))}</span>`);
     $("#metaChain").textContent = `${chainsAll.filter((r) => r.key !== "unknown").length}`;
     const roles = Object.entries(st.roles || {}).sort((a, b) => b[1] - a[1]); const rt = roles.reduce((a, r) => a + r[1], 0) || 1;
-    hbars($("#rolesBars"), roles.map(([k, v]) => ({ k: roleName(k), v, pct: v / rt })), cnt, t("roles"));
+    $("#rolesBars").innerHTML = `<div class="rgrid">${roles.map(([k, v]) => `<div class="rcell ${esc(k)}"><span class="ic">${KL.roleIcon(k)}</span><b>${fmtInt(v)}</b><span class="l">${esc(roleName(k))}</span><span class="p">${fmtPct(v / rt, 0)}</span></div>`).join("")}</div>`;
     $("#metaRoles").textContent = `${fmtInt(st.addresses)} ${t("addresses")}`;
   }
   $$("#valueMode button").forEach((b) => b.addEventListener("click", () => { S.mode = b.dataset.mode; render(); }));

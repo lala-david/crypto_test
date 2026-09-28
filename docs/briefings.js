@@ -11,7 +11,8 @@
     $("#sub").innerHTML = `<span class="m">${esc(t("collected_days").replace("{n}", days.length))}</span><span class="m">${esc(t("new_label"))} ${fmtInt(totN)}${esc(t("unit"))}</span><span class="m" title="${moneyFull(totA)}">${esc(t("total_amount").replace("{v}", money(totA)))}</span>`;
     $("#metaDays").textContent = `${days.length}`;
     const shortHead = (b) => (b[`headline_${K.lang}`] || b.headline_ko || "").replace(/^(\d+월 \d+일 브리핑|[A-Z][a-z]{2} \d+ briefing)\s*·\s*/, "");
-    $("#dayList").innerHTML = days.map((b) => `<li class="${cur && cur.day === b.day ? "on" : ""}" data-day="${b.day}"><b>${fmtDate(b.day)}</b><span>${esc(shortHead(b))}</span></li>`).join("");
+    const mxA = Math.max(...days.map((b) => b.amount_usd || 0), 1);
+    $("#dayList").innerHTML = days.map((b) => `<li class="${cur && cur.day === b.day ? "on" : ""}" data-day="${b.day}"><div class="dl-top"><b>${fmtDate(b.day)}</b><span class="dl-amt">${esc(money(b.amount_usd))}</span></div><div class="dl-bar"><i style="width:${((b.amount_usd || 0) / mxA * 100).toFixed(1)}%"></i></div><div class="dl-sub"><span>${esc(t("new_label"))} ${fmtInt(b.new)}</span>${b.followups ? `<span>${esc(t("follow"))} ${fmtInt(b.followups)}</span>` : ""}</div></li>`).join("");
     $$("#dayList li").forEach((li) => li.addEventListener("click", () => show(li.dataset.day)));
     if (!cur) return;
     $("#briefTitle").textContent = `${t("briefing")} · ${fmtDate(cur.day)}`;

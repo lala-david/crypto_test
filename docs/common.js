@@ -190,13 +190,13 @@ window.KL = (() => {
   const GAUGE_L = 86.39;
   const gauge = (n) => { const score = Math.min(1, (n || 0) / 4); const col = score >= 1 ? "#34d399" : score >= 0.75 ? "#ffd74b" : score >= 0.5 ? "#ff9f43" : "#fa5b72";
     return `<span class="gauge" title="${esc(t("src_gauge_tip").replace("{n}", n || 0))}"><svg viewBox="0 0 60 35" width="52" height="30"><path d="M2.5 30 A27.5 27.5 0 0 1 57.5 30" class="g-muted"/><path d="M2.5 30 A27.5 27.5 0 0 1 57.5 30" class="g-val" style="stroke:${col}" stroke-dasharray="${GAUGE_L}" stroke-dashoffset="${(GAUGE_L * (1 - score)).toFixed(2)}"/></svg><b>${n || 0}</b></span>`; };
-  const typeBadge = (type) => `<span class="badge" style="--c:${TYPE_COLOR[type] || "var(--t-other)"}" title="${esc(typeFull(type))}"><span class="dot"></span>${esc(typeName(type))}</span>`;
+  const typeBadge = (type) => (KL.typeBadge ? KL.typeBadge(type) : `<span class="badge" style="--c:${TYPE_COLOR[type] || "var(--t-other)"}" title="${esc(typeFull(type))}"><span class="dot"></span>${esc(typeName(type))}</span>`);
   const badges = (i) => `${i.followup_of ? `<span class="tag" title="${esc(t("legend_follow"))} · ${esc(i.followup_of.day || "")}">${esc(t("follow"))}</span>` : ""}${(i.followups || []).length ? `<span class="tag" title="${esc(t("follow_reports").replace("{n}", i.followups.length))} · ${esc(i.followups.map((f) => f.day).join(", "))}">${esc(t("follow_n").replace("{n}", i.followups.length))}</span>` : ""}${i.blacklist_hits ? `<span class="tag warn" title="${esc(t("legend_bl"))}">BL ${i.blacklist_hits}</span>` : ""}${i.amount_revised_from ? `<span class="tag" title="${esc(t("revised_from"))} ${moneyFull(i.amount_revised_from)}">↑</span>` : ""}`;
   const amountCell = (i) => i.amount_usd != null ? `<span class="amt" title="${moneyFull(i.amount_usd)}"><span class="cur">$</span>${fmtInt(i.amount_usd)}</span>` : `<span class="faint" title="${esc(i.amount_text || "")}">${esc(t("unknown"))}</span>`;
   const zeroDash = (n) => (n ? fmtInt(n) : '<span class="faint">–</span>');
   function incidentRow(i, compact = false) {
     compact = compact === true;
-    const name = `<td class="nowrap"><span class="avatar" style="--c:${TYPE_COLOR[i.type] || "var(--t-other)"}">${esc((i.project || "?").trim().charAt(0).toUpperCase())}</span><a class="name" href="${detailUrl(i)}">${esc(i.project)}</a>${badges(i)}</td>`;
+    const name = `<td class="nowrap">${KL.avatar ? KL.avatar(i) : sw(i.type)}<a class="name" href="${detailUrl(i)}">${esc(i.project)}</a>${badges(i)}</td>`;
     const amt = `<td class="num">${amountCell(i)}</td>`;
     const ev = i.event_date || i.incident_date || i.day;
     if (compact) return `<tr class="link" data-href="${detailUrl(i)}">${name}${amt}<td>${pill(i)}</td><td class="date">${esc(fmtDate(ev))}</td></tr>`;
