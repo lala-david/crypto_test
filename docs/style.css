@@ -700,3 +700,19 @@ body.case-open { overflow: hidden; }
 #addrTable td .name { display: inline-block; max-width: calc(100% - 34px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
 #addrTable .label-cell, #addrTable td:nth-child(4) { white-space: nowrap; }
 @media (max-width: 1100px) { .tbl col.a-inc { width: 160px; } .tbl col.a-addr { width: 190px; } }
+/* 통계 표 공통 열 구조 */
+.stbl.tbl.lumos-tbl:has(> colgroup) { table-layout: fixed; width: 100%; }
+.tbl col.s-name { width: 186px; } .tbl col.s-new { width: 58px; } .tbl col.s-bar { width: auto; } .tbl col.s-pct { width: 68px; } .tbl col.s-amt { width: 96px; }
+.stbl td.barcol, .stbl th:nth-child(3) { width: auto; min-width: 0; padding-left: 10px; padding-right: 10px; }
+.stbl td.barcol .bar { min-width: 0; width: 100%; }
+.stbl td:first-child { overflow: hidden; text-overflow: ellipsis; }
+.stbl .chain.named { max-width: 100%; overflow: hidden; } .stbl .chain.named > span { overflow: hidden; text-overflow: ellipsis; }
+.stbl td .tag { margin-left: 6px; }
+.stbl tr.faint-row td { color: var(--ink-3); } .stbl tr.faint-row .chain.named { opacity: .7; }
+.stbl tr.total td { border-top: 1px solid var(--line-2, var(--line)); font-weight: 600; color: var(--ink); background: var(--card-2); }
+.stbl tbody tr:last-child td { border-bottom: 0; }
+.card-b.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+.card-b.two-col > table:nth-child(2) { border-left: 1px solid var(--line); }
+.card-b.two-col > table[hidden] { display: none; }
+@media (max-width: 900px) { .card-b.two-col { grid-template-columns: 1fr; } .card-b.two-col > table:nth-child(2) { border-left: 0; border-top: 1px solid var(--line); } }
+.stbl tr.filler td { height: 47px; border-bottom: 0; }

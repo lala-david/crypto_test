@@ -368,6 +368,14 @@ class DataService:
                 if k not in best or ROLE_PRIORITY.get(a["role"], 9) < ROLE_PRIORITY.get(best[k], 9):
                     best[k] = a["role"]
         roles = Counter(best.values())
+        roles_inc: Dict[str, set] = defaultdict(set); roles_bl: Counter = Counter(); bl_seen: set = set()
+        for r in rows:
+            bd = r.get("blacklist_detail") or {}
+            for a in r["addresses"]:
+                k = a["address"].lower(); ro = best.get(k, a["role"])
+                roles_inc[ro].add(r["uid"])
+                if k not in bl_seen and (bd.get(a["address"]) or bd.get(k)):
+                    bl_seen.add(k); roles_bl[ro] += 1
         for k, v in daily_addr.items():
             daily[k]["addresses"] = len(v)
         top = sorted(known, key=lambda r: -r["amount_usd"])[:10]
@@ -384,7 +392,7 @@ class DataService:
             "daily": [{"day": k, **v} for k, v in sorted(daily.items())],
             "by_type": sorted([{"key": k, **v} for k, v in by_type.items()], key=lambda x: (-x["new"], -x["amount"])),
             "by_chain": sorted([{"key": k, **v} for k, v in by_chain.items()], key=lambda x: (-x["new"], -x["amount"])),
-            "roles": dict(roles.most_common()),
+            "roles": dict(roles.most_common()), "roles_inc": {k: len(v) for k, v in roles_inc.items()}, "roles_bl": dict(roles_bl),
             "top": [{"uid": r["uid"], "project": r["project"], "amount_usd": r["amount_usd"], "day": r["day"], "incident_date": r["incident_date"], "event_date": r["event_date"],
                      "type": r["type"], "legal": r["type"] in LEGAL, "chains": r["chains"][:1]} for r in top],
         }
