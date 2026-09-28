@@ -2,29 +2,32 @@
 (() => {
   "use strict";
   const { esc, typeName, typeFull, roleName, TYPE_COLOR } = KL;
-  const wrap = (paths, extra = "") => `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${extra}>${paths}</svg>`;
+  const wrap = (paths, extra = "") => `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="none" aria-hidden="true"${extra}>${paths}</svg>`;
   // 유형별: 해킹=깨진 방패 · 개인키=열쇠 · 피싱=낚싯바늘 · 러그풀=말린 카펫+화살 · 사기=가면 · 랜섬웨어=자물쇠 · 제재=금지 원 · 수사·기소=망치(가벨) · 세탁=순환 화살표+$ · 기타=점
-  const F = 'fill="currentColor" fill-opacity=".2"';
-  // 유형별(면 20% + 선): 해킹=방패+번개 · 개인키=열쇠 · 피싱=코인 미끼 낚싯바늘 · 러그풀=떨어지는 화살+말린 카펫 · 사기=가면 · 랜섬웨어=자물쇠 · 제재=팔각 금지 · 수사·기소=가벨 · 세탁=순환+$ · 기타=스파클
+  // 솔리드 스타일: 기본 fill=currentColor, 구멍은 evenodd, 굵은 선 요소는 개별 stroke. 14~17px 에서도 실루엣이 읽힌다.
+  const S = 'stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+  const EO = 'fill-rule="evenodd" clip-rule="evenodd"';
+  const ring = (cx, cy, r, ri) => `<path ${EO} d="M${cx} ${cy - r}a${r} ${r} 0 1 0 0 ${2 * r}a${r} ${r} 0 1 0 0-${2 * r}Zm0 ${r - ri}a${ri} ${ri} 0 1 1 0 ${2 * ri}a${ri} ${ri} 0 1 1 0-${2 * ri}Z"/>`;
+  // 유형: 해킹=방패+번개 구멍 · 개인키=열쇠 · 피싱=코인 미끼 낚싯바늘 · 러그풀=떨어지는 화살+말린 카펫 · 사기=가면(눈·입 구멍) · 랜섬웨어=자물쇠(열쇠구멍) · 제재=팔각 금지 · 수사·기소=가벨 · 세탁=순환 화살+코인 · 기타=스파클
   const TYPE_PATHS = {
-    hack_exploit: `<path d="M12 2.5l7.5 3v5.5c0 5.3-3.2 9.2-7.5 10.7C7.7 20.2 4.5 16.3 4.5 11V5.5l7.5-3z" ${F}/><path d="M13.3 6.8l-3.5 5.2h3.8l-2.7 5.2" stroke-width="2.2"/>`,
-    private_key_compromise: `<circle cx="7.5" cy="16.5" r="3.6" ${F}/><path d="M10.1 13.9L19.6 4.4"/><path d="M16.2 7.8l2.6 2.6M13.2 10.8l2.1 2.1"/><path d="M19.6 4.4l1.2 1.2" stroke-width="2.4"/>`,
-    phishing_social_engineering: `<circle cx="14" cy="5.2" r="2.3" ${F}/><path d="M14 7.5v6.2a4 4 0 0 1-8 0V12"/><path d="M6 12l2.3 1.5"/>`,
-    rug_pull: `<path d="M12 2.8v8.6M8.4 7.8l3.6 3.6 3.6-3.6"/><path d="M3 17.6h11.5"/><circle cx="17.5" cy="15.3" r="2.9" ${F}/><path d="M17.5 15.3h1.5"/>`,
-    scam_fraud: `<path d="M4.5 6.3c2.5-2.1 12.5-2.1 15 0 0 5.6-.5 9.2-3.5 12.2-1.5 1.5-3 2.5-4 2.5s-2.5-1-4-2.5c-3-3-3.5-6.6-3.5-12.2z" ${F}/><path d="M8 11.4c.8-.9 2-.9 2.8 0M13.2 11.4c.8-.9 2-.9 2.8 0"/><path d="M9 15.8c1.7 1.4 4.3 1.4 6 0"/>`,
-    ransomware: `<rect x="4.5" y="10.5" width="15" height="10.5" rx="2.6" ${F}/><path d="M8 10.5V7.6a4 4 0 0 1 8 0v2.9"/><circle cx="12" cy="14.8" r="1.4" fill="currentColor" stroke="none"/><path d="M12 16.2v2.3"/>`,
-    sanctions_designation: `<path d="M8.2 3h7.6L21 8.2v7.6L15.8 21H8.2L3 15.8V8.2L8.2 3z" ${F}/><path d="M7.8 12h8.4" stroke-width="2.6"/>`,
-    law_enforcement_action: `<path d="M13.6 3.4l7 7-2.6 2.6-7-7z" ${F}/><path d="M14.6 9.4L4.6 19.4"/><path d="M3 21.2h8.2"/><path d="M11.2 4.8l1.2-1.2M19.4 13l1.2-1.2" stroke-width="1.6"/>`,
-    laundering_report: `<path d="M5.2 12A6.8 6.8 0 0 1 16.4 6.8"/><path d="M18.8 12A6.8 6.8 0 0 1 7.6 17.2"/><path d="M16.6 3.6v3.2h-3.2M7.4 20.4v-3.2h3.2"/><circle cx="12" cy="12" r="3.3" ${F}/><text x="12" y="14.6" text-anchor="middle" font-family="Geist Mono, Menlo, monospace" font-size="7.5" font-weight="700" fill="currentColor" stroke="none">$</text>`,
-    other: `<path d="M12 3c.6 4.8 4.2 8.4 9 9-4.8.6-8.4 4.2-9 9-.6-4.8-4.2-8.4-9-9 4.8-.6 8.4-4.2 9-9z" ${F}/>`,
+    hack_exploit: `<path ${EO} d="M12 2.2 20 5.4V11c0 5.4-3.4 9.4-8 10.8C7.4 20.4 4 16.4 4 11V5.4l8-3.2Zm1.5 4.6-4.2 6.2h2.9l-1.6 4.8 4.6-6.6h-3l1.3-4.4Z"/>`,
+    private_key_compromise: `${ring(7.6, 16.4, 4.4, 1.7)}<path d="M10.6 13.4 20.2 3.8" ${S} stroke-width="2.9"/><path d="M16.4 7.6l2.6 2.6M13.4 10.6l2 2" ${S} stroke-width="2.5"/>`,
+    phishing_social_engineering: `${ring(14.2, 5.2, 2.8, 1.1)}<path d="M14.2 8v5.6a4.1 4.1 0 0 1-8.2 0v-1.8" ${S} stroke-width="2.7"/><path d="M6 11.8l2.6 1.6" ${S} stroke-width="2.4"/>`,
+    rug_pull: `<path d="M10.7 2.6h2.6v6.2l1.6-1.6 1.8 1.8L12 13.7 7.3 9l1.8-1.8 1.6 1.6V2.6Z"/><path d="M3 18.4h10.2" ${S} stroke-width="2.7"/>${ring(18.2, 16.3, 3.3, 1.2)}`,
+    scam_fraud: `<path ${EO} d="M4 5.4c2.6-2.2 13.4-2.2 16 0 0 6.1-.6 9.8-3.6 12.9-1.5 1.5-3 2.7-4.4 2.7s-2.9-1.2-4.4-2.7C4.6 15.2 4 11.5 4 5.4Zm2.9 4.7c1.1-1.3 3.1-1.3 4.2 0-1.1 1.3-3.1 1.3-4.2 0Zm6 0c1.1-1.3 3.1-1.3 4.2 0-1.1 1.3-3.1 1.3-4.2 0Zm-4.6 4.4c2.2 2.2 5.2 2.2 7.4 0-2.2 3.1-5.2 3.1-7.4 0Z"/>`,
+    ransomware: `<path ${EO} d="M7.1 10.3h9.8A2.6 2.6 0 0 1 19.5 12.9v6a2.6 2.6 0 0 1-2.6 2.6H7.1a2.6 2.6 0 0 1-2.6-2.6v-6a2.6 2.6 0 0 1 2.6-2.6Zm4.9 3.2a1.7 1.7 0 0 0-.9 3.2v1.9h1.8v-1.9a1.7 1.7 0 0 0-.9-3.2Z"/><path d="M8.1 10.3V7.7a3.9 3.9 0 0 1 7.8 0v2.6" ${S} stroke-width="2.6"/>`,
+    sanctions_designation: `<path ${EO} d="M8.1 2.5h7.8l5.6 5.6v7.8l-5.6 5.6H8.1l-5.6-5.6V8.1l5.6-5.6Zm-1.4 8.2a1.3 1.3 0 0 0 0 2.6h10.6a1.3 1.3 0 0 0 0-2.6H6.7Z"/>`,
+    law_enforcement_action: `<path d="M13.2 2.6l8.2 8.2-2.7 2.7-8.2-8.2 2.7-2.7Z"/><path d="M14.3 9.7 4.7 19.3" ${S} stroke-width="2.9"/><path d="M2.6 21.4h8.8" ${S} stroke-width="2.7"/>`,
+    laundering_report: `<path d="M5.4 12A6.6 6.6 0 0 1 14.6 5.9" ${S} stroke-width="2.5"/><path d="M18.6 12A6.6 6.6 0 0 1 9.4 18.1" ${S} stroke-width="2.5"/><path d="M14.2 2.6l4.6 3.4-4.9 2.4.3-5.8Z"/><path d="M9.8 21.4 5.2 18l4.9-2.4-.3 5.8Z"/>${ring(12, 12, 3.1, 1.3)}`,
+    other: `<path d="M12 2.4c.7 5 4.6 8.9 9.6 9.6-5 .7-8.9 4.6-9.6 9.6-.7-5-4.6-8.9-9.6-9.6 5-.7 8.9-4.6 9.6-9.6Z"/>`,
   };
-  // 역할: 제재=팔각 금지 · 공격자=조준선 · 세탁·경유=순환 · 피해자=방패+체크 · 미분류=물음표
+  // 역할: 제재=팔각 금지 · 공격자=조준선 · 세탁·경유=순환 화살 · 피해자=방패+체크 구멍 · 미분류=점선 원
   const ROLE_PATHS = {
     sanctioned: TYPE_PATHS.sanctions_designation,
-    attacker: `<circle cx="12" cy="12" r="7" ${F}/><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/>`,
-    laundering: `<path d="M5.2 12A6.8 6.8 0 0 1 16.4 6.8"/><path d="M18.8 12A6.8 6.8 0 0 1 7.6 17.2"/><path d="M16.6 3.6v3.2h-3.2M7.4 20.4v-3.2h3.2"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>`,
-    victim: `<path d="M12 2.5l7.5 3v5.5c0 5.3-3.2 9.2-7.5 10.7C7.7 20.2 4.5 16.3 4.5 11V5.5l7.5-3z" ${F}/><path d="M8.8 12l2.2 2.2 4.4-4.4"/>`,
-    unknown: `<circle cx="12" cy="12" r="8.5" ${F}/><path d="M9.4 9.6a2.6 2.6 0 1 1 3.7 2.4c-.8.4-1.1.9-1.1 1.8"/><circle cx="12" cy="17.2" r="1.1" fill="currentColor" stroke="none"/>`,
+    attacker: `${ring(12, 12, 7.2, 4.6)}<circle cx="12" cy="12" r="2.1"/><path d="M12 1.8v3.4M12 18.8v3.4M1.8 12h3.4M18.8 12h3.4" ${S} stroke-width="2.4"/>`,
+    laundering: `<path d="M5.4 12A6.6 6.6 0 0 1 14.6 5.9" ${S} stroke-width="2.5"/><path d="M18.6 12A6.6 6.6 0 0 1 9.4 18.1" ${S} stroke-width="2.5"/><path d="M14.2 2.6l4.6 3.4-4.9 2.4.3-5.8Z"/><path d="M9.8 21.4 5.2 18l4.9-2.4-.3 5.8Z"/><circle cx="12" cy="12" r="2.2"/>`,
+    victim: `<path ${EO} d="M12 2.2 20 5.4V11c0 5.4-3.4 9.4-8 10.8C7.4 20.4 4 16.4 4 11V5.4l8-3.2Zm3.6 7.2-1.6-1.6-3.2 3.2-1.6-1.6-1.6 1.6 3.2 3.2 4.8-4.8Z"/>`,
+    unknown: `<circle cx="12" cy="12" r="8" ${S} stroke-width="2.3" stroke-dasharray="3.2 3"/><circle cx="12" cy="12" r="2.4"/>`,
   };
 
   // ---- 체인 아이콘: 브랜드 색 원 + 흰 마크(직접 그림). 없는 체인은 이름 첫 글자 모노그램 ----
