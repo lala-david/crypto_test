@@ -32,7 +32,7 @@
 
   /* series: [{key, color, data:[number…]}], labels: [string…] (x 라벨), metrics: [{icon:'diamond'|'circle'|'triangle', label, value, up, good}] */
   function reportCard(el, { title = "Incident Report", series, labels, metrics = [], wide = false, hud = "" }) {
-    const W = wide ? 1040 : 448, H = wide ? 300 : 200, m = { l: 14, r: 14, t: 12, b: 28 };
+    const W = wide ? 1108 : 448, H = wide ? 300 : 200, m = { l: 14, r: 14, t: 12, b: 28 };
     const n = labels.length; const pw = W - m.l - m.r, ph = H - m.t - m.b;
     const max = Math.max(1, ...series.flatMap((s) => s.data));
     const x = (i) => m.l + (n > 1 ? (i / (n - 1)) * pw : pw / 2), y = (v) => m.t + ph - (v / max) * ph, base = y(0);
