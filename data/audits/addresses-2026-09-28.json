@@ -1,0 +1,33 @@
+{
+ "summary": {
+  "addresses": 340,
+  "checked": 1,
+  "kinds": {
+   "eoa": 224,
+   "contract": 104,
+   "wallet": 11,
+   "unfunded": 1
+  },
+  "ctypes": {
+   "contract": 62,
+   "token": 24,
+   "lp_pool": 7,
+   "proxy": 3,
+   "ctoken": 1,
+   "router": 1,
+   "v3_pool": 2,
+   "safe": 1,
+   "atoken": 2,
+   "nft": 1
+  },
+  "cards_changed": 0,
+  "changes": 0,
+  "days": [],
+  "rpc": {
+   "rpc_calls": 12,
+   "rpc_errors": 0
+  },
+  "oklink": false
+ },
+ "changes": []
+}

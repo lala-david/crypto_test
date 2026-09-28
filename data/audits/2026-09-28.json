@@ -1,0 +1,1699 @@
+{
+ "listing": [
+  {
+   "uid": "7fe367b4eda4f6b7",
+   "project": "Unknown Gnosis Safe Wallet",
+   "type": "hack_exploit",
+   "event_date": "2026-09-15",
+   "reported": "2026-09-15",
+   "amount_usd": 7730000.0,
+   "amount_text": "$ 7,730,000",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 15일, 미확인 사용자의 Gnosis Safe 지갑이 약 $7.73M 규모로 비워졌다. 공격자는 Router 계약의 multicall 권한 우회 취약점을 이용해 Safe 모듈을 통해 자금을 이동시켰다. 자금은 aEthrsETH 형태로 Uniswap V4 훅 풀에 주입된 "
+  },
+  {
+   "uid": "136ee4cb3fd84062",
+   "project": "Long Bridge",
+   "type": "hack_exploit",
+   "event_date": "2026-09-14",
+   "reported": "2026-09-14",
+   "amount_usd": 118000.0,
+   "amount_text": "$ 118,000",
+   "chains": [
+    "Robinhood Chain"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 14일, 조작된 RPC 이벤트로 Long Bridge가 Robinhood Chain 금고에서 46.7928 WETH(≈$118,000)를 풀어냈다. 계약이나 키가 탈취되지 않아 직접적인 해킹은 아니었다. 팀은 즉시 keeper를 중단하고 검증 로직을 재구축했다. 같은 날"
+  },
+  {
+   "uid": "5ca765c887048a1c",
+   "project": "Spiral",
+   "type": "hack_exploit",
+   "event_date": "2026-09-14",
+   "reported": "2026-09-14",
+   "amount_usd": 26800.0,
+   "amount_text": "$ 26,800",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 14일 공격자가 Uniswap V4 풀의 현물 가격을 조작해 Spiral 프로토콜을 공격했다. tx.origin 기반 방어 로직을 다중 EOA로 우회해 같은 블록에서 부풀려진 담보로 대출을 실행했다. 이 공격으로 약 10.7 ETH(약 $26.8K)의 손실이 발생했다."
+  },
+  {
+   "uid": "6567b5179c6fb0bc",
+   "project": "YamFinance",
+   "type": "hack_exploit",
+   "event_date": "2026-09-12",
+   "reported": "2026-09-12",
+   "amount_usd": 121000.0,
+   "amount_text": "~$121K (48.085 WETH + 763.101 UMA)",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 12일 공격자가 약 504K YAM을 장내 매수하여 타임락 관리자를 자신으로 지정하는 거버넌스 제안을 단독 통과시켰다. 5일간의 타임락 기간 후 관리자 권한을 획득하고 레거시 UMAFarmingMar 및 UMAFarmingFeb 컨트랙트의 거버넌스를 장악했다. 공격자는 "
+  },
+  {
+   "uid": "54112ebada5b6c17",
+   "project": "Chainflip",
+   "type": "hack_exploit",
+   "event_date": "2026-09-12",
+   "reported": "2026-09-12",
+   "amount_usd": 736442.17,
+   "amount_text": "$ 736,442.17",
+   "chains": [
+    "Tron"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 12일 공격자가 TRON 메모 처리 취약점을 악용해 90분 동안 8차례 공격을 시도했다. 이를 통해 6차례에 걸쳐 총 736,442.17 USDT가 무단 지급됐다. 대기 중이던 사용자 스왑 자금 115,654.41 USDT는 금고에 안전하게 보관되어 있다. 프로토콜 네트"
+  },
+  {
+   "uid": "5fffa3cf9db39d9a",
+   "project": "Revolut",
+   "type": "phishing_social_engineering",
+   "event_date": "2026-09-11",
+   "reported": "2026-09-12",
+   "amount_usd": null,
+   "amount_text": "",
+   "chains": [
+    "Bitcoin"
+   ],
+   "sources": [
+    "zachxbt"
+   ],
+   "followup_of": null,
+   "summary": "Revolut가 허위 정부 기관 요청을 탐지하지 못해 일부 이용자의 개인식별정보(PII)가 유출됐다. 노출된 정보에는 신분증 사본, 계좌 내역, Bitcoin을 포함한 전체 거래 내역 등이 포함됐다. 이번 사건은 고액 자산가를 표적으로 삼은 것으로 보이며, 9월 11일 피해 이용자들에게"
+  },
+  {
+   "uid": "b6fcaf1b9dca7c3a",
+   "project": "ORB",
+   "type": "hack_exploit",
+   "event_date": "2026-09-11",
+   "reported": "2026-09-11",
+   "amount_usd": 32610.72,
+   "amount_text": "~44.9-45 BNB (~$32,610.72)",
+   "chains": [
+    "BSC"
+   ],
+   "sources": [
+    "defihacklabs",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 11일 ORB 프로젝트를 대상으로 레버리지 매수와 재진입을 결합한 익스플로잇이 일어났다. 공격자는 Moolah와 Venus에서 자금을 빌려 풀의 ORB를 대부분 사들인 뒤 재진입 소각 루프로 풀을 고갈시켰다. 이 공격으로 약 44.9~45 BNB(약 $32.6K)가 탈취"
+  },
+  {
+   "uid": "2e38cf338e9a43b2",
+   "project": "Symbiosis",
+   "type": "hack_exploit",
+   "event_date": "2026-09-11",
+   "reported": "2026-09-11",
+   "amount_usd": 775000.0,
+   "amount_text": "$ 775,000",
+   "chains": [
+    "Ethereum",
+    "BSC",
+    "Rootstock"
+   ],
+   "sources": [
+    "defillama",
+    "rss:cointelegraph_hacks",
+    "rss:cointelegraph_scams",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 11일 공격자가 BridgeV2 취약점을 악용해 BSC, Ethereum, Rootstock 전반에서 담보 없는 syBTC를 대량 민팅했다. 공격자는 Ethereum의 Uniswap V4에서 약 4.39 WBTC를 약 $336K에 매도했다. Symbiosis 팀은 즉시 "
+  },
+  {
+   "uid": "91bf25b74551875a",
+   "project": "Dominion",
+   "type": "private_key_compromise",
+   "event_date": "2026-09-11",
+   "reported": "2026-09-11",
+   "amount_usd": 238000.0,
+   "amount_text": "$ 238,000",
+   "chains": [
+    "Solana"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 11일 공격자가 3개의 멀티시그 서명키를 확보해 SILV 재무 금고와 대출 계약에서 자금을 인출했다. 공격자는 액면가 약 $3M에 해당하는 46,909 SILV를 유동성이 부족한 DEX 풀에 덤핑해 약 $238K를 현금화했다. 이로 인해 페그가 붕괴되었으며 팀은 유동성을"
+  },
+  {
+   "uid": "b62a764a65e93795",
+   "project": "William Andres Holguin Mendez",
+   "type": "law_enforcement_action",
+   "event_date": null,
+   "reported": "2026-09-10",
+   "amount_usd": 135000000.0,
+   "amount_text": "$135 million",
+   "chains": [],
+   "sources": [
+    "doj"
+   ],
+   "followup_of": null,
+   "summary": "미국 연방 대배심은 약 $135M 규모의 마약 자금세탁 음모 혐의로 콜롬비아 국적의 William Andres Holguin Mendez를 기소했다. 피고인은 2023년 3월부터 2024년 5월까지 본인 명의 미국 및 해외 거래소 계정에서 스테이블코인을 활용해 자금을 세탁했다. 피고인은"
+  },
+  {
+   "uid": "ec8baca30ce2ffb5",
+   "project": "OMNI404",
+   "type": "hack_exploit",
+   "event_date": "2026-09-09",
+   "reported": "2026-09-09",
+   "amount_usd": 5923.0,
+   "amount_text": "2.427 WETH (run() leg reproduced here; ~",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defihacklabs",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 9일 OMNI404 토큰의 ERC-404 로직 취약점을 악용한 공격이 발생했다. 공격자는 Uniswap V3 풀에서 플래시론으로 풀에 낮은 ID의 NFT를 소유하게 만든 뒤, 미세 스왑으로 헐값에 대량의 O404 토큰을 인출했다. 이후 탈취한 토큰을 풀에 매도해 WETH"
+  },
+  {
+   "uid": "79fa042ce18bb803",
+   "project": "Xinbi Guarantee",
+   "type": "sanctions_designation",
+   "event_date": "2026-09-09",
+   "reported": "2026-09-09",
+   "amount_usd": 52000000.0,
+   "amount_text": "$52M",
+   "chains": [
+    "Tron",
+    "Ethereum",
+    "BSC"
+   ],
+   "sources": [
+    "chainalysis",
+    "doj",
+    "ofac",
+    "rss:cointelegraph_scams",
+    "trm"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 9일 미 OFAC는 Xinbi Guarantee와 연계 기술사들을 제재 목록에 지정했다. 북한 연계 조직도 Bybit과 WazirX 해킹 자금을 이 플랫폼을 통해 세탁했다. 미 당국은 플랫폼 관련 지갑에서 $52M 이상의 가상자산을 압수 또는 동결했다."
+  },
+  {
+   "uid": "4c05315cb8a4da8b",
+   "project": "Zentra Finance",
+   "type": "hack_exploit",
+   "event_date": "2026-09-09",
+   "reported": "2026-09-09",
+   "amount_usd": 140030.0,
+   "amount_text": "140,000 ctUSD and 30 USDC.e",
+   "chains": [
+    "Citrea"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 9일 공격자가 Citrea 메인넷 단일 트랜잭션에서 취약점을 악용해 140,000 ctUSD와 30 USDC.e(총 $140,030)를 탈취했다. 운영 멀티시그는 약 17분 후 모든 시장을 일시 중단해 추가 피해를 막았다. 2차 공격은 발생하지 않았다."
+  },
+  {
+   "uid": "80f0277fe88564a0",
+   "project": "EnsoFinance",
+   "type": "hack_exploit",
+   "event_date": "2026-09-09",
+   "reported": "2026-09-09",
+   "amount_usd": null,
+   "amount_text": "~5.6 ETH (5.277 ETH realized in this PoC",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 9일 EnsoFinance의 전략 금고를 대상으로 오라클 조작 공격이 발생했다. 공격자는 Uniswap V2에서 0.683 WETH로 268.42 FARM을 구매한 뒤 왜곡된 V3 TWAP을 통해 수 ETH 가치로 인정받아 지분을 대량 발행했다. 이후 발행된 지분을 소각"
+  },
+  {
+   "uid": "7dcbf0adc5dc94a7",
+   "project": "BeatXswap",
+   "type": "hack_exploit",
+   "event_date": "2026-09-09",
+   "reported": "2026-09-09",
+   "amount_usd": 77512.0,
+   "amount_text": "~$63.7K USDT net profit (2,984,557 BTX /",
+   "chains": [
+    "BSC"
+   ],
+   "sources": [
+    "defihacklabs",
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 9일 공격자가 플래시론으로 PancakeSwap V3 풀의 BTX 가격을 조작하여 두 베스팅 계약에서 약 2,984,557 BTX(약 $77.5K)를 탈취했다. 공격자는 조작된 틱 범위에 베스팅 계약의 BTX 예치금을 강제로 유동성으로 공급하게 한 뒤 역방향 스왑으로 이"
+  },
+  {
+   "uid": "90941b92547619e1",
+   "project": "EtherFiAtomicQueue",
+   "type": "hack_exploit",
+   "event_date": "2026-09-09",
+   "reported": "2026-09-09",
+   "amount_usd": null,
+   "amount_text": "~15.45 ETH (9 real victims' standing liq",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 9일 ether.fi의 AtomicQueue 컨트랙트에서 접근 제어 취약점을 이용한 익스플로잇이 발생했다. 공격자는 남아 있던 승인 권한을 이용해 9개 피해자 지갑에서 14.4455 liquidETH를 탈취했다. 탈취된 자산은 Uniswap V4 풀을 거쳐 약 15.45"
+  },
+  {
+   "uid": "211280cea304b54c",
+   "project": "Nomic nBTC Bridge",
+   "type": "hack_exploit",
+   "event_date": "2026-09-09",
+   "reported": "2026-09-09",
+   "amount_usd": 3150000.0,
+   "amount_text": "$ 3,150,000",
+   "chains": [
+    "Osmosis",
+    "Nomic"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 9일 Nomic nBTC 브리지에서 이중지불 공격으로 약 $3.15M의 손실이 발생했다. 발행된 nBTC 중 39.84개가 Alloyed BTC에 유입됐다. Osmosis는 자금 흐름을 중단하고 노드 업그레이드를 통해 공격자 지갑의 22.65 BTC를 동결했다. 거버넌스"
+  },
+  {
+   "uid": "f2b5c3ee9cf95f07",
+   "project": "Amnext",
+   "type": "hack_exploit",
+   "event_date": "2026-09-09",
+   "reported": "2026-09-09",
+   "amount_usd": 116100.0,
+   "amount_text": "$ 116,100",
+   "chains": [
+    "BSC"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 9일 Amnext 프로토콜이 스마트컨트랙트 취약점으로 공격받았다. 공격자는 Ticket AMC를 대량 발행한 뒤 PancakeSwap을 거쳐 프로토콜에서 약 154.02 WBNB를 빼돌렸다. 이로 인해 약 $116.1K 규모의 피해가 발생했다."
+  },
+  {
+   "uid": "9fd024f79d7b0d8d",
+   "project": "OrderFactory",
+   "type": "hack_exploit",
+   "event_date": "2026-09-08",
+   "reported": "2026-09-08",
+   "amount_usd": null,
+   "amount_text": "~20.247 ETH this tx (5 buyers drained; r",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 8일 OrderFactory의 접근 제어 부재를 악용한 익스플로잇이 발생했다. 공격자는 단일 공격 트랜잭션에서 구매자 5명의 계정을 털어 20.247 ETH를 가로챘으며 전체 사건 피해는 약 24.7 ETH로 보고됐다. 공격자는 새로 생성된 주문 프록시의 중단 함수를 호"
+  },
+  {
+   "uid": "10d58ffe332ab6a0",
+   "project": "WealthManagementV2",
+   "type": "private_key_compromise",
+   "event_date": "2026-09-08",
+   "reported": "2026-09-08",
+   "amount_usd": 26414.0,
+   "amount_text": "$ 26,414",
+   "chains": [
+    "BSC"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 8일 WealthManagementV2의 오너 권한이 개인키 유출로 의심되는 방식으로 탈취됐습니다. 공격자는 updatePlanConfig 함수로 기간을 0으로, 이자 승수를 5억 2,830만으로 조작했습니다. 같은 트랜잭션에서 투자와 상환을 실행해 부풀려진 이자를 획득"
+  },
+  {
+   "uid": "c9a07fc4922ac572",
+   "project": "Liquid Network",
+   "type": "hack_exploit",
+   "event_date": "2026-09-06",
+   "reported": "2026-09-09",
+   "amount_usd": 320000000.0,
+   "amount_text": "$320M",
+   "chains": [
+    "Liquid",
+    "Bitcoin",
+    "Liquid Network"
+   ],
+   "sources": [
+    "chainalysis",
+    "defillama",
+    "rss:boannews",
+    "rss:cointelegraph_hacks",
+    "slowmist",
+    "trm"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 6일 자칭 화이트햇 공격자들이 Liquid Network 예치금 4,200 BTC 중 약 4,000 BTC($320M)를 탈취했다. 공격자는 온체인 OP_RETURN 메시지를 통해 취약점 패치를 요구한 뒤, 3,400 BTC(약 85%)를 반환했다. 나머지 약 600 B"
+  },
+  {
+   "uid": "8555595f48b94850",
+   "project": "Carlos Erick Vazquez Gonzalez",
+   "type": "law_enforcement_action",
+   "event_date": "2026-09-04",
+   "reported": "2026-09-04",
+   "amount_usd": 4000000.0,
+   "amount_text": "approximately $4 million",
+   "chains": [],
+   "sources": [
+    "doj"
+   ],
+   "followup_of": null,
+   "summary": "멕시코 국적 Carlos Erick Vazquez Gonzalez(48)가 약 $4M 규모의 마약 밀매 자금을 가상자산으로 세탁한 혐의(자금세탁 공모)로 유죄를 인정했다. 피고인은 가상자산 입금 및 출처 세탁 후 멕시코에서 현금화해 브로커에게 전달하고 약 $40K의 수수료를 챙겼다. 피"
+  },
+  {
+   "uid": "f0e4a1ea4036f53c",
+   "project": "Tectonic",
+   "type": "hack_exploit",
+   "event_date": "2026-08-30",
+   "reported": "2026-09-14",
+   "amount_usd": 120400000.0,
+   "amount_text": "$120.4 million",
+   "chains": [
+    "Cronos",
+    "Ethereum"
+   ],
+   "sources": [
+    "rekt",
+    "rss:cointelegraph_hacks"
+   ],
+   "followup_of": null,
+   "summary": "2026년 8월 30일 공격자가 TONIC 가격을 조작해 Tectonic에서 $120.4M를 탈취했다. Cronos 검증인들은 블록 생성을 중단하고 10,961개 블록을 롤백(블록체인을 이전 상태로 되돌림)해 $111.2M를 복구했다. 그러나 중단 전 이미 이더리움으로 브리지된 $9.1"
+  },
+  {
+   "uid": "8e1475e0e75a808f",
+   "project": "Nesa",
+   "type": "hack_exploit",
+   "event_date": "2026-08-24",
+   "reported": "2026-09-11",
+   "amount_usd": 50000000.0,
+   "amount_text": "roughly $50 million",
+   "chains": [
+    "Ethereum",
+    "Cosmos"
+   ],
+   "sources": [
+    "rekt"
+   ],
+   "followup_of": null,
+   "summary": "2026년 8월 24일 공격자가 Cosmos EVM 취약점을 이용해 Nesa에서 약 257,703,733 NES(약 $50M 상당)를 Hyperlane을 통해 이더리움으로 인출했다. Nesa 체인은 사고 직후 탐색기와 RPC가 중단됐다. 공격자는 이더리움 상에서 CoW Protocol과"
+  },
+  {
+   "uid": "154cd5c68d0a244c",
+   "project": "Malone Lam",
+   "type": "law_enforcement_action",
+   "event_date": "2025-09-18",
+   "reported": "2026-09-08",
+   "amount_usd": 245000000.0,
+   "amount_text": "$245M",
+   "chains": [],
+   "sources": [
+    "doj",
+    "rss:cointelegraph_scams"
+   ],
+   "followup_of": null,
+   "summary": "22세 싱가포르인 Malone Lam이 $245M 이상의 가상자산 탈취·세탁과 관련된 RICO(조직범죄처벌법) 공모 혐의로 유죄를 인정했다. Lam은 가명을 쓰며 범행 대상 지정과 공범 역할을 총괄했다. 그는 2025년 9월 18일 마이애미 자택에서 체포됐다. 연방법원은 2026년 12"
+  },
+  {
+   "uid": "9f691f847a83b81f",
+   "project": "ADAM IZA",
+   "type": "law_enforcement_action",
+   "event_date": "2024-08-25",
+   "reported": "2026-09-09",
+   "amount_usd": null,
+   "amount_text": "hundreds of millions of dollars in Bitco",
+   "chains": [
+    "Bitcoin"
+   ],
+   "sources": [
+    "doj"
+   ],
+   "followup_of": null,
+   "summary": "2024년 8월 25일 Adam Iza와 공범들은 비트코인을 강탈하기 위해 코네티컷주 댄버리에서 피해자 부부를 납치했다. Iza는 암호화 메신저로 납치범들을 지휘하고 자금을 제공했다. 납치 실행범 6명과 형제 Saif Faiq 등도 유죄를 인정했다. 캘리포니아 출신 Adam Iza는 징"
+  },
+  {
+   "uid": "a9900e3f5aa3eb2e",
+   "project": "Bonfiretoken",
+   "type": "hack_exploit",
+   "event_date": "2026-09-16",
+   "reported": "2026-09-16",
+   "amount_usd": 50000.0,
+   "amount_text": "$ 50,000",
+   "chains": [
+    "BSC"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 16일 BonfireSwap 라우터의 접근 제어 결함으로 약 $50,000 상당의 토큰이 탈취됐다. 약 41명의 허가된 보유자가 피해를 입었으며, 탈취된 토큰은 동일 토큰 풀 스와프를 통해 이동되었다. SlowMist이 해당 취약성을 공개했다."
+  },
+  {
+   "uid": "ced5f72046cd5393",
+   "project": "HEFU CHAI, HUAISONG XIANG",
+   "type": "law_enforcement_action",
+   "event_date": "2026-09-15",
+   "reported": "2026-09-15",
+   "amount_usd": 50000.0,
+   "amount_text": "$50,000 each",
+   "chains": [],
+   "sources": [
+    "doj",
+    "rss:blockmedia"
+   ],
+   "followup_of": null,
+   "summary": "2025~2026년 사이 HEFU CHAI와 HUAISONG XIANG은 각각 $50,000 이상을 부당 이익으로 챙겼다. 이들은 상품법 위반 및 전신 사기 혐의로 기소되었다. 사건은 뉴욕 남부 연방 검찰과 FBI가 제기했다."
+  },
+  {
+   "uid": "4b0d13e5d2f05915",
+   "project": "custom Safe module",
+   "type": "hack_exploit",
+   "event_date": "2026-09-15",
+   "reported": "2026-09-15",
+   "amount_usd": 7700000.0,
+   "amount_text": "$7.7M",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "rss:cointelegraph_hacks"
+   ],
+   "followup_of": "Unknown Gnosis Safe Wallet",
+   "summary": "2026년 9월 15일, 공격자가 Safe 모듈을 이용해 rsETH를 훔치려 했지만 MEV 봇 Yoink이 앞서서 $7.7M을 가로챘다. 이후 Kelp이 해당 주소를 일시적으로 동결했다. 손실은 대부분 Yoink이 회수했으며, 공격자는 아직 확인되지 않았다."
+  },
+  {
+   "uid": "05b907f063d273b2",
+   "project": "SpiralHookV2",
+   "type": "hack_exploit",
+   "event_date": "2026-09-12",
+   "reported": "2026-09-12",
+   "amount_usd": null,
+   "amount_text": "~10.70728 ETH (reproduced exact to the w",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": "Spiral",
+   "summary": "2026년 9월 12일 한 블록(25974146) 안에서 공격이 전개되었다. 공격자 EOA 0x859E…가 54 ETH를 풀에 투입해 SPIRAL 가격을 약 0.0012041 ETH/토큰으로 상승시켰다. 동일 계약을 6개의 다른 EOAs가 이용해 총 64.7072 ETH를 인출했으며, "
+  },
+  {
+   "uid": "836c90a50074f044",
+   "project": "Liquid Network",
+   "type": "hack_exploit",
+   "event_date": "2026-09-06",
+   "reported": "2026-09-14",
+   "amount_usd": 320000000.0,
+   "amount_text": "$320 million",
+   "chains": [
+    "Bitcoin",
+    "Liquid"
+   ],
+   "sources": [
+    "rekt"
+   ],
+   "followup_of": "Liquid Network",
+   "summary": "2026년 9월 6일 캐시 키 충돌로 약 4,000 L-BTC가 무담보로 생성되었다. 공격자는 SideSwap의 peg-out 서비스를 이용해 3,996 BTC를 Bitcoin 메인넷으로 출금했다. 이후 3,400 BTC가 Liquid 연방 지갑으로 반환됐지만 598.5 BTC는 공격자"
+  },
+  {
+   "uid": "9200b5b01fb39ac6",
+   "project": "Fake AI Trading Bot Drainer",
+   "type": "phishing_social_engineering",
+   "event_date": "2026-02-12",
+   "reported": "2026-09-14",
+   "amount_usd": 517205.0,
+   "amount_text": "approximately USD 517,205",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "trm"
+   ],
+   "followup_of": null,
+   "summary": "2026년 2월부터 8월까지 224명의 사용자가 274.60 ETH(≈ $517,205)를 6개의 운영자 주소로 송금했다. 피해자는 튜토리얼을 따라 계약을 배포했으며, 자금은 탈중앙화 거래소, 브리지 및 믹서를 거쳐 이동했지만 중앙화 거래소는 사용되지 않았다. 이 공격은 피싱 링크나 승"
+  },
+  {
+   "uid": "798da6d31446f89c",
+   "project": "Revolut",
+   "type": "ransomware",
+   "event_date": "2026-09-17",
+   "reported": "2026-09-17",
+   "amount_usd": null,
+   "amount_text": "$300만달러",
+   "chains": [
+    "Monero"
+   ],
+   "sources": [
+    "rss:blockmedia",
+    "rss:tokenpost"
+   ],
+   "followup_of": "Revolut",
+   "summary": "리볼루트는 9월 17일 해당 집단으로부터 직접 연락을 받은 적 없다고 밝혔다. 집단은 ‘IAmNotAVillain’이라는 이름으로 6000 XMR(≈$3M)를 24시간 내에 지급하라며 위협했다. 리볼루트는 공식적인 요구를 받지 않았으며 현재까지 금전이 지급되지 않았다."
+  },
+  {
+   "uid": "01786e09a76a88df",
+   "project": "Startale",
+   "type": "hack_exploit",
+   "event_date": "2026-09-16",
+   "reported": "2026-09-16",
+   "amount_usd": 2876.0,
+   "amount_text": "$ 2,876",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 16일, Startale의 ERC-7579 스마트 계정이 취약점으로 악용돼 약 $2,876을 잃었습니다. 공격자는 초기화 플래그를 재사용해 330개의 사전 자금 계정을 비웠습니다. 손실은 사전 자금만으로 발생했으며 Soneium 네트워크는 영향을 받지 않았습니다. 현재 "
+  },
+  {
+   "uid": "22c2943da27ab332",
+   "project": "Flamincome",
+   "type": "hack_exploit",
+   "event_date": "2026-09-16",
+   "reported": "2026-09-16",
+   "amount_usd": 345900.0,
+   "amount_text": "$ 345,900",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 16일, 공격자는 플래시 론을 이용해 전략에 LP를 주입해 VaultYUSDT 주식 가격을 부풀렸다. 이후 실제 Aave aUSDT 유동성을 회수해 약 $345.9K를 탈취했다. 손실은 Flamincome 계약에 $345,900으로 보고되었다. 사건은 SlowMist이 "
+  },
+  {
+   "uid": "dd282a46ff0998df",
+   "project": "BonfireSwap",
+   "type": "hack_exploit",
+   "event_date": "2026-09-15",
+   "reported": "2026-09-15",
+   "amount_usd": 47000.0,
+   "amount_text": "~66 BNB (~$47-50K); 58.78 BNB reproduced",
+   "chains": [
+    "BSC"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": "Bonfiretoken",
+   "summary": "2026년 9월 15일, 공격자는 BonfireSwap 라우터를 이용해 약 66 BNB(≈$47-50K)를 탈취했습니다. 피해자는 약 65명의 토큰 보유자였으며, 5명만으로 전체 손실의 98.7%를 차지했습니다. 공격자는 토큰을 강제 전송 후 라우터의 sell()을 호출해 BNB로 교환"
+  },
+  {
+   "uid": "41285d45e3aa0286",
+   "project": "DCENT App Wallet",
+   "type": "hack_exploit",
+   "event_date": "2026-09-15",
+   "reported": "2026-09-15",
+   "amount_usd": 6570000.0,
+   "amount_text": "$ 6,570,000",
+   "chains": [],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 15일 DCENT App Wallet에서 $6.57M 규모의 자산이 탈취되었습니다. 9월 16일 DCENT은 긴급 보안 경고를 발표하고 조사 중임을 알렸습니다. 초기 조사 결과는 하드웨어 지갑에는 영향을 주지 않은 것으로 보입니다. 사용자는 즉시 자산을 안전한 하드웨어 "
+  },
+  {
+   "uid": "c1fab747f31ea437",
+   "project": "Iranian Government",
+   "type": "law_enforcement_action",
+   "event_date": "2026-09-14",
+   "reported": "2026-09-14",
+   "amount_usd": 61000000.0,
+   "amount_text": "$61 million",
+   "chains": [],
+   "sources": [
+    "doj"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 14일, 미국 남동부 뉴욕 연방 지방 검찰은 약 6100만 달러 규모의 암호화폐 압류를 청구했다. 검찰은 이 자금이 이란 원유 불법 판매 수익이며, IRGC와 이란 군대에 사용됐다고 주장한다. 중국 기업 Blessed Trust와 Hexa Whale이 Binance를 이"
+  },
+  {
+   "uid": "30189360635b7c4c",
+   "project": "GalaChain",
+   "type": "hack_exploit",
+   "event_date": "2026-08-18",
+   "reported": "2026-09-17",
+   "amount_usd": 3000000.0,
+   "amount_text": "$300만달러",
+   "chains": [
+    "GalaChain"
+   ],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": null,
+   "summary": "GalaChain에서 약 300만 달러 규모의 자산이 탈취되었다. 공격자는 과거 실패 트랜잭션 서명을 재활용해 9개 지갑에서 총 20억 GALA와 37종 토큰을 빼냈다. 가장 큰 단일 전송은 1억6398만 GALA였다. GalaChain은 이번 취약점을 공개하고 패치를 준비 중이다."
+  },
+  {
+   "uid": "7583dd85ed695c65",
+   "project": "BitBank",
+   "type": "sanctions_designation",
+   "event_date": "2026-09-17",
+   "reported": "2026-09-17",
+   "amount_usd": null,
+   "amount_text": "hundreds of millions of dollars worth of",
+   "chains": [
+    "Bitcoin",
+    "Dot One Smart Chain"
+   ],
+   "sources": [
+    "rss:blockmedia",
+    "trm"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 17일 OFAC는 BitBank과 그 개발사 Pishtaz Simorgh Electronic Trade Company, 그리고 잔자니 네트워크의 고위 관계자를 제재했다. OFAC는 잔자니가 2026년 6~7월에 BitBank을 이용해 수백만 달러 규모의 비트코인을 IRG"
+  },
+  {
+   "uid": "1f235f3ba4232a20",
+   "project": "Nostra",
+   "type": "hack_exploit",
+   "event_date": "2026-09-17",
+   "reported": "2026-09-17",
+   "amount_usd": 3500000.0,
+   "amount_text": "$ 3,500,000",
+   "chains": [
+    "Starknet",
+    "Ethereum"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 17일, 공격자는 조작된 NSTR 가격을 담보로 약 $3.5M 규모의 자산을 빌렸습니다. 손실된 자산에는 ETH, STRK, USDC, USDT, WBTC, DAI가 포함됩니다. Nostra 팀은 시장을 일시 중단하고 자금 추적에 나섰습니다. 현재 약 $1.92M가 Et"
+  },
+  {
+   "uid": "d4448a2b8387df9f",
+   "project": "Nimiq",
+   "type": "hack_exploit",
+   "event_date": "2026-09-16",
+   "reported": "2026-09-16",
+   "amount_usd": 50463.0,
+   "amount_text": "$ 50,463",
+   "chains": [
+    "Polygon"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 16일, 공격자는 0x24cb…6773 주소를 가장해 26,130.64171 USDC, 24,332.489269 USDT0, 0.661117 USDC.e를 HTLC에 잠갔다. 이후 CREATE2 계약으로 비밀값 1을 제공해 토큰을 회수해 약 $50,463 손실이 발생했다"
+  },
+  {
+   "uid": "154039714a49ea45",
+   "project": "Flamincome",
+   "type": "hack_exploit",
+   "event_date": "2026-09-16",
+   "reported": "2026-09-16",
+   "amount_usd": 595000,
+   "amount_text": "",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defillama"
+   ],
+   "followup_of": "Flamincome",
+   "summary": "DeFiLlama: Flamincome (Ethereum) — Oracle Manipulation / Spot Price Manipulation, 손실 $595,000"
+  },
+  {
+   "uid": "264dbb7f5b6e2448",
+   "project": "Decent",
+   "type": "private_key_compromise",
+   "event_date": "2026-09-15",
+   "reported": "2026-09-18",
+   "amount_usd": null,
+   "amount_text": "",
+   "chains": [
+    "Bitcoin",
+    "Ethereum",
+    "XRP"
+   ],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 18일 Decent는 앱 지갑에서 승인되지 않은 자산 이동을 신고받았다. 약 2,009,321개의 XRP가 탈취된 것으로 분석됐다. 복구 문구 유출이 원인으로 확인되었다. 현재 추가 조사가 진행 중이며, 영향을 받은 사용자는 복구 문구를 재설정하도록 권고받았다."
+  },
+  {
+   "uid": "1a96fd35a33fe926",
+   "project": "RsETHSafeModule",
+   "type": "hack_exploit",
+   "event_date": "2026-09-15",
+   "reported": "2026-09-15",
+   "amount_usd": 7800000.0,
+   "amount_text": "2,900 aEthrsETH (~$7.8M gross; 2,882.37 ",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": "Unknown Gnosis Safe Wallet",
+   "summary": "2026-09-15에 공격자는 예시 트랜잭션 0x0e7680… 로 2,900 aEthrsETH를 빼냈다. 피해자 Safe(0x40E93a…)는 53,402 aEthrsETH를 보유하고 있었으며 전부가 사라졌다. 탈취된 토큰은 MEV 프론트러너 주소 0xFDe0… 로 전송돼 2,882.3"
+  },
+  {
+   "uid": "7a85ee628fc6a541",
+   "project": "Christopher Michael Cadman",
+   "type": "law_enforcement_action",
+   "event_date": "2026-09-14",
+   "reported": "2026-09-14",
+   "amount_usd": 25000.0,
+   "amount_text": "$25,000",
+   "chains": [],
+   "sources": [
+    "doj"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 14일, 전 LASD 부Deputy Christopher Michael Cadman은 시민권 침해와 허위 세금 신고 혐의로 21개월 징역형을 선고받았다. 법원은 그에게 $25,000의 배상금을 지급하도록 명령했다. Cadman은 Iza의 적을 위협해 피해자로부터 $25,"
+  },
+  {
+   "uid": "b27e57014a017ff5",
+   "project": "Chainflip",
+   "type": "hack_exploit",
+   "event_date": "2026-09-12",
+   "reported": "2026-09-17",
+   "amount_usd": 736442.17,
+   "amount_text": "73만6442.17 USDT",
+   "chains": [
+    "Tron"
+   ],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": "Chainflip",
+   "summary": "2026년 9월 12일 공격자가 중복 출금으로 736,442.17 USDT를 탈취했다. Chainflip은 9월 13일 보고서에서 다른 자금은 안전하다고 밝혔다. 9월 15일 잔액을 0으로 초기화하고 네트워크를 재가동한다. 기존 잔액은 온체인 기록에 남겨 추후 상환을 준비한다."
+  },
+  {
+   "uid": "19bb44807d8b224e",
+   "project": "RISEx",
+   "type": "hack_exploit",
+   "event_date": null,
+   "reported": "2026-09-19",
+   "amount_usd": 673011.56,
+   "amount_text": "67만3011.56 USDC",
+   "chains": [
+    "Ethereum",
+    "Base"
+   ],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": null,
+   "summary": "2026년 8월 RISEx XLP 금고에서 67만3011.56 USDC가 무단 인출됐다. RISEx는 공격자에게 보유 중인 13만4566 USDC를 제외하고 나머지 80%를 반환하도록 요구했다. 반환 기한은 9월 23일이며, 지정 주소는 이더리움 또는 Base 네트워크에 있다. 공격자가"
+  },
+  {
+   "uid": "36d55089fa264dc3",
+   "project": "Radix Engine",
+   "type": "hack_exploit",
+   "event_date": "2026-09-17",
+   "reported": "2026-09-19",
+   "amount_usd": 1260000.0,
+   "amount_text": "$1.26 million",
+   "chains": [
+    "Ethereum",
+    "BSC",
+    "Solana"
+   ],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 17일, 래딕스 엔진의 취약점이 악용돼 약 $1.26M 규모의 자산이 탈취되었다. 인출된 토큰은 이더리움, BNB 체인, 솔라나 및 Radix 네트워크에 걸쳐 있었다. 이 사건으로 네트워크 거래 처리가 일시 중단되었다. 래딕스 재단은 하이퍼레인 경로를 차단하고 일부 검증"
+  },
+  {
+   "uid": "539f8d767d650de1",
+   "project": "Osmosis",
+   "type": "hack_exploit",
+   "event_date": "2026-06-25",
+   "reported": "2026-09-18",
+   "amount_usd": 3150000.0,
+   "amount_text": "$3.15 million",
+   "chains": [
+    "Cosmos",
+    "Ethereum",
+    "Noble"
+   ],
+   "sources": [
+    "rekt"
+   ],
+   "followup_of": null,
+   "summary": "2026년 6월 25일 Nomic의 ibc_deliver 버그를 이용해 40.65 nBTC가 무담보로 발행됐다. 이 토큰은 Osmosis의 allBTC 전환기에 1:1로 교환돼 약 $3.15M 규모의 손실을 만들었다. 공격자는 약 18 BTC에 해당하는 자금을 다른 체인으로 전환하고 T"
+  },
+  {
+   "uid": "09352e817384118e",
+   "project": "AI Bot Lecture Scam",
+   "type": "scam_fraud",
+   "event_date": "2026-02-12",
+   "reported": "2026-09-18",
+   "amount_usd": 517205.0,
+   "amount_text": "51만7205달러",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": "Fake AI Trading Bot Drainer",
+   "summary": "2026년 2월 12일부터 8월 11일까지 총 274.60 ETH(≈$517,205)가 탈취되었다. 사기 조직은 6개의 주소로 자금을 집중시켰다. TRM Labs는 9월 14일 보고서로 사실을 공개했다. 현재 해당 주소들은 추적 중이며 추가 조치가 필요하다."
+  },
+  {
+   "uid": "83b6ceb51e69728b",
+   "project": "MultiversX",
+   "type": "hack_exploit",
+   "event_date": "2026-09-19",
+   "reported": "2026-09-19",
+   "amount_usd": null,
+   "amount_text": "-",
+   "chains": [
+    "MultiversX"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 19일, 공격자가 MultiversX 메인넷의 VM 원자성 결함을 이용하려 시도했다. 이로 인해 일부 온체인 상태가 잘못 변경되었지만, 즉시 네트워크가 일시 정지되었다. 엔지니어 팀은 그림자 포크에서 검증 로직을 수정하고, 영향을 받은 변경만 되돌리는 복구 방안을 검토 "
+  },
+  {
+   "uid": "cb91f1c9aedbc3fe",
+   "project": "Blink Wallet",
+   "type": "hack_exploit",
+   "event_date": "2026-09-19",
+   "reported": "2026-09-19",
+   "amount_usd": null,
+   "amount_text": "-",
+   "chains": [
+    "Bitcoin"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 19일 Blink Wallet에 무단 접근 사건이 발생했다. 공격자는 몇 개의 custodial 계정에서 자금을 빼냈지만 대부분의 자금은 안전하게 유지되었다. 비관리형(Non-custodial) 지갑은 영향을 받지 않았다. 현재 팀은 사건 조사와 복구 작업을 진행 중이다"
+  },
+  {
+   "uid": "5cda55e0d065f1f4",
+   "project": "Likwid",
+   "type": "hack_exploit",
+   "event_date": "2026-09-18",
+   "reported": "2026-09-18",
+   "amount_usd": null,
+   "amount_text": "74.31 BNB (reproduced to within 3 wei)",
+   "chains": [
+    "BSC"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 18일 BSC에서 공격자는 LikwidMarginPosition 계약의 pairDelta 누락 버그를 악용했다. 24번의 addMargin 호출로 총 74.31 BNB를 LikwidVault에서 빼냈다. 공격자는 사전에 보유한 218.58M TOKEN을 사용했으며, 차입"
+  },
+  {
+   "uid": "b1fc47e32e4c4580",
+   "project": "BitBank",
+   "type": "sanctions_designation",
+   "event_date": "2026-09-17",
+   "reported": "2026-09-19",
+   "amount_usd": null,
+   "amount_text": "수억달러",
+   "chains": [
+    "Bitcoin"
+   ],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": "BitBank",
+   "summary": "2026년 9월 17일 OFAC는 BitBank를 제재 대상으로 지정했다. 비트뱅크는 이란 혁명수비대로 수억 달러 규모의 비트코인을 이전한 것으로 알려졌다. 동시에 Blink Wallet은 일부 수탁형 계정이 해킹당해 자금이 유출됐으며, 회사는 전액 보전을 약속했다."
+  },
+  {
+   "uid": "01dcf593b33091ff",
+   "project": "PrimeFinance",
+   "type": "hack_exploit",
+   "event_date": "2026-09-16",
+   "reported": "2026-09-16",
+   "amount_usd": 33400.0,
+   "amount_text": "~425.5 WHYPE (~$33.4K) drained from the ",
+   "chains": [
+    "HyperEVM"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": null,
+   "summary": "2026-09-16에 공격자는 오래된 오라클 보고서로 PRFI 가격을 52배 올렸다. 이를 이용해 100 WHYPE를 플래시 대출받아 PRFI를 구매·담보로 제공하고 425.5 WHYPE를 차입해 풀 준비금을 고갈시켰다. 플래시 대출을 상환하고 약 398.7 WHYPE를 순이익으로 남겼"
+  },
+  {
+   "uid": "454f0ebc6282a922",
+   "project": "Flamincome",
+   "type": "hack_exploit",
+   "event_date": "2026-09-16",
+   "reported": "2026-09-16",
+   "amount_usd": 345900.0,
+   "amount_text": "~$345.9K USDT net attacker profit (gross",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": "Flamincome",
+   "summary": "2026년 9월 16일 공격자는 무수수료 USDT 플래시론을 받아 VaultYUSDT에 예치했다. 이후 Convex stakeFor를 이용해 전략 잔액을 인위적으로 늘리고, withdrawAll로 과다 지급된 USDT를 인출했다. 공격자는 약 $345.9K 순이익을 얻었으며 전략은 약 "
+  },
+  {
+   "uid": "26bb1bed34fd692b",
+   "project": "Paraguay illegal mining",
+   "type": "law_enforcement_action",
+   "event_date": "2026-09-12",
+   "reported": "2026-09-20",
+   "amount_usd": 30000.0,
+   "amount_text": "약 3만달러",
+   "chains": [],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 12일과 9월 17일에 파라과이 당국은 알토파라나주에 있는 두 불법 채굴장을 적발하고 ASIC 채굴기 35대를 압수했다. 첫 번째 단속에서는 25대, 두 번째에서는 10대가 각각 적발되었다. 관련 벌금은 약 3만달러(≈4,161만원)로 책정되었다. 현재 압수된 장비는 국"
+  },
+  {
+   "uid": "3a837f40f2d58f55",
+   "project": "North Korean fake recruiters",
+   "type": "phishing_social_engineering",
+   "event_date": null,
+   "reported": "2026-09-21",
+   "amount_usd": 10700000.0,
+   "amount_text": "$10.7M",
+   "chains": [],
+   "sources": [
+    "rss:cointelegraph_hacks"
+   ],
+   "followup_of": null,
+   "summary": "WaterPlum은 30,000대 이상의 기기를 감염시켜 $10.7M 규모의 암호화폐를 훔쳤다. 피해는 100개국 이상에 걸쳐 있었다. 현재 피해 복구 및 추적이 진행 중이다."
+  },
+  {
+   "uid": "05a786a34f92d390",
+   "project": "Binance",
+   "type": "phishing_social_engineering",
+   "event_date": "2026-09-20",
+   "reported": "2026-09-21",
+   "amount_usd": null,
+   "amount_text": "",
+   "chains": [],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": null,
+   "summary": "데이터 유출 후 가짜 고객센터 전화가 증가했습니다. 사기범은 전화로 자산 이전을 요구했지만 실제 손실 규모는 확인되지 않았습니다. 해당 사기의 직접적인 원인과 피해액은 아직 파악되지 않았습니다. 현재 당국은 조사 중이며 이용자에게 주의를 당부하고 있습니다."
+  },
+  {
+   "uid": "b212ff97cd577f31",
+   "project": "NuNet",
+   "type": "private_key_compromise",
+   "event_date": "2026-09-19",
+   "reported": "2026-09-19",
+   "amount_usd": 462730.0,
+   "amount_text": "$ 462,730",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 19일, 공격자는 NuNet의 배포자 개인키를 탈취했다. 이를 이용해 NTX 토큰 계약의 mint 함수를 실행해 408,532,878.13 NTX를 발행했고, 이는 약 $462,730에 해당한다. 해당 토큰은 공급 상한 검사가 없어 키만 있으면 무제한 발행이 가능했다. "
+  },
+  {
+   "uid": "b106e8fe073742e5",
+   "project": "Fetch.ai",
+   "type": "private_key_compromise",
+   "event_date": "2026-09-19",
+   "reported": "2026-09-19",
+   "amount_usd": 1530000.0,
+   "amount_text": "$ 1,530,000",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 19일, 공격자는 유출된 서명키로 Fetch.ai의 이더리움 토큰 변환 계약에서 약 8,721,530 FET를 인출했다. 이는 약 $1.53M에 해당한다. 이후 동일 지갑 클러스터가 NuNet 배포키를 이용해 408.5M NTX를 무단 발행했다. 공격은 추가로 ASI A"
+  },
+  {
+   "uid": "8f679df94cb5f6ba",
+   "project": "Likwid",
+   "type": "hack_exploit",
+   "event_date": "2026-09-18",
+   "reported": "2026-09-18",
+   "amount_usd": 55721.0,
+   "amount_text": "$ 55,721",
+   "chains": [
+    "BNB Chain"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": "Likwid",
+   "summary": "2026년 9월 18일, 공격자는 Likwid의 마진 계약 버그를 악용해 74.31 BNB(≈$55.7K)를 탈취했다. 탈취된 자금은 Tornado Cash로 전송되어 추적이 어려워졌다. Likwid 팀은 손실을 확인하고 보안 패치를 적용했으며, 현재 추가 손실 방지를 위해 시스템을 점"
+  },
+  {
+   "uid": "4aa1d2c916ad3688",
+   "project": "Nimiq",
+   "type": "hack_exploit",
+   "event_date": "2026-09-16",
+   "reported": "2026-09-16",
+   "amount_usd": 50463.79,
+   "amount_text": "~$50,463.79 (USDC, USDT0, USDC.e drained",
+   "chains": [
+    "Polygon"
+   ],
+   "sources": [
+    "defihacklabs",
+    "defillama"
+   ],
+   "followup_of": "Nimiq",
+   "summary": "2026년 9월 16일 Nimiq 스왑-리퀴디티 지갑이 약 $50,463를 잃었다. 공격자는 악성 페이마스터를 배포하고 RelayHub로 피해자 주소의 open()을 실행했다. CREATE2 수신자 계약에서 비밀값으로 HTLC를 인출해 전액을 자신에게 전송했다. 포워더가 서명 검증을 하"
+  },
+  {
+   "uid": "dae47477bbcb607e",
+   "project": "Startale",
+   "type": "hack_exploit",
+   "event_date": "2026-09-16",
+   "reported": "2026-09-16",
+   "amount_usd": 2876.0,
+   "amount_text": "427.551160 USDC drained in this batch tx",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": "Startale",
+   "summary": "2026년 9월 16일, 공격자는 임시 계약을 배포하고 생성자 안에서 두 번의 initializeAccount 호출을 수행해 23개의 사전 충전된 계정에서 총 427.551160 USDC를 탈취했습니다. 이 단일 트랜잭션에서 약 $427가 손실됐으며, 전체 캠페인에서는 약 $2,876 "
+  },
+  {
+   "uid": "345800d566c57323",
+   "project": "말레이시아 중국인 2명, 가상자산 사기 공모로 각 4700링깃 벌금",
+   "type": "scam_fraud",
+   "event_date": "2026-09-11",
+   "reported": "2026-09-21",
+   "amount_usd": null,
+   "amount_text": "",
+   "chains": [],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 11일 두 피고인은 조호르바루 마리나뷰 리조트에서 허위 가상자산 투자 사기를 공모했다. 9월 21일 조호르바루 치호르바루 치안법원에서 유죄를 인정하고 각각 4,700링깃의 벌금을 선고받았다. 사건은 가상자산을 이용한 사기 공모로, 실제 자금 흐름이나 자산 압류는 보고되지"
+  },
+  {
+   "uid": "0bce9293083d7aa9",
+   "project": "DoinGud",
+   "type": "hack_exploit",
+   "event_date": "2026-09-21",
+   "reported": "2026-09-21",
+   "amount_usd": 35486.0,
+   "amount_text": "$ 35,486",
+   "chains": [
+    "Polygon"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 21일 DoinGud의 Diamond 입찰 계약에 버그가 악용돼 $35,486 규모의 USDC가 탈취되었습니다. 공격자는 플래시론을 이용해 입찰을 두 번 승인했습니다. 현재 복구나 추가 조치는 보고되지 않았습니다."
+  },
+  {
+   "uid": "13bc68472fc584d9",
+   "project": "GaslessReservoirEnabler",
+   "type": "hack_exploit",
+   "event_date": "2026-09-21",
+   "reported": "2026-09-21",
+   "amount_usd": 23000.0,
+   "amount_text": "$ 23,000",
+   "chains": [
+    "Polygon"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 21일, 공격자는 GaslessReservoirEnabler 계약의 허점을 이용해 약 997명의 토큰 보유자에게서 총 $23,000을 탈취했다. 탈취된 자금은 Polygon 브리지로 통합되어 이동되었다. 피해액은 비교적 작지만, 허가된 토큰의 allowance 남용 위험"
+  },
+  {
+   "uid": "fa7e8784eda7d0e7",
+   "project": "캄보디아 가상자산 사기단",
+   "type": "law_enforcement_action",
+   "event_date": "2026-09-21",
+   "reported": "2026-09-21",
+   "amount_usd": null,
+   "amount_text": "",
+   "chains": [],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": null,
+   "summary": "경기남부경찰청은 2026년 9월 21일 사기단 26명을 검거하고 그 중 9명을 구속했다. 피해액은 409억원이며 456명의 피해자가 발생했다. 현재 사건은 추가 수사 중이다."
+  },
+  {
+   "uid": "b685cc839f0264a1",
+   "project": "Internet Token",
+   "type": "hack_exploit",
+   "event_date": "2026-09-21",
+   "reported": "2026-09-21",
+   "amount_usd": 265000.0,
+   "amount_text": "$ 265,000",
+   "chains": [
+    "Base"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 21일, 공격자는 LiquidityUnifier의 취약점을 이용해 $265,000 상당의 자금을 탈취했다. 가짜 풀 콜백으로 대량의 INT를 발행하고, 공식 풀에서 WETH를 빼냈다. 공격자는 보유한 INT를 이용해 거버넌스 제안을 제출해 금고 자금 이동을 시도하고 있다"
+  },
+  {
+   "uid": "2bd3009b61732e57",
+   "project": "RWC Token",
+   "type": "hack_exploit",
+   "event_date": "2026-09-21",
+   "reported": "2026-09-21",
+   "amount_usd": 109460.85,
+   "amount_text": "$ 109,460.85",
+   "chains": [
+    "BNB Smart Chain"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 21일, 공격자는 플래시론으로 풀을 조작해 약 $109,460.85 상당의 USDT를 탈취했다. 탈취된 금액 중 $39,964.07은 공격자 지갑에 남았고, 나머지 $69,496.78은 토큰 수수료 로직에 따라 프로젝트 회사와 플랫폼 지갑으로 전송되었다. 피해 풀은 Pa"
+  },
+  {
+   "uid": "38afe064d7c7264d",
+   "project": "Balancer",
+   "type": "hack_exploit",
+   "event_date": "2026-08-31",
+   "reported": "2026-09-21",
+   "amount_usd": 1393694.67,
+   "amount_text": "139만3694.67달러",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "rss:tokenpost"
+   ],
+   "followup_of": null,
+   "summary": "2026년 8월 31일 Balancer V1 풀 해킹으로 $1.393M 손실이 발생했다. DAO는 296.401711 ETH를 회수했으며, 9월 18일 제안서에서 120개 피해 풀의 LP에게 배분할 계획을 발표했다. 아직 거버넌스 표결과 구체적 지급 일정은 확정되지 않았다."
+  },
+  {
+   "uid": "246938c18958e5d6",
+   "project": "DYORSWAP",
+   "type": "phishing_social_engineering",
+   "event_date": "2026-09-27",
+   "reported": "2026-09-27",
+   "amount_usd": 2000000.0,
+   "amount_text": "$ 2,000,000",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 27일, 사기꾼이 체인 ID 9134를 이용해 가짜 GIWA 메인넷을 구축했다. 사용자는 DYORSWAP 통합 브리지를 통해 ETH를 전송했고, 자금은 가짜 브리지 계약으로 빠져나갔다. 총 손실은 약 $2M이다. 현재 프로젝트는 피해 복구 방안을 모색 중이다."
+  },
+  {
+   "uid": "af4c3fe77edae826",
+   "project": "DAOstack",
+   "type": "hack_exploit",
+   "event_date": "2026-09-26",
+   "reported": "2026-09-26",
+   "amount_usd": null,
+   "amount_text": "4.025 ETH (full Genesis Alpha treasury);",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 26일 공격자는 permissionless newOrganization을 이용해 DAOstack Genesis Alpha DAO의 Reputation을 탈취했다. 20,000 REP을 민팅해 과반수 권한을 확보하고, SchemeRegistrar를 통해 자신을 전체 권한 "
+  },
+  {
+   "uid": "d2eaa1d494c9d055",
+   "project": "Limit Break",
+   "type": "hack_exploit",
+   "event_date": "2026-09-25",
+   "reported": "2026-09-25",
+   "amount_usd": 1700000.0,
+   "amount_text": "$ 1,700,000",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 25일, 공격자는 Limit Break의 Payment Processor V2를 이용해 사용자 승인 NFT를 무상으로 구매했다. 약 $1.7M 가치의 NFT가 몇 차례 거래를 통해 탈취되었다. 화이트햇이 일부 자산을 회수했으며, 위험이 사라지면 반환할 예정이다. Limi"
+  },
+  {
+   "uid": "ec9a5d264f736af8",
+   "project": "Bitget",
+   "type": "hack_exploit",
+   "event_date": "2026-09-24",
+   "reported": "2026-09-25",
+   "amount_usd": 387500000.0,
+   "amount_text": "$387.5 million",
+   "chains": [
+    "Ethereum",
+    "XRP Ledger",
+    "Arbitrum"
+   ],
+   "sources": [
+    "defillama",
+    "rss:cointelegraph_hacks",
+    "rss:tokenpost",
+    "slowmist",
+    "trm"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 24일 공격자는 Bitget의 핫·웜 월렛에서 3억 5천 1백 6십만 달러를 7개 체인으로 전송했다. 자금은 0x770b…와 0xa6d… 주소로 모여 약 10,000 ETH와 20 M XRP 등 라운드 금액 지갑으로 분할되었다. 일부는 THORChain을 통해 비트코인으"
+  },
+  {
+   "uid": "a10f1288a9c47623",
+   "project": "Payy Network",
+   "type": "hack_exploit",
+   "event_date": "2026-09-24",
+   "reported": "2026-09-24",
+   "amount_usd": 1832149.0,
+   "amount_text": "$ 1,832,149",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 24일, Payy Network의 이더리움 브리지 계약이 해킹돼 약 $1.83M(USDC) 전액이 탈취됐다. Payy는 사용자 예치금이 사라졌다고 발표했다. 모든 거래를 일시 중단하고 자금 회수를 위해 조사 중이다. 현재 공격자 주소는 확인되지 않았다."
+  },
+  {
+   "uid": "e561631c657af925",
+   "project": "Meter Passport",
+   "type": "hack_exploit",
+   "event_date": "2026-09-24",
+   "reported": "2026-09-24",
+   "amount_usd": 2300000.0,
+   "amount_text": "$ 2,300,000",
+   "chains": [
+    "BSC",
+    "Meter",
+    "Ethereum"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 24일 Meter Passport 브리지에서 약 $2.3M 규모의 무보증 wMTRG가 두 건의 트랜잭션으로 발행됐다. 공격자는 이를 PancakeSwap에 판매해 현금화했다. 현재 공격이 진행 중이며 손실 회복이 어려운 상황이다."
+  },
+  {
+   "uid": "394da3487529cc41",
+   "project": "Duelbits",
+   "type": "private_key_compromise",
+   "event_date": "2026-09-24",
+   "reported": "2026-09-24",
+   "amount_usd": 4900000.0,
+   "amount_text": "$ 4,900,000",
+   "chains": [
+    "Ethereum",
+    "BSC",
+    "Tron"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 24일 Duelbits의 멀티체인 핫월렛에서 약 $4.9M가 새 주소로 이동했다. 대부분의 자금은 ETH로 교환되었다. 사건 발생 후 사이트는 조사 차단되었다."
+  },
+  {
+   "uid": "e530dd155fd0df97",
+   "project": "Jack Kong",
+   "type": "phishing_social_engineering",
+   "event_date": "2026-09-23",
+   "reported": "2026-09-23",
+   "amount_usd": null,
+   "amount_text": "-",
+   "chains": [
+    "bnb chain"
+   ],
+   "sources": [
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 23일 Nano Labs 설립자 Jack Kong의 개인 X 계정이 해킹되었다. 공격자는 계정을 이용해 Binance World Assets($BWA)라는 가짜 AI 트레이딩 토큰을 홍보하고, BNB 체인 수수료로 bStocks를 거래한다며 수익을 공유한다는 주장을 펼쳤"
+  },
+  {
+   "uid": "82ed3d233a44cff4",
+   "project": "Drop",
+   "type": "hack_exploit",
+   "event_date": "2026-09-22",
+   "reported": "2026-09-22",
+   "amount_usd": 4400000.0,
+   "amount_text": "$ 4,400,000",
+   "chains": [
+    "Ethereum",
+    "Neutron"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 22일 Drop 프로젝트는 악성 거버넌스 제안으로 약 $4.4M를 탈취당했다. 공격자는 금고에서 자금을 이동시켰으며, 현재 회수 여부는 확인되지 않았다."
+  },
+  {
+   "uid": "5d09cf26aa89d8a4",
+   "project": "Karen Vardanyan",
+   "type": "law_enforcement_action",
+   "event_date": "2026-09-22",
+   "reported": "2026-09-22",
+   "amount_usd": 1219106.0,
+   "amount_text": "$1,219,106.00",
+   "chains": [
+    "Bitcoin"
+   ],
+   "sources": [
+    "doj"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 22일, Vardanyan은 24개월 징역과 3년 보호관찰을 선고받았다. 그는 $1,219,106의 피해자 보상을 지급하도록 명령받았다. 법원은 2024년 연방 대배심이 제기한 혐의를 근거로 판결했다. 현재 그는 연방 교도소에 수감 중이다."
+  },
+  {
+   "uid": "02c9bb7af86c637c",
+   "project": "Astroport",
+   "type": "hack_exploit",
+   "event_date": "2026-09-22",
+   "reported": "2026-09-22",
+   "amount_usd": 4900000.0,
+   "amount_text": "$ 4,900,000",
+   "chains": [
+    "Neutron"
+   ],
+   "sources": [
+    "defillama",
+    "slowmist"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 22일 Astroport은 Neutron 체인에서 관리자 권한이 탈취돼 $4.9M 손실이 발생했다고 발표했다. Neutron은 조사 위해 체인 운영을 중단했다. 프로젝트는 모든 Astroport 풀에서 유동성을 즉시 인출하라고 권고했다. Terra 측 계약은 영향을 받지"
+  },
+  {
+   "uid": "0287d35d7b3838c7",
+   "project": "Olamide Shanu",
+   "type": "law_enforcement_action",
+   "event_date": "2026-09-21",
+   "reported": "2026-09-22",
+   "amount_usd": 2500000.0,
+   "amount_text": "more than $2,500,000",
+   "chains": [],
+   "sources": [
+    "doj"
+   ],
+   "followup_of": null,
+   "summary": "Shanu는 150명 이상의 미국 피해자를 속여 250만 달러 이상을 획득했다. 그는 2026년 9월 21일 아이오와 연방 법원에서 돈세탁 혐의에 대해 유죄를 인정했다. 검찰은 그를 나이지리아에서 인도해 형사 재판을 진행했으며, 12월 15일 선고가 예정돼 있다. 이 사건은 사이버 사기"
+  },
+  {
+   "uid": "01bd0804d7d205ae",
+   "project": "Iris Rabaya Au",
+   "type": "law_enforcement_action",
+   "event_date": "2026-09-21",
+   "reported": "2026-09-21",
+   "amount_usd": 2600000.0,
+   "amount_text": "$2.6 million",
+   "chains": [],
+   "sources": [
+    "doj"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 21일 Au는 연방 감옥 18개월형을 선고받았다. 법원은 1,484,343달러의 배상금과 고급 차량·가방·조각품 등을 몰수했다. Au는 2020-2023년 사이 2,600,000달러를 은닉하고 신고를 누락했다. 검찰은 그녀가 Iza의 자금 흐름을 지원했다고 주장했다. 현"
+  },
+  {
+   "uid": "e34a54c64c9de29d",
+   "project": "DoinGud",
+   "type": "hack_exploit",
+   "event_date": "2026-09-21",
+   "reported": "2026-09-21",
+   "amount_usd": 35486,
+   "amount_text": "35,380.154566 USDC net (two byte-identic",
+   "chains": [
+    "Polygon"
+   ],
+   "sources": [
+    "defihacklabs",
+    "defillama"
+   ],
+   "followup_of": "Nimiq",
+   "summary": "2026년 9월 21일, 공격자는 UniswapV2 플래시 스왑으로 35,486.935717 USDC를 빌려 DoinGud 마켓플레이스에 오퍼를 생성했다. 이후 acceptOffer를 두 번 호출해 총 70,973.871434 USDC를 인출하고, 플래시 스왑 수수료를 포함해 35,59"
+  },
+  {
+   "uid": "91cad2a8fdfa6080",
+   "project": "GaslessReservoirEnabler",
+   "type": "hack_exploit",
+   "event_date": "2026-09-21",
+   "reported": "2026-09-21",
+   "amount_usd": 23800.0,
+   "amount_text": "8.72 WETH (~$23.8K) across 466 victims w",
+   "chains": [
+    "Polygon"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": "GaslessReservoirEnabler",
+   "summary": "2026-09-21에 공격자는 Enabler를 이용해 466명의 WETH 허가를 악용해 8.72 WETH(~$23.8K)를 빼냈다. 트랜잭션 해시 0x2e476745f0f546dbe4583359ea6258dfb4fababea08734f676df2e6006e1fdee가 해당 공격이다. 피"
+  },
+  {
+   "uid": "0c27caa1f3121d7b",
+   "project": "InternetToken",
+   "type": "hack_exploit",
+   "event_date": "2026-09-21",
+   "reported": "2026-09-21",
+   "amount_usd": null,
+   "amount_text": "764,145,702 INT + 5.846988 WETH (attacke",
+   "chains": [
+    "Base"
+   ],
+   "sources": [
+    "defihacklabs"
+   ],
+   "followup_of": "Internet Token",
+   "summary": "2026년 9월 21일 공격자는 EOA 0x5F7cE6395818857aC20730dc990F614356D1Ec68 로 가짜 Uniswap V3 풀을 배포했다. LiquidityUnifier.swapV3에 가짜 풀을 전달해 콜백에서 925.41 M INT를 임의로 mint했다. 그 중 "
+  },
+  {
+   "uid": "a4f101443b947464",
+   "project": "SingularityNET",
+   "type": "hack_exploit",
+   "event_date": "2026-09-19",
+   "reported": "2026-09-25",
+   "amount_usd": 2290000.0,
+   "amount_text": "$2.29 million",
+   "chains": [
+    "Ethereum",
+    "Cardano"
+   ],
+   "sources": [
+    "rekt"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월 19일 공격자는 탈취한 서명으로 FET 8.72 M을 인출해 522.78 ETH로 교환했다. 이어 AGIX, WMTX, CGV, NTX 토큰을 총 2.3 B개 이상 무단 발행했다. 주요 지갑 두 개에 자금이 집중됐으며, 약 $2.29M의 현금성 수익이 확인됐다. Sing"
+  },
+  {
+   "uid": "28351a18ad65f2b3",
+   "project": "Nostra",
+   "type": "hack_exploit",
+   "event_date": "2026-09-17",
+   "reported": "2026-09-23",
+   "amount_usd": 3500000.0,
+   "amount_text": "$3.5 million",
+   "chains": [
+    "Starknet",
+    "Ethereum",
+    "Near"
+   ],
+   "sources": [
+    "rekt"
+   ],
+   "followup_of": "Nostra",
+   "summary": "2026년 9월 17일 조작된 가격으로 약 $3.5M을 차입했다. 차입된 자산은 ETH, STRK, USDC.e, USDT, WBTC, DAI 등이다. 프로토콜은 즉시 돈시장을 중단하고 조사에 들어갔다. PeckShield·CertiK 등 보안 업체가 거래를 추적했다. 자금은 Stark"
+  },
+  {
+   "uid": "b9e2530c9fb765f3",
+   "project": "KelpDAO",
+   "type": "hack_exploit",
+   "event_date": "2026-04-18",
+   "reported": "2026-09-25",
+   "amount_usd": 292000000.0,
+   "amount_text": "$292M",
+   "chains": [
+    "Ethereum"
+   ],
+   "sources": [
+    "rss:cointelegraph_hacks"
+   ],
+   "followup_of": null,
+   "summary": "2026년 9월, KelpDAO는 rsETH 브리지에서 $292M가 탈취된 사건을 겪었다. KelpDAO는 LayerZero와 CEO를 상대로 손해배상 소송을 제기했다. 현재 소송 진행 중이며, 자금 회수 여부는 미확정이다."
+  }
+ ],
+ "out": {
+  "duplicates": [
+   {
+    "uids": [
+     "7fe367b4eda4f6b7",
+     "4b0d13e5d2f05915",
+     "1a96fd35a33fe926"
+    ],
+    "representative": "1a96fd35a33fe926",
+    "confidence": 0.96,
+    "evidence": "All three entries refer to the same rsETH Safe theft on 2026‑09‑15: the first is \"Unknown Gnosis Safe Wallet\" with $7.73M, the second is \"custom Safe module\" with $7.7M and notes it is the same attack, and the third is \"RsETHSafeModule\" with $7.8M and links to the same Safe address."
+   }
+  ],
+  "wrong_amount": [
+   {
+    "uid": "5fffa3cf9db39d9a",
+    "suggested_amount_usd": null,
+    "confidence": 0.88,
+    "evidence": "The entry is a phishing/social‑engineering incident (PII leak) and the summary contains no monetary loss, yet the field amount_usd is null – this is correct, but the type \"phishing_social_engineering\" usually expects a loss amount; the record should leave amount blank rather than imply a loss."
+   },
+   {
+    "uid": "9200b5b01fb39ac6",
+    "suggested_amount_usd": 517205.0,
+    "confidence": 0.91,
+    "evidence": "The summary describes a theft of 274.60 ETH (≈ $517,205) from Feb‑Aug 2026, but the event_date is listed as \"2026‑02‑12\" while reported is \"2026‑09‑14\"; the amount field is correct but the date is inconsistent, indicating the amount belongs to the earlier period."
+   }
+  ],
+  "wrong_type": [
+   {
+    "uid": "b6fcaf1b9dca7c3a",
+    "suggested_type": "exploit",
+    "confidence": 0.87,
+    "evidence": "The summary describes a leveraged buy‑and‑re‑enter exploit on ORB, not a classic hack of contract code; \"hack_exploit\" is acceptable but the more precise type would be \"exploit\"."
+   },
+   {
+    "uid": "7a85ee628fc6a541",
+    "suggested_type": "criminal_prosecution",
+    "confidence": 0.89,
+    "evidence": "The entry is a law enforcement action against a former deputy for civil rights violations and tax fraud, not a crypto‑related sanction or seizure; \"law_enforcement_action\" is too generic."
+   }
+  ],
+  "wrong_date": [
+   {
+    "uid": "9200b5b01fb39ac6",
+    "suggested_date": "2022-02-12",
+    "confidence": 0.94,
+    "evidence": "The summary states the attack ran from February 2022 to August 2022, but the event_date field shows \"2026-02-12\" which is a clear typo."
+   },
+   {
+    "uid": "b27e57014a017ff5",
+    "suggested_date": "2026-09-12",
+    "confidence": 0.86,
+    "evidence": "The summary says the Chainflip attack occurred on 2026‑09‑12, yet the reported date is 2026‑09‑17 and the entry is marked as a follow‑up of itself, causing a date mismatch."
+   }
+  ],
+  "not_incident": [
+   {
+    "uid": "c1fab747f31ea437",
+    "category": "political_action",
+    "confidence": 0.92,
+    "evidence": "The entry concerns a US DOJ request to seize $61 M of crypto linked to the Iranian government; it is a law‑enforcement seizure, not a distinct crypto‑security incident."
+   },
+   {
+    "uid": "26bb1bed34fd692b",
+    "category": "non_crypto_crime",
+    "confidence": 0.88,
+    "evidence": "The summary describes a Paraguayan illegal mining raid and equipment seizure; no virtual‑asset loss is reported."
+   },
+   {
+    "uid": "3a837f40f2d58f55",
+    "category": "general_phishing",
+    "confidence": 0.85,
+    "evidence": "The summary mentions a large‑scale device infection campaign with $10.7 M stolen, but no blockchain or crypto‑asset details are provided."
+   }
+  ],
+  "naming": [
+   {
+    "uid": "7fe367b4eda4f6b7",
+    "suggested_name": "rsETH Safe Theft – Unknown Gnosis Safe Wallet",
+    "confidence": 0.9,
+    "evidence": "The project field \"Unknown Gnosis Safe Wallet\" is vague; the attack is the rsETH Safe module theft."
+   },
+   {
+    "uid": "b6fcaf1b9dca7c3a",
+    "suggested_name": "ORB Leveraged Buy‑and‑Re‑Enter Exploit",
+    "confidence": 0.86,
+    "evidence": "The project name \"ORB\" does not convey the exploit method described in the summary."
+   },
+   {
+    "uid": "fa7e8784eda7d0e7",
+    "suggested_name": "Cambodia Crypto Scam Ring",
+    "confidence": 0.84,
+    "evidence": "The Korean title \"캄보디아 가상자산 사기단\" is a generic description; a concise English name improves clarity."
+   }
+  ],
+  "overall": "전체 91건 중 중복된 rsETH Safe 사건, 날짜 오류, 비암호화 사건, 그리고 모호한 명칭이 다수 발견되었습니다. 대부분은 명확한 정정으로 해결 가능하지만, 일부는 추가 검증이 필요합니다."
+ },
+ "applied": {
+  "duplicates": 0,
+  "not_incident": 0,
+  "amount": 0,
+  "naming": 0,
+  "type": 0,
+  "date": 0
+ }
+}
