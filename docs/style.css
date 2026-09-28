@@ -769,3 +769,7 @@ body.case-open { overflow: hidden; }
 .badge.tb svg, .role svg { filter: drop-shadow(0 1px 1px rgba(0,0,0,.35)); }
 .rk-ri svg { width: 14px; height: 14px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.4)); }
 .rtile .ic svg { width: 19px; height: 19px; filter: drop-shadow(0 1px 2px rgba(0,0,0,.45)); }
+/* 유형 타일: 플랫 — 색 테 1.5px + 어두운 안쪽, 글로우·그림자 없음 */
+.avatar { background: color-mix(in srgb, var(--c, var(--ink-3)) 55%, transparent); }
+.avatar::before { background: color-mix(in srgb, var(--c, var(--ink-3)) 14%, #15151a); }
+.avatar svg, .badge.tb svg, .role svg, .rk-ri svg, .rtile .ic svg { filter: none; }

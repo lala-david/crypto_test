@@ -4,52 +4,41 @@
   const { esc, typeName, typeFull, roleName, TYPE_COLOR } = KL;
   const wrap = (paths, extra = "") => `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="none" aria-hidden="true"${extra}>${paths}</svg>`;
   // 유형별: 해킹=깨진 방패 · 개인키=열쇠 · 피싱=낚싯바늘 · 러그풀=말린 카펫+화살 · 사기=가면 · 랜섬웨어=자물쇠 · 제재=금지 원 · 수사·기소=망치(가벨) · 세탁=순환 화살표+$ · 기타=점
-  // ---- 게임 엠블럼 스타일: 그라데이션 면(ig-<key>) + 어두운 외곽선 + 흰 하이라이트 + 금색 코인/강철 디테일 ----
+  // ---- 플랫 2톤 엠블럼: 기본색 면 + 오른쪽 어두운 면(입체감) + 흰 포인트(번개·체크·눈·금지 바) + 플랫 금색 코인/강철. 그라데이션·글로우·하이라이트 없음 ----
   const BASE = { hack_exploit: "#e0521c", private_key_compromise: "#8f66f0", phishing_social_engineering: "#6aa018", rug_pull: "#b8800e", scam_fraud: "#d9408a", ransomware: "#e83a5a",
     sanctions_designation: "#109e8c", law_enforcement_action: "#3f7fe8", laundering_report: "#1e9fd8", other: "#7a8290", attacker: "#fb7185", laundering: "#fbbf24", victim: "#3f7fe8", unknown: "#7a8290" };
   const shade = (hex, p) => { const n = parseInt(hex.slice(1), 16); const t = p < 0 ? 0 : 255, q = Math.abs(p); const f = (v) => Math.round((t - v) * q + v);
     return "#" + [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => f(v).toString(16).padStart(2, "0")).join(""); };
-  const DK = (k) => shade(BASE[k] || BASE.other, -0.5);
-  const G = (k) => `url(#ig-${k})`;
-  const INNER = "#15151a";
-  const HL = 'stroke="#fff" stroke-opacity=".55" stroke-width=".9" stroke-linecap="round" fill="none"';
-  const OL = (k, w = ".8") => `stroke="${DK(k)}" stroke-width="${w}" stroke-linejoin="round"`;
+  const C = (k) => shade(BASE[k] || BASE.other, 0.06);
+  const D2 = (k) => shade(BASE[k] || BASE.other, -0.3);
+  const INNER = "#15151a", GOLD = "#f2b632", GOLD_D = "#a86a00", STEEL = "#b9c2d2", STEEL_D = "#6b7689";
   const RC = 'stroke-linecap="round" stroke-linejoin="round" fill="none"';
-  function ensureDefs() {
-    if (document.getElementById("klIconDefs")) return;
-    const grads = Object.keys(BASE).map((k) => { const c = BASE[k]; return `<linearGradient id="ig-${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(c, 0.42)}"/><stop offset=".55" stop-color="${c}"/><stop offset="1" stop-color="${shade(c, -0.4)}"/></linearGradient>`; }).join("")
-      + `<linearGradient id="ig-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffeaa7"/><stop offset=".5" stop-color="#f5b301"/><stop offset="1" stop-color="#a86a00"/></linearGradient>`
-      + `<linearGradient id="ig-steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f6fb"/><stop offset=".5" stop-color="#b6bfd0"/><stop offset="1" stop-color="#5b6577"/></linearGradient>`
-      + `<linearGradient id="ig-white" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#ffe9a8"/></linearGradient>`;
-    const el = document.createElement("div"); el.innerHTML = `<svg id="klIconDefs" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>${grads}</defs></svg>`;
-    (document.body || document.documentElement).prepend(el.firstChild);
-  }
-  const coin = (cx, cy, r) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#ig-gold)" stroke="#8a5a00" stroke-width=".7"/><circle cx="${(cx - r * 0.32).toFixed(1)}" cy="${(cy - r * 0.34).toFixed(1)}" r="${(r * 0.28).toFixed(1)}" fill="#fff" fill-opacity=".85"/>`;
-  const SHIELD = "M12 2.2 20 5.4V11c0 5.4-3.4 9.4-8 10.8C7.4 20.4 4 16.4 4 11V5.4Z";
+  const coin = (cx, cy, r) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${GOLD}" stroke="${GOLD_D}" stroke-width=".9"/><circle cx="${cx}" cy="${cy}" r="${(r * 0.55).toFixed(1)}" fill="none" stroke="${GOLD_D}" stroke-opacity=".7" stroke-width=".8"/>`;
+  const SHIELD = "M12 2.2 20 5.4V11c0 5.4-3.4 9.4-8 10.8C7.4 20.4 4 16.4 4 11V5.4Z", SHIELD_R = "M12 2.2 20 5.4V11c0 5.4-3.4 9.4-8 10.8Z";
   const BOLT = "M13.7 6.2 9.6 12.6h2.9L11 17.8l4.7-6.8h-3.1Z";
-  const CYCLE = (k) => `<path d="M5.4 12A6.6 6.6 0 0 1 14.6 5.9" stroke="${G(k)}" stroke-width="2.6" ${RC}/><path d="M18.6 12A6.6 6.6 0 0 1 9.4 18.1" stroke="${G(k)}" stroke-width="2.6" ${RC}/><path d="M14.2 2.6l4.6 3.4-4.9 2.4Z" fill="${G(k)}" ${OL(k, ".6")}/><path d="M9.8 21.4 5.2 18l4.9-2.4Z" fill="${G(k)}" ${OL(k, ".6")}/>`;
-  // 유형: 해킹=방패+번개 · 개인키=열쇠+반짝임 · 피싱=코인 미끼 낚싯바늘 · 러그풀=코인 추락+말린 카펫 · 사기=가면(빛나는 눈) · 랜섬웨어=강철 고리 자물쇠 · 제재=팔각 금지 · 수사·기소=가벨+타격 · 세탁=순환 화살+코인 · 기타=스파클
+  const CYCLE = (k) => `<path d="M5.4 12A6.6 6.6 0 0 1 14.6 5.9" stroke="${C(k)}" stroke-width="2.6" ${RC}/><path d="M18.6 12A6.6 6.6 0 0 1 9.4 18.1" stroke="${C(k)}" stroke-width="2.6" ${RC}/><path d="M14.2 2.6l4.6 3.4-4.9 2.4Z" fill="${C(k)}"/><path d="M9.8 21.4 5.2 18l4.9-2.4Z" fill="${C(k)}"/>`;
+  // 유형: 해킹=방패+번개 · 개인키=열쇠 · 피싱=코인 미끼 낚싯바늘 · 러그풀=코인 추락+말린 카펫 · 사기=가면 · 랜섬웨어=강철 고리 자물쇠 · 제재=팔각 금지 · 수사·기소=가벨 · 세탁=순환 화살+코인 · 기타=스파클
   const TYPE_PATHS = {
-    hack_exploit: `<path d="${SHIELD}" fill="${G("hack_exploit")}" ${OL("hack_exploit")}/><path d="M12 3.7 18.5 6.3" ${HL}/><path d="${BOLT}" transform="translate(.5 .8)" fill="${DK("hack_exploit")}" fill-opacity=".7"/><path d="${BOLT}" fill="url(#ig-white)" stroke="#ffd166" stroke-width=".6" stroke-linejoin="round"/>`,
-    private_key_compromise: `<path d="M10.4 13.6 20.4 3.6" stroke="${G("private_key_compromise")}" stroke-width="3.1" ${RC}/><path d="M16.6 7.4l2.7 2.7M13.6 10.4l2.1 2.1" stroke="${G("private_key_compromise")}" stroke-width="2.6" ${RC}/><circle cx="7.6" cy="16.4" r="4.7" fill="${G("private_key_compromise")}" ${OL("private_key_compromise")}/><circle cx="7.6" cy="16.4" r="1.9" fill="${INNER}"/><path d="M4.4 14.6a3.7 3.7 0 0 1 2.6-1.8" ${HL}/><path d="M11.4 12.6 19.6 4.4" stroke="#fff" stroke-opacity=".45" stroke-width=".8" stroke-linecap="round" fill="none"/><path d="M20.6 1.4l.6 1.5 1.5.6-1.5.6-.6 1.5-.6-1.5-1.5-.6 1.5-.6Z" fill="#fff"/>`,
-    phishing_social_engineering: `<path d="M14.4 8.4v5.2a4.2 4.2 0 0 1-8.4 0v-1.8" stroke="${G("phishing_social_engineering")}" stroke-width="2.9" ${RC}/><path d="M6 11.8l2.7 1.7" stroke="${G("phishing_social_engineering")}" stroke-width="2.5" ${RC}/><path d="M14.4 9v4.6a4.2 4.2 0 0 1-2.1 3.6" stroke="#fff" stroke-opacity=".4" stroke-width=".8" stroke-linecap="round" fill="none"/>${coin(14.4, 5.2, 3.2)}`,
-    rug_pull: `<path d="M3 17.4h11.6" stroke="${G("rug_pull")}" stroke-width="3.2" ${RC}/><path d="M3.8 16.6h9.8" stroke="#fff" stroke-opacity=".35" stroke-width=".8" stroke-linecap="round" fill="none"/><circle cx="18" cy="15.6" r="3.8" fill="${G("rug_pull")}" ${OL("rug_pull")}/><circle cx="18" cy="15.6" r="1.4" fill="${INNER}"/><path d="M15.2 13.6a3 3 0 0 1 2.4-1.2" ${HL}/>${coin(8.2, 6.4, 3.1)}<path d="M14.4 3v4.6M12.8 6l1.6 1.7L16 6" stroke="#fff" stroke-opacity=".85" stroke-width="1.3" ${RC}/>`,
-    scam_fraud: `<path d="M4 5.4c2.6-2.2 13.4-2.2 16 0 0 6.1-.6 9.8-3.6 12.9-1.5 1.5-3 2.7-4.4 2.7s-2.9-1.2-4.4-2.7C4.6 15.2 4 11.5 4 5.4Z" fill="${G("scam_fraud")}" ${OL("scam_fraud")}/><path d="M5.6 5.4c2.4-1.5 10.4-1.5 12.8 0" ${HL}/><path d="M6.9 10.1c1.1-1.4 3.1-1.4 4.2 0-1.1 1.4-3.1 1.4-4.2 0Zm6 0c1.1-1.4 3.1-1.4 4.2 0-1.1 1.4-3.1 1.4-4.2 0Z" fill="#fff"/><path d="M8.3 14.4c2.3 2.4 5.1 2.4 7.4 0-2.3 3.4-5.1 3.4-7.4 0Z" fill="${INNER}"/>`,
-    ransomware: `<path d="M8.1 10.2V7.6a3.9 3.9 0 0 1 7.8 0v2.6" stroke="url(#ig-steel)" stroke-width="2.7" ${RC}/><path d="M8.1 10.2V7.6a3.9 3.9 0 0 1 7.8 0v2.6" stroke="#2c3442" stroke-width=".6" ${RC}/><rect x="4.6" y="10.2" width="14.8" height="11" rx="2.6" fill="${G("ransomware")}" ${OL("ransomware")}/><path d="M6.4 11.8h11.2" ${HL}/><path d="M12 13.4a1.8 1.8 0 0 0-1 3.3v2h2v-2a1.8 1.8 0 0 0-1-3.3Z" fill="${INNER}"/>`,
-    sanctions_designation: `<path d="M8.1 2.5h7.8l5.6 5.6v7.8l-5.6 5.6H8.1l-5.6-5.6V8.1Z" fill="${G("sanctions_designation")}" ${OL("sanctions_designation")}/><path d="M8.7 3.8h6.6l4.6 4.6" ${HL}/><path d="M9.1 4.7h5.8l4.4 4.4v5.8l-4.4 4.4H9.1L4.7 14.9V9.1Z" fill="none" stroke="${INNER}" stroke-opacity=".45" stroke-width=".7"/><rect x="6.4" y="10.7" width="11.2" height="2.6" rx="1.3" fill="#fff"/>`,
-    law_enforcement_action: `<path d="M14.5 9.6 4.8 19.3" stroke="${G("law_enforcement_action")}" stroke-width="3" ${RC}/><path d="M13.2 2.6l8.2 8.2-2.7 2.7-8.2-8.2Z" fill="url(#ig-steel)" stroke="#2c3442" stroke-width=".8" stroke-linejoin="round"/><path d="M13.6 4.2 19.6 10.2" ${HL}/><path d="M2.6 21.4h8.8" stroke="${G("law_enforcement_action")}" stroke-width="2.6" ${RC}/><path d="M18.4 1.6l.8 2M21.4 2.8l-1.4 1.6M22.6 6.4l-2 .6" stroke="#fff" stroke-opacity=".9" stroke-width="1.1" stroke-linecap="round" fill="none"/>`,
+    hack_exploit: `<path d="${SHIELD}" fill="${C("hack_exploit")}"/><path d="${SHIELD_R}" fill="${D2("hack_exploit")}"/><path d="${BOLT}" fill="#fff"/>`,
+    private_key_compromise: `<path d="M10.4 13.6 20.4 3.6" stroke="${C("private_key_compromise")}" stroke-width="3.1" ${RC}/><path d="M16.6 7.4l2.7 2.7M13.6 10.4l2.1 2.1" stroke="${C("private_key_compromise")}" stroke-width="2.6" ${RC}/><circle cx="7.6" cy="16.4" r="4.7" fill="${C("private_key_compromise")}"/><path d="M7.6 11.7a4.7 4.7 0 0 1 0 9.4Z" fill="${D2("private_key_compromise")}"/><circle cx="7.6" cy="16.4" r="1.9" fill="${INNER}"/>`,
+    phishing_social_engineering: `<path d="M14.4 8.4v5.2a4.2 4.2 0 0 1-8.4 0v-1.8" stroke="${C("phishing_social_engineering")}" stroke-width="2.9" ${RC}/><path d="M6 11.8l2.7 1.7" stroke="${C("phishing_social_engineering")}" stroke-width="2.5" ${RC}/>${coin(14.4, 5.2, 3.2)}`,
+    rug_pull: `<path d="M3 17.4h11.6" stroke="${C("rug_pull")}" stroke-width="3.2" ${RC}/><circle cx="18" cy="15.6" r="3.8" fill="${C("rug_pull")}"/><path d="M18 11.8a3.8 3.8 0 0 1 0 7.6Z" fill="${D2("rug_pull")}"/><circle cx="18" cy="15.6" r="1.4" fill="${INNER}"/>${coin(8.2, 6.4, 3.1)}<path d="M14.4 3v4.6M12.8 6l1.6 1.7L16 6" stroke="#fff" stroke-width="1.3" ${RC}/>`,
+    scam_fraud: `<path d="M4 5.4c2.6-2.2 13.4-2.2 16 0 0 6.1-.6 9.8-3.6 12.9-1.5 1.5-3 2.7-4.4 2.7s-2.9-1.2-4.4-2.7C4.6 15.2 4 11.5 4 5.4Z" fill="${C("scam_fraud")}"/><path d="M12 3.75c3.6 0 7.2.55 8 1.65 0 6.1-.6 9.8-3.6 12.9-1.5 1.5-3 2.7-4.4 2.7Z" fill="${D2("scam_fraud")}"/><path d="M6.9 10.1c1.1-1.4 3.1-1.4 4.2 0-1.1 1.4-3.1 1.4-4.2 0Zm6 0c1.1-1.4 3.1-1.4 4.2 0-1.1 1.4-3.1 1.4-4.2 0Z" fill="#fff"/><path d="M8.3 14.4c2.3 2.4 5.1 2.4 7.4 0-2.3 3.4-5.1 3.4-7.4 0Z" fill="${INNER}"/>`,
+    ransomware: `<path d="M8.1 10.2V7.6a3.9 3.9 0 0 1 7.8 0v2.6" stroke="${STEEL}" stroke-width="2.7" ${RC}/><rect x="4.6" y="10.2" width="14.8" height="11" rx="2.6" fill="${C("ransomware")}"/><path d="M12 10.2h4.8a2.6 2.6 0 0 1 2.6 2.6v5.8a2.6 2.6 0 0 1-2.6 2.6H12Z" fill="${D2("ransomware")}"/><path d="M12 13.4a1.8 1.8 0 0 0-1 3.3v2h2v-2a1.8 1.8 0 0 0-1-3.3Z" fill="${INNER}"/>`,
+    sanctions_designation: `<path d="M8.1 2.5h7.8l5.6 5.6v7.8l-5.6 5.6H8.1l-5.6-5.6V8.1Z" fill="${C("sanctions_designation")}"/><path d="M12 2.5h3.9l5.6 5.6v7.8l-5.6 5.6H12Z" fill="${D2("sanctions_designation")}"/><rect x="6.4" y="10.7" width="11.2" height="2.6" rx="1.3" fill="#fff"/>`,
+    law_enforcement_action: `<path d="M14.5 9.6 4.8 19.3" stroke="${C("law_enforcement_action")}" stroke-width="3" ${RC}/><path d="M13.2 2.6l8.2 8.2-2.7 2.7-8.2-8.2Z" fill="${STEEL}"/><path d="M17.3 6.7l4.1 4.1-2.7 2.7-4.1-4.1Z" fill="${STEEL_D}"/><path d="M2.6 21.4h8.8" stroke="${C("law_enforcement_action")}" stroke-width="2.6" ${RC}/>`,
     laundering_report: `${CYCLE("laundering_report")}${coin(12, 12, 3.4)}`,
-    other: `<path d="M12 2.4c.7 5 4.6 8.9 9.6 9.6-5 .7-8.9 4.6-9.6 9.6-.7-5-4.6-8.9-9.6-9.6 5-.7 8.9-4.6 9.6-9.6Z" fill="${G("other")}" ${OL("other", ".7")}/><path d="M12 6.6c.4 2.6 2.3 4.6 5 5.2" ${HL}/><path d="M19.6 3.2c.2 1.3 1.1 2.2 2.4 2.4-1.3.2-2.2 1.1-2.4 2.4-.2-1.3-1.1-2.2-2.4-2.4 1.3-.2 2.2-1.1 2.4-2.4Z" fill="#fff" fill-opacity=".9"/>`,
+    other: `<path d="M12 2.4c.7 5 4.6 8.9 9.6 9.6-5 .7-8.9 4.6-9.6 9.6-.7-5-4.6-8.9-9.6-9.6 5-.7 8.9-4.6 9.6-9.6Z" fill="${C("other")}"/><path d="M12 2.4c.7 5 4.6 8.9 9.6 9.6-5 .7-8.9 4.6-9.6 9.6Z" fill="${D2("other")}"/>`,
   };
-  // 역할: 제재=팔각 금지 · 공격자=조준선(빨강, 흰 중심) · 세탁·경유=순환 화살(노랑)+코인 · 피해자=방패(파랑)+흰 체크 · 미분류=점선 원
+  // 역할: 제재=팔각 금지 · 공격자=조준선 · 세탁·경유=순환 화살+코인 · 피해자=방패+체크 · 미분류=점선 원
   const ROLE_PATHS = {
     sanctioned: TYPE_PATHS.sanctions_designation,
-    attacker: `<circle cx="12" cy="12" r="6.2" stroke="${G("attacker")}" stroke-width="2.5" fill="none"/><path d="M12 2v3.4M12 18.6V22M2 12h3.4M18.6 12H22" stroke="${G("attacker")}" stroke-width="2.5" ${RC}/><path d="M7.6 9.4a5 5 0 0 1 3.2-3" ${HL}/><circle cx="12" cy="12" r="2.3" fill="#fff"/><circle cx="12" cy="12" r="1.2" fill="${BASE.attacker}"/>`,
+    attacker: `<circle cx="12" cy="12" r="6.2" stroke="${C("attacker")}" stroke-width="2.5" fill="none"/><path d="M12 2v3.4M12 18.6V22M2 12h3.4M18.6 12H22" stroke="${C("attacker")}" stroke-width="2.5" ${RC}/><circle cx="12" cy="12" r="2.3" fill="#fff"/><circle cx="12" cy="12" r="1.2" fill="${BASE.attacker}"/>`,
     laundering: `${CYCLE("laundering")}${coin(12, 12, 3.2)}`,
-    victim: `<path d="${SHIELD}" fill="${G("victim")}" ${OL("victim")}/><path d="M12 3.7 18.5 6.3" ${HL}/><path d="M8.2 12.2l2.6 2.6 5.2-5.2" stroke="#fff" stroke-width="2.3" ${RC}/>`,
-    unknown: `<circle cx="12" cy="12" r="8" stroke="${G("unknown")}" stroke-width="2.4" fill="none" stroke-dasharray="3.4 3"/><circle cx="12" cy="12" r="2.5" fill="${G("unknown")}" ${OL("unknown", ".6")}/>`,
+    victim: `<path d="${SHIELD}" fill="${C("victim")}"/><path d="${SHIELD_R}" fill="${D2("victim")}"/><path d="M8.2 12.2l2.6 2.6 5.2-5.2" stroke="#fff" stroke-width="2.3" ${RC}/>`,
+    unknown: `<circle cx="12" cy="12" r="8" stroke="${C("unknown")}" stroke-width="2.4" fill="none" stroke-dasharray="3.4 3"/><circle cx="12" cy="12" r="2.5" fill="${C("unknown")}"/>`,
   };
-  ensureDefs();
+  const ensureDefs = () => {};
 
   // ---- 체인 아이콘: 브랜드 색 원 + 흰 마크(직접 그림). 없는 체인은 이름 첫 글자 모노그램 ----
   const W = 'fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
