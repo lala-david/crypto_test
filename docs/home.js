@@ -3,7 +3,7 @@
   "use strict";
   const { $, $$, t, typeName, typeFull, roleName, esc, fmtInt, money, moneyFull, fmtDate, fmtMD, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, bindTips, columns, hbars, donut, fillSelect, incidentRow, TABLE_HEAD, bindRows, typeColorHex, chainName, errorBox } = KL;
   const S = { days: "90", type: "", chain: "", q: "", page: 1, size: 20, tab: "amount", mode: "amount" };
-  let meta = null, st = null, allSt = null, prevSt = null, facets = null, list = null, addrs = null, flowRows = null;
+  let meta = null, st = null, allSt = null, facets = null, list = null, addrs = null, flowRows = null;
 
   async function load(tableOnly = false) {
     const f = { days: S.days, type: S.type, chain: S.chain };
@@ -13,9 +13,7 @@
     const res = await Promise.all(jobs);
     list = res[0];
     if (!tableOnly) { st = res[1]; addrs = res[2]; flowRows = res[3].items; if (!facets || (!S.type && !S.chain)) facets = st.facets;
-      const d0 = new Date(st.range.from + "T00:00:00"), d1 = new Date(st.range.to + "T00:00:00"); const len = Math.max(1, Math.round((d1 - d0) / 86400000) + 1);
-      const pTo = new Date(d0.getTime() - 86400000), pFrom = new Date(pTo.getTime() - (len - 1) * 86400000);
-      try { prevSt = await api("/api/stats", { from: pFrom.toISOString().slice(0, 10), to: pTo.toISOString().slice(0, 10), type: S.type, chain: S.chain }); } catch (_) { prevSt = null; } }
+    }
     if (!allSt) allSt = res[res.length - 1];
     render();
   }
@@ -35,13 +33,7 @@
     const top3 = Object.entries(byType).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k]) => k);
     const { labels, idx } = bucketize(flowRows, st.range.from, st.range.to);
     const series = top3.map((tp, k) => { const data = new Array(labels.length).fill(0); flowRows.forEach((r) => { if (r.type === tp) data[idx(r)] += 1; }); return { key: typeName(tp), color: TYPE_SHADES[k], data }; });
-    const pv = prevSt || {};
-    const trend = (cur, prev) => ({ up: cur >= (prev || 0), good: cur < (prev || 0) });
-    KL.reportCard($("#reportCard"), { title: "Incident Report", series, labels, metrics: [
-      { icon: "diamond", label: t("k_new"), value: `${fmtInt(st.new_count)}${t("unit")}`, ...trend(st.new_count, pv.new_count), tooltip: `${t("prev_period")} ${fmtInt(pv.new_count || 0)}` },
-      { icon: "circle", label: t("k_loss"), value: money(st.loss_amount), ...trend(st.loss_amount, pv.loss_amount), tooltip: `${t("prev_period")} ${money(pv.loss_amount || 0)}` },
-      { icon: "triangle", label: t("k_addr"), value: fmtInt(st.addresses), ...trend(st.addresses, pv.addresses), tooltip: `${t("prev_period")} ${fmtInt(pv.addresses || 0)}` },
-    ] });
+    KL.reportCard($("#reportCard"), { title: "Incident Report", series, labels, metrics: [], wide: true });
     // (2) AnimatedCard × 3: 도넛 = 1위 비중(호버: 1+2위 누적), 알약 = 상위 6 항목
     const mk = (id, list, name, opts) => {
       const total = list.reduce((a, r) => a + r.v, 0) || 1; const sorted = list.slice().sort((a, b) => b.v - a.v);
@@ -95,7 +87,6 @@
     rangeSeg($("#rangeSeg"), S.days, (v) => { S.days = v; S.page = 1; load(); });
     fillSelect($("#typeSel"), Object.keys(facets.types).map((v) => ({ value: v, label: `${typeName(v)} (${facets.types[v]})` })), t("all_types"), S.type);
     fillSelect($("#chainSel"), Object.keys(facets.chains).map((v) => ({ value: v, label: `${v} (${facets.chains[v]})` })), t("all_chains"), S.chain);
-    $("#heroSub").innerHTML = `<span>${esc(t("hero_since").replace("{d}", fmtDate(meta.first_day)))}</span><span class="dot">·</span><span>${esc(t("k_new"))} <b>${fmtInt(allSt.new_count)}</b></span><span class="dot">·</span><span>${esc(t("k_loss"))} <b>${esc(money(allSt.loss_amount))}</b></span><span class="dot">·</span><span>${esc(t("k_legal"))} <b>${esc(money(allSt.legal_amount))}</b></span><span class="dot">·</span><span>${esc(t("k_addr"))} <b>${fmtInt(meta.addresses_total)}</b></span>`;
     renderCards();
     $("#total").textContent = fmtInt(list.total);
     renderPanel();

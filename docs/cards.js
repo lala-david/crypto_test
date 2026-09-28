@@ -31,8 +31,8 @@
   }
 
   /* series: [{key, color, data:[number…]}], labels: [string…] (x 라벨), metrics: [{icon:'diamond'|'circle'|'triangle', label, value, up, good}] */
-  function reportCard(el, { title = "Incident Report", series, labels, metrics }) {
-    const W = 448, H = 200, m = { l: 14, r: 14, t: 12, b: 28 };
+  function reportCard(el, { title = "Incident Report", series, labels, metrics = [], wide = false }) {
+    const W = wide ? 1040 : 448, H = wide ? 300 : 200, m = { l: 14, r: 14, t: 12, b: 28 };
     const n = labels.length; const pw = W - m.l - m.r, ph = H - m.t - m.b;
     const max = Math.max(1, ...series.flatMap((s) => s.data));
     const x = (i) => m.l + (n > 1 ? (i / (n - 1)) * pw : pw / 2), y = (v) => m.t + ph - (v / max) * ph, base = y(0);
@@ -44,15 +44,15 @@
       const line = smoothPath(pts, base);
       svg += `<path class="rc-area" d="${line} L${pts[pts.length - 1][0]},${base} L${pts[0][0]},${base} Z" fill="url(#${uid}${k})"/><path class="rc-line" d="${line}" stroke="${s.color}"/>`;
     });
-    const step = Math.max(1, Math.ceil(n / 7));
+    const step = Math.max(1, Math.ceil(n / (wide ? 13 : 7)));
     labels.forEach((lb, i) => { if (i % step === 0 || i === n - 1) svg += `<text class="rc-tick" x="${x(i)}" y="${H - 8}" text-anchor="middle">${esc(lb)}</text>`; });
     svg += "</svg>";
-    el.innerHTML = `<div class="rc">
+    el.innerHTML = `<div class="rc ${wide ? "rc-wide" : ""}">
       <h3 class="rc-title">${esc(title)}</h3>
       <div class="rc-legend">${series.map((s) => `<div class="rc-li"><span class="rc-sw" style="background:${s.color}"></span><span>${esc(s.key)}</span></div>`).join("")}</div>
       <div class="rc-chart">${svg}</div>
-      <div class="rc-metrics">${metrics.map((mt, k) => { const base = mt.good ? "#40E5D1" : "#E84045", stroke = mt.good ? "#40E5D1" : "#F08083";
-        return `<div class="rc-row" style="animation-delay:${(k * 0.05).toFixed(2)}s"><div class="rc-lbl">${ICON[mt.icon] || ICON.circle}<span title="${esc(mt.tooltip || mt.label)}">${esc(mt.label)}</span></div><div class="rc-val"><span>${esc(mt.value)}</span>${trendIcon(mt.up, base, stroke)}</div></div>`; }).join("")}</div>
+      ${metrics.length ? `<div class="rc-metrics">${metrics.map((mt, k) => { const base = mt.good ? "#40E5D1" : "#E84045", stroke = mt.good ? "#40E5D1" : "#F08083";
+        return `<div class="rc-row" style="animation-delay:${(k * 0.05).toFixed(2)}s"><div class="rc-lbl">${ICON[mt.icon] || ICON.circle}<span title="${esc(mt.tooltip || mt.label)}">${esc(mt.label)}</span></div><div class="rc-val"><span>${esc(mt.value)}</span>${trendIcon(mt.up, base, stroke)}</div></div>`; }).join("")}</div>` : ""}
     </div>`;
   }
 
