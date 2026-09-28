@@ -386,8 +386,8 @@ body { font-size: 14px; }
 .case-row { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card-2); font-size: 13px; min-width: 0; }
 .case-row .who { font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; } .case-row .what { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .case-row:hover { border-color: var(--accent); text-decoration: none; }
-.case-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(760px, 100%); background: var(--card); border-left: 1px solid var(--line); box-shadow: -24px 0 60px rgba(0,0,0,.5); z-index: 40; overflow-y: auto; transform: translateX(100%); transition: transform .22s ease; }
-.case-drawer.open { transform: none; }
+.case-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(760px, 100%); background: var(--card); border-left: 1px solid var(--line); z-index: 40; overflow-y: auto; transform: translateX(100%); visibility: hidden; transition: transform .22s ease, visibility 0s linear .22s; }
+.case-drawer.open { transform: none; visibility: visible; box-shadow: -24px 0 60px rgba(0,0,0,.5); transition: transform .22s ease, visibility 0s; }
 .case-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.55); backdrop-filter: blur(2px); z-index: 39; opacity: 0; pointer-events: none; transition: opacity .2s; }
 .case-backdrop.show { opacity: 1; pointer-events: auto; }
 body.case-open { overflow: hidden; }
