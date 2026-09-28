@@ -716,3 +716,37 @@ body.case-open { overflow: hidden; }
 .card-b.two-col > table[hidden] { display: none; }
 @media (max-width: 900px) { .card-b.two-col { grid-template-columns: 1fr; } .card-b.two-col > table:nth-child(2) { border-left: 0; border-top: 1px solid var(--line); } }
 .stbl tr.filler td { height: 47px; border-bottom: 0; }
+/* 통계 순위 막대 목록 */
+.card-b.rank, .chain-split .rank { display: grid; gap: 4px; padding: 10px 16px 14px; }
+.rk { display: grid; gap: 6px; padding: 7px 0 9px; border-bottom: 1px solid var(--line-2, var(--line)); }
+.rk:last-child { border-bottom: 0; }
+.rk-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }
+.rk-l { display: inline-flex; align-items: center; gap: 9px; min-width: 0; font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.rk-l .rk-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rk-l .avatar.sm { margin: 0; }
+.rk-ci { display: inline-flex; align-items: center; } .rk-ci .cico { width: 18px; height: 18px; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
+.rk-ci.multi .cico { width: 14px; height: 14px; margin-left: -5px; } .rk-ci.multi .cico:first-child { margin-left: 0; }
+.rk-ri { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; color: var(--ink-2); background: color-mix(in srgb, var(--ink-3) 14%, transparent); }
+.rk-ri svg { width: 14px; height: 14px; }
+.rk-ri.attacker { color: var(--up); background: color-mix(in srgb, var(--up) 14%, transparent); } .rk-ri.sanctioned { color: var(--t-sanction); background: color-mix(in srgb, var(--t-sanction) 14%, transparent); }
+.rk-ri.laundering { color: var(--warn); background: color-mix(in srgb, var(--warn) 14%, transparent); } .rk-ri.victim { color: var(--t-law); background: color-mix(in srgb, var(--t-law) 14%, transparent); }
+.rk-n { display: grid; grid-template-columns: 44px 62px 92px; gap: 8px; align-items: baseline; text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
+.rk-n b { font-size: 14px; font-weight: 600; color: var(--ink); } .rk-n .pct { font-size: 12px; color: var(--ink-2); } .rk-n .amt { font-size: 12.5px; color: var(--ink); }
+.rk-n .amt .faint { color: var(--ink-3); }
+.rk-n .bl { display: inline-block; font-family: var(--sans); font-size: 11px; font-weight: 600; color: var(--up); background: color-mix(in srgb, var(--up) 14%, transparent); border: 1px solid color-mix(in srgb, var(--up) 40%, transparent); border-radius: 999px; padding: 0 7px; line-height: 17px; }
+.rk-bar { position: relative; height: 7px; border-radius: 4px; background: var(--line-2, var(--line)); overflow: hidden; }
+.rk-bar > i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px; min-width: 3px; transform-origin: left; animation: growX .8s cubic-bezier(.2,.8,.2,1) both; }
+.rk-bar > i.sub { background: repeating-linear-gradient(135deg, rgba(255,255,255,.55) 0 3px, transparent 3px 6px); mix-blend-mode: screen; }
+.rk.faint-row .rk-l, .rk.faint-row .rk-n b, .rk.faint-row .rk-n .amt { color: var(--ink-3); } .rk.faint-row .rk-ci { opacity: .6; }
+.rk.muted-row .rk-l { color: var(--ink-2); }
+/* 체인 카드: 왼쪽 막대(2건 이상 + 1건 묶음 + unknown) · 오른쪽 1건 체인 칩 */
+.chain-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; padding: 0 !important; }
+.chain-split .rank { padding: 10px 16px 14px; border-right: 1px solid var(--line); }
+.chain-split .tail { padding: 14px 16px; } .chain-split .tail[hidden] { display: none; }
+.tail-h { font-size: 11.5px; color: var(--ink-3); margin: 0 0 10px 2px; letter-spacing: .02em; }
+.chips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.chip2 { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card-2); min-width: 0; }
+.chip2 .cico { width: 18px; height: 18px; flex-shrink: 0; filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
+.chip2 .cn { font-size: 12.5px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; flex: 1; }
+.chip2 .ca { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); white-space: nowrap; }
+@media (max-width: 900px) { .chain-split { grid-template-columns: 1fr; } .chain-split .rank { border-right: 0; border-bottom: 1px solid var(--line); } .chips-grid { grid-template-columns: 1fr; } .rk-n { grid-template-columns: 40px 56px 80px; } }
