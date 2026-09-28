@@ -23,7 +23,7 @@
     const chainsAll = st.by_chain.filter((r) => r.new).sort((a, b) => b.new - a.new);
     const TOP = 8; const chains = chainsAll.slice(0, TOP);
     if (chainsAll.length > TOP) { const rest = chainsAll.slice(TOP); chains.push({ key: `${t("other")} (${rest.length})`, new: rest.reduce((a, r) => a + r.new, 0), known: rest.reduce((a, r) => a + r.known, 0), amount: rest.reduce((a, r) => a + r.amount, 0), _other: true }); }
-    $("#chainTable").innerHTML = head(t("chain")) + rows(chains, (r) => `<span class="chain">${esc(r._other ? r.key : chainName(r.key))}</span>`);
+    $("#chainTable").innerHTML = head(t("chain")) + rows(chains, (r) => (r._other ? `<span class="chain">${esc(r.key)}</span>` : KL.chainPill(r.key, true)), (r) => (r._other ? "var(--ink-3)" : KL.chainColor(r.key)));
     $("#metaChain").textContent = `${chainsAll.filter((r) => r.key !== "unknown").length}`;
     const roles = Object.entries(st.roles || {}).sort((a, b) => b[1] - a[1]); const rt = roles.reduce((a, r) => a + r[1], 0) || 1;
     $("#rolesBars").innerHTML = `<div class="rgrid">${roles.map(([k, v]) => `<div class="rcell ${esc(k)}"><span class="ic">${KL.roleIcon(k)}</span><b data-countup="${v}">0</b><span class="l">${esc(roleName(k))}</span><span class="p">${fmtPct(v / rt, 0)}</span></div>`).join("")}</div>`;

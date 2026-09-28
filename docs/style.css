@@ -642,3 +642,61 @@ body.case-open { overflow: hidden; }
 :root[data-theme="light"] .rc-tip { background: rgba(255,255,255,.97); color: #0f0f11; border-color: #e2e6ed; } :root[data-theme="light"] .rc-tip .d { color: #4b5563; }
 @media (prefers-reduced-motion: reduce) { .tier.t-S, .threat.lv5 .segs i.on, .tbl .bar > i, .dl-bar > i, .hb .bar, .plot .bar { animation: none; } }
 @media (max-width: 900px) { .resbar { display: none; } }
+
+/* ================= 표 열 정렬 · 체인 칩 · 자원 카운터 라벨 · 로고 ================= */
+.tbl.lumos-tbl:has(> colgroup) { table-layout: fixed; }  /* 열 폭을 지정한 사건 표만 고정 (주소·유형·체인 표는 자동) */
+.tbl col.c-name { width: auto; } .tbl col.c-amt { width: 176px; } .tbl col.c-date { width: 112px; } .tbl col.c-type { width: 128px; } .tbl col.c-chain { width: 160px; } .tbl col.c-src { width: 76px; }
+.tbl.lumos-tbl:has(> colgroup) td:nth-child(5) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tbl td.num, .tbl th.num { text-align: right; }
+.amtwrap { display: inline-flex; align-items: center; justify-content: flex-end; gap: 8px; width: 100%; } .amtwrap .tier { margin: 0; flex-shrink: 0; }
+.tbl td .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: calc(100% - 44px); display: inline-block; vertical-align: middle; }
+.tbl td.nowrap .tag { vertical-align: middle; }
+.chain { display: inline-flex; align-items: center; gap: 5px; font-family: var(--sans); font-size: 11.5px; padding: 1px 7px 1px 5px; border-radius: 999px; background: color-mix(in srgb, var(--cc, var(--ink-3)) 12%, transparent); border: 1px solid color-mix(in srgb, var(--cc, var(--ink-3)) 40%, transparent); color: var(--cc, var(--ink-2)); white-space: nowrap; line-height: 18px; }
+.chain img { width: 14px; height: 14px; border-radius: 50%; display: block; } .chain .chain-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-3); display: inline-block; }
+:root[data-theme="light"] .chain { color: color-mix(in srgb, var(--cc, var(--ink-2)) 70%, #000); }
+.resbar { gap: 16px; } .res .rl { font-size: 11.5px; color: var(--ink-3); } .res b { min-width: 0; }
+.brand img.mark { width: 22px; height: 22px; border-radius: 0; background: none; box-shadow: none; display: block; }
+@media (max-width: 1100px) { .tbl col.c-chain { width: 130px; } .tbl col.c-amt { width: 150px; } }
+/* 체인: 아이콘만(이름은 툴팁) */
+.chain.ic { padding: 0; border: 0; background: none; margin-right: 4px; line-height: 0; vertical-align: middle; }
+.chain.ic .cico { width: 20px; height: 20px; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,.4)); }
+.chain.named { padding: 1px 8px 1px 3px; gap: 6px; } .chain.named .cico { width: 16px; height: 16px; }
+.tbl .chain.ic + .faint { vertical-align: middle; margin-left: 2px; }
+.case-sub .chain.ic .cico { width: 18px; height: 18px; }
+/* 상세보기: 체인 전부 표시(줄바꿈 허용) · 금액 우측 정렬 보강 */
+.case-kv .val.wrap { white-space: normal; display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; overflow: visible; }
+.case-sub .chain.ic .cico { width: 20px; height: 20px; }
+.chain.named { font-size: 12px; }
+.tbl .more { cursor: default; }
+.case-row .mono { text-align: right; font-variant-numeric: tabular-nums; }
+.dl-amt { margin-left: auto; text-align: right; }
+.avatar svg { width: 17px; height: 17px; } .avatar.lg svg { width: 24px; height: 24px; } .avatar.sm svg { width: 14px; height: 14px; }
+.badge.tb svg { width: 14px; height: 14px; }
+.tbl td .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.case-sub { flex-wrap: wrap; row-gap: 6px; }
+/* 컬럼 헤더 정렬·필터 */
+.tbl th.th-sort, .tbl th.th-filter { cursor: pointer; user-select: none; }
+.tbl th.th-sort:hover, .tbl th.th-filter:hover { color: var(--ink); }
+.tbl th .th-ic { margin-left: 5px; color: var(--ink-3); font-size: 11px; opacity: .7; }
+.tbl th.on .th-ic, .tbl th:hover .th-ic { color: var(--accent); opacity: 1; }
+.tbl th.th-sort.on .th-l { color: var(--ink); }
+.tbl th .th-val { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; padding: 1px 4px 1px 6px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 11px; font-weight: 600; text-transform: none; letter-spacing: 0; }
+.tbl th .th-val .oi, .tbl th .th-val .cico { width: 13px; height: 13px; display: inline-flex; vertical-align: middle; } .tbl th .th-val .oi svg { width: 13px; height: 13px; color: var(--c, var(--accent)); }
+.tbl th .th-x { color: var(--accent); font-size: 13px; line-height: 1; padding: 0 3px; border-radius: 50%; } .tbl th .th-x:hover { background: var(--accent); color: #fff; }
+.hmenu { position: absolute; z-index: 60; min-width: 190px; max-width: 300px; background: var(--card); border: 1px solid var(--line-2, var(--line)); border-radius: 10px; box-shadow: 0 14px 40px rgba(0,0,0,.45); padding: 6px; font-size: 12.5px; }
+.hmenu .hm-q { width: 100%; box-sizing: border-box; margin-bottom: 6px; padding: 6px 9px; border-radius: 7px; border: 1px solid var(--line); background: var(--card-2); color: var(--ink); font-size: 12px; }
+.hmenu .hm-list { max-height: 320px; overflow-y: auto; display: grid; gap: 1px; }
+.hmenu .opt { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; text-align: left; padding: 6px 9px; border-radius: 7px; color: var(--ink-2); }
+.hmenu .opt:hover { background: var(--card-2); color: var(--ink); } .hmenu .opt.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.hmenu .opt .ol { display: inline-flex; align-items: center; gap: 7px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hmenu .opt .on { font-family: var(--mono); font-size: 11.5px; color: var(--ink-3); } .hmenu .opt.on .on { color: var(--accent); }
+.hmenu .oi { display: inline-flex; width: 14px; height: 14px; } .hmenu .oi svg { width: 14px; height: 14px; color: var(--c, var(--ink-2)); }
+.hmenu .role-ic.sanctioned svg { color: #34d399; } .hmenu .role-ic.attacker svg { color: #fa5b72; } .hmenu .role-ic.laundering svg { color: #ffd74b; } .hmenu .role-ic.victim svg { color: #60a5fa; }
+/* 지갑 주소 표: 축약 주소 · 가로 스크롤 없음 */
+#addrTable.tbl.lumos-tbl:has(> colgroup) { table-layout: fixed; }
+.tbl col.a-addr { width: 210px; } .tbl col.a-chain { width: 70px; } .tbl col.a-kind { width: 110px; } .tbl col.a-label { width: auto; } .tbl col.a-role { width: 120px; } .tbl col.a-inc { width: 210px; } .tbl col.a-tx { width: 84px; }
+.addr.short { white-space: nowrap; word-break: normal; cursor: default; }
+#addrTable td { overflow: hidden; text-overflow: ellipsis; }
+#addrTable td .name { display: inline-block; max-width: calc(100% - 34px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
+#addrTable .label-cell, #addrTable td:nth-child(4) { white-space: nowrap; }
+@media (max-width: 1100px) { .tbl col.a-inc { width: 160px; } .tbl col.a-addr { width: 190px; } }

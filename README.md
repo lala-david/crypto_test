@@ -49,9 +49,9 @@ run.py  (매시간)
 ### 홈페이지 — Incident Ledger (로컬 백엔드 + 정량 대시보드, `server.py` + `docs/`)
 - 실행: `python server.py` → http://localhost:8765 (작업 스케줄러 `CryptoIncidentSite` 가 로그온 시 `pythonw server.py` 로 자동 시작; 등록은 `install_site_task.ps1`, LAN 공개는 `-Lan`). 로그는 `logs/server.log`.
 - 백엔드는 Starlette + uvicorn(FastAPI 는 설치된 starlette 1.6 과 충돌). SQLite `data/collector.db` 를 직접 읽어 병합·후속·블랙리스트 대조까지 계산하고, incidents 테이블의 (건수, 최신 collected_at) 서명이 바뀌면 캐시를 다시 만듭니다. 수집기가 돌면 페이지가 자동으로 최신이 됩니다.
-- API(JSON, 목록은 `/api`): `/api/meta`, `/api/incidents?days=30|all&type=&chain=&source=&q=&hide_followups=&page=&size=&sort=day|amount|date`, `/api/incidents/{uid}`(+related), `/api/briefings`, `/api/briefings/{day|latest}`, `/api/stats?days=…&type=&chain=`, `/api/addresses/lookup?q=`, `/api/search?q=`.
+- API(JSON, 목록은 `/api`): `/api/meta`, `/api/incidents?days=30|all&type=&chain=&source=&q=&hide_followups=&page=&size=&sort=date|day|amount|name|type|chain|sources&dir=asc|desc`, `/api/incidents/{uid}`(+related), `/api/briefings`, `/api/briefings/{day|latest}`, `/api/stats?days=…&type=&chain=`, `/api/addresses/lookup?q=`, `/api/search?q=`.
 - 집계 규칙: 후속 보도(`followup_of`)는 건수에만 포함하고 금액 합계·순위·비중에서는 제외합니다(같은 사건 이중 계산 방지).
-- 페이지: `index.html` 개요(Incident Report 카드: 상위 3개 유형 주간 건수 영역 차트 → AnimatedCard 3장: 유형·체인·주소 역할 도넛(호버 시 상위 6 알약) → 검색+기간 → 사건 표 20행: 사건·금액·사건일·유형 배지·체인·출처 게이지) · `incidents.html` 사건 표(검색·유형·체인·소스·정렬·기간·후속 제외·페이지) · `stats.html` 통계(사건일 기준 고정; 시계열 금액/건수, 유형·체인 표: 신규·%·금액·%·평균, 일별 표, 제재·수사, 주소 역할, 출처별 사건) · `briefings.html` 날짜별 브리핑 · `addresses.html` 지갑 주소(기간·역할·체인·종류별 수집 주소 목록, 온체인 종류 EOA/CA·토큰·풀 + 라벨 + 조회: 사건 카드·OFAC SDN·crimial_hunter 동시 대조; API `/api/addresses`) · `incident.html?id=` 사건 케이스(LUMOS 스타일 패널 — 목록에서 행을 누르면 오른쪽 슬라이드 패널 `?case=<uid>`, 단독 페이지도 동일: 큰 금액 → 사건일·보고일·유형·체인·수법·사건 코드 → 요약 → 경과 타임라인(발생·최초 보도·후속·블랙리스트·주소 검증) → 자금 흐름 표(주소·tx, 종류·역할·탐색기 링크) → 출처·관련 사건 → 자세히). 한/영, 다크(기본)/라이트.
+- 페이지: `index.html` 개요(Incident Report 카드: 상위 3개 유형 주간 건수 영역 차트 → AnimatedCard 3장: 유형·체인·주소 역할 도넛(호버 시 상위 6 알약) → 검색+기간 → 사건 표 20행: 사건·금액·사건일·유형 배지·체인·출처 게이지) · `incidents.html` 사건 표(검색·기간·후속 제외·페이지; 유형·체인 필터와 정렬은 **표 머리글**에서 — 아래 '컬럼 헤더' 참고) · `stats.html` 통계(사건일 기준 고정; 시계열 금액/건수, 유형·체인 표: 신규·%·금액·%·평균, 일별 표, 제재·수사, 주소 역할, 출처별 사건) · `briefings.html` 날짜별 브리핑 · `addresses.html` 지갑 주소(기간·역할·체인·종류별 수집 주소 목록, 온체인 종류 EOA/CA·토큰·풀 + 라벨 + 조회: 사건 카드·OFAC SDN·crimial_hunter 동시 대조; API `/api/addresses`) · `incident.html?id=` 사건 케이스(LUMOS 스타일 패널 — 목록에서 행을 누르면 오른쪽 슬라이드 패널 `?case=<uid>`, 단독 페이지도 동일: 큰 금액 → 사건일·보고일·유형·체인·수법·사건 코드 → 요약 → 경과 타임라인(발생·최초 보도·후속·블랙리스트·주소 검증) → 자금 흐름 표(주소·tx, 종류·역할·탐색기 링크) → 출처·관련 사건 → 자세히). 한/영, 다크(기본)/라이트.
 - 프런트는 빌드 없는 바닐라 JS(`common.js`: API·i18n·SVG 차트). 유형 9색은 색약 시뮬레이션 검증을 통과한 팔레트이며 항상 점+라벨을 함께 표기합니다.
 - `collector/site.py` 는 매 실행 `docs/data/*.json` 스냅샷을 남깁니다(GitHub 에서 데이터만 볼 때 용도). GitHub Pages 는 private+Free 플랜이라 쓰지 않습니다.
 
@@ -62,6 +62,13 @@ run.py  (매시간)
 
 ### 후속 보도와 중복
 같은 사건을 다른 출처가 며칠 뒤 다시 보도하면(`followup_of`) 대시보드는 **원 사건 한 행**으로만 보여 줍니다. 후속 카드는 원 사건에 접혀(`followups[]`) 출처·주소·tx·블랙리스트가 합쳐지고, 목록에는 `후속 N` 배지, 케이스 패널의 경과 타임라인에 보도일·출처가 나옵니다. 금액은 대표 카드 하나가 아니라 **출처 합의**로 정합니다(`merge.consensus_amount`: ±5% 로 묶어 가장 많은 출처가 말한 값, 동수면 더 늦은 보도 = 정정치). 같은 날 여러 출처(Bitget 7건)도, 원 사건+후속(Flamincome 3건)도 같은 규칙입니다. 브리핑의 '당일 사건' 표는 그날 들어온 카드를 그대로(후속 태그 포함) 보여 줍니다.
+
+### 대시보드 아이콘·로고
+- 로고 `docs/logo.svg`(보라 육각 방패 + 원장 줄 3개 + 노란 균열), 파비콘 `favicon-32.png`·`favicon.ico`·`apple-touch-icon.png` 는 headless Chrome 으로 SVG 를 512px 렌더 후 PIL 로 축소.
+- 유형 10종·역할 5종 아이콘은 `docs/icons.js`(직접 그린 24×24, 면 20% + 선 2톤). 체인 아이콘도 같은 파일의 `CHAIN_ICONS`(브랜드색 원 + 흰 마크, 35종 직접 그림; 없는 체인은 이름 첫 글자 모노그램, `unknown` 은 회색 ?) — 외부 로고 PNG 는 쓰지 않습니다. 표에서는 **아이콘만** 보이고 이름은 마우스를 올리면 즉시 툴팁(`data-tip`, 위임 핸들러)으로, 목록은 최대 4개 + `+N`(툴팁에 나머지 이름), 케이스 패널·상세 페이지는 **전부** 표시(헤더 아이콘 + 핵심 값의 이름 알약). 새 체인이 나오면 `CHAIN_ICONS` 에 `{c: 색, g: 마크}` 를 추가하고 `service.CHAIN_ALIAS` 에 별칭(예: XRP → XRP Ledger)을 넣습니다.
+- **컬럼 헤더 컨트롤**(`common.js` thSort/thFilter/bindHead/openMenu): 사건·금액·사건일·출처·tx 수 머리글은 클릭하면 정렬(↕/↑/↓, 금액·날짜·건수는 내림차순부터), 유형·체인·종류·역할 머리글은 클릭하면 필터 메뉴(아이콘·건수, 8개 넘으면 검색창; 선택값은 머리글에 알약 + × 해제). 사건·개요·지갑 주소 표는 서버(`sort`·`dir` 파라미터), 브리핑 '당일 사건' 표는 클라이언트(`applyCtl`)에서 처리. 툴바의 유형·체인·정렬 select 는 이 머리글 컨트롤로 대체해 없앴습니다.
+- 지갑 주소 표는 주소를 `앞 6자…뒤 4자` 로 축약(전체는 툴팁, 복사 버튼은 전체 복사)하고 열 폭을 고정해 가로 스크롤이 없습니다. 금액이 없는 사건은 한/영 모두 `unknown` 으로 표기(브리핑의 '소액·unknown N건' 도 같은 기준).
+- 등급 칩(S ≥ $100M · A ≥ $10M · B ≥ $1M · C ≥ $100K · D), 상단 자원 카운터(사건·피해액·주소, 수집 시작 이후 누적) — `docs/hud.js`.
 
 ### 데이터 재검증·재레이블링 (`collector/relabel.py`, `python run.py --relabel`)
 - 규칙 QA 로 의심 카드를 고릅니다: 사건일 없음/게시일 이후/수집일과 같음, 금액이 원문에 없음, 원문에 금액이 있는데 카드엔 없음, 온체인 유형인데 체인 없음, 이름이 제목 그대로, 유형 의심(법집행 단어).

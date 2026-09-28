@@ -5,6 +5,7 @@
 <title>지갑 주소 · Incident Ledger</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="icon" type="image/svg+xml" href="logo.svg"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,7 +13,7 @@
 <main class="page lumos">
   <div class="page-h"><div><h1 data-i18n="nav_addresses">지갑 주소</h1><div class="sub" id="sub"></div></div>
     <div class="controls"><form class="search" id="form" style="min-width:320px"><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="" data-i18n-ph="addr_ph" aria-label="주소"><button class="btn primary" type="submit" data-i18n="lookup">조회</button></form>
-      <label class="ctl"><select id="chainSel"></select></label><label class="ctl"><select id="kindSel"></select></label><div class="seg" id="roleSeg"></div><div class="seg" id="rangeSeg"></div></div></div>
+      <div class="seg" id="roleSeg"></div><div class="seg" id="rangeSeg"></div></div></div>
   <section class="rtiles" id="roleTiles"></section>
   <section id="result" class="grid"></section>
   <section class="card"><div class="card-h"><h2 data-i18n="all_addresses">수집 주소</h2><span class="meta" id="metaList"></span></div><div class="table-wrap"><table class="tbl lumos-tbl" id="addrTable"></table></div><div class="pager" id="pager"></div></section>

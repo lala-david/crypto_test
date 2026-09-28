@@ -3,6 +3,7 @@
   "use strict";
   const { $, $$, t, esc, fmtInt, money, moneyFull, fmtDate, api, renderNav, renderFoot, applyI18n, bindChrome, mdToHtml, incidentRow, TABLE_HEAD, tableLegend, bindRows, errorBox, state: K } = KL;
   let meta = null, days = [], cur = null;
+  const L = { sort: { key: "date", dir: "desc" }, filters: { type: "", chain: "" } };
   const qs = new URLSearchParams(location.search);
   async function show(day) { cur = await api(`/api/briefings/${day}`); history.replaceState(null, "", `briefings.html?day=${day}`); render(); }
   function render() {
@@ -20,7 +21,10 @@
     $("#briefHeadline").textContent = cur[`headline_${K.lang}`] || cur.headline_ko;
     $("#briefBody").innerHTML = mdToHtml(cur[`briefing_${K.lang}`] || cur.briefing_ko);
     $("#metaDay").textContent = `${cur.incidents.length}${t("unit")}`;
-    const tb = $("#dayTable"); tb.innerHTML = TABLE_HEAD() + `<tbody>${cur.incidents.map((i) => incidentRow(i)).join("")}</tbody>`; bindRows(tb);
+    const ctl = { ...L, options: { type: KL.optsType(KL.countBy(cur.incidents, (r) => r.type)), chain: KL.optsChain(KL.countBy(cur.incidents, (r) => r.chains || [])) },
+      onSort: (k, d) => { L.sort = { key: k, dir: d }; render(); }, onFilter: (k, v) => { L.filters[k] = v; render(); } };
+    const rows = KL.applyCtl(cur.incidents, ctl);
+    const tb = $("#dayTable"); tb.innerHTML = TABLE_HEAD(false, ctl) + `<tbody>${rows.length ? rows.map((i) => incidentRow(i)).join("") : `<tr><td colspan="6" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`; bindRows(tb); KL.bindHead(tb, ctl);
   }
   (async () => { meta = await api("/api/meta"); days = await api("/api/briefings"); if (days.length) await show(qs.get("day") && days.some((d) => d.day === qs.get("day")) ? qs.get("day") : days[0].day); else render(); })()
     .catch((e) => { $("main").insertAdjacentHTML("afterbegin", errorBox(e)); });

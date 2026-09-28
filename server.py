@@ -72,13 +72,35 @@ async def meta(req: Request):
     return J(svc.meta)
 
 
+INC_SORT = {
+    "amount": lambda r: r["amount_usd"] or 0, "date": lambda r: r.get("event_date") or r["day"], "day": lambda r: r["day"],
+    "name": lambda r: (r["project"] or "").lower(), "type": lambda r: r["type"] or "", "chain": lambda r: ((r.get("chains") or ["~"])[0] or "~").lower(),
+    "sources": lambda r: len(r.get("sources") or []),
+}
+ADDR_SORT = {
+    "address": lambda a: (a["address"] or "").lower(), "chain": lambda a: (a["chain"] or "~").lower(), "kind": lambda a: a.get("kind") or "~",
+    "label": lambda a: (a.get("label") or "~").lower(), "role": lambda a: a["role"] or "~", "incident": lambda a: ((a["incidents"] or [{}])[0].get("project") or "").lower(),
+    "tx": lambda a: a.get("tx_count") or 0, "day": lambda a: a["first_day"],
+}
+DESC_DEFAULT = {"amount", "date", "day", "sources", "tx"}
+
+
+def _sort_rows(rows, sort, dir_, table=None):
+    """컬럼 정렬. dir 미지정 시 금액·날짜·건수는 내림차순, 문자열은 오름차순. 금액 미상은 항상 뒤로."""
+    table = table or INC_SORT
+    key = table.get(sort or "")
+    if not key:
+        return rows
+    desc = (dir_ == "desc") if dir_ in ("asc", "desc") else sort in DESC_DEFAULT
+    if sort == "amount":
+        known = [r for r in rows if r["amount_usd"] is not None]; unknown = [r for r in rows if r["amount_usd"] is None]
+        return sorted(known, key=key, reverse=desc) + unknown
+    return sorted(rows, key=key, reverse=desc)
+
+
 async def incidents(req: Request):
     rows = svc.filter(**_filters(req))
-    sort = _p(req, "sort", "day")
-    if sort == "amount":
-        rows = sorted(rows, key=lambda r: -(r["amount_usd"] or 0))
-    elif sort == "date":
-        rows = sorted(rows, key=lambda r: (r.get("event_date") or r["day"]), reverse=True)
+    rows = _sort_rows(rows, _p(req, "sort", "day"), _p(req, "dir"))
     size = max(1, min(_int(req, "size", 20), 200))
     page = max(1, _int(req, "page", 1))
     items = rows[(page - 1) * size:page * size]
@@ -129,7 +151,8 @@ async def addresses(req: Request):
     role, chain, q = _p(req, "role"), _p(req, "chain"), _p(req, "q")
     size = max(1, min(_int(req, "size", 50), 500)); page = max(1, _int(req, "page", 1))
     res = svc.list_addresses(f["days"], f["from_"], f["to"], role=role, chain=chain, q=q, basis=f["basis"], limit=100000, kind=_p(req, "kind") or "")
-    items = res["items"][(page - 1) * size:page * size]
+    rows = _sort_rows(res["items"], _p(req, "sort"), _p(req, "dir"), ADDR_SORT)
+    items = rows[(page - 1) * size:page * size]
     return J({"total": res["total"], "page": page, "size": size, "items": items, "roles": res["roles"], "chains": res["chains"], "kinds": res.get("kinds", {})})
 
 

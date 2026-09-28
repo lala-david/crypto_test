@@ -2,12 +2,12 @@
 (() => {
   "use strict";
   const { $, $$, t, typeName, typeFull, roleName, esc, fmtInt, money, moneyFull, fmtDate, fmtMD, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, bindTips, columns, hbars, donut, fillSelect, incidentRow, TABLE_HEAD, bindRows, typeColorHex, chainName, errorBox } = KL;
-  const S = { days: "90", type: "", chain: "", q: "", page: 1, size: 20 };
+  const S = { days: "90", type: "", chain: "", q: "", sort: "date", dir: "desc", page: 1, size: 20 };
   let meta = null, st = null, allSt = null, facets = null, list = null, addrs = null, flowRows = null;
 
   async function load(tableOnly = false) {
     const f = { days: S.days, type: S.type, chain: S.chain };
-    const jobs = [api("/api/incidents", { ...f, q: S.q, page: S.page, size: S.size, sort: "date" })];
+    const jobs = [api("/api/incidents", { ...f, q: S.q, page: S.page, size: S.size, sort: S.sort, dir: S.dir })];
     if (!tableOnly) jobs.push(api("/api/stats", f), api("/api/addresses", { ...f, size: 1 }), api("/api/incidents", { ...f, size: 400, sort: "amount" }));
     if (!allSt) jobs.push(api("/api/stats", { days: "all" }));
     const res = await Promise.all(jobs);
@@ -36,7 +36,7 @@
     const from = firstDay && firstDay > st.range.from ? firstDay : st.range.from;
     const { labels, idx } = bucketize(flowRows, from, st.range.to);
     const series = top3.map((tp, k) => { const data = new Array(labels.length).fill(0); flowRows.forEach((r) => { if (r.type === tp) data[idx(r)] += 1; }); return { key: typeName(tp), color: TYPE_SHADES[k], data }; });
-    KL.reportCard($("#reportCard"), { title: "Incident Report", series, labels, metrics: [], wide: true, hud: KL.threatBar(st.loss_amount) });
+    KL.reportCard($("#reportCard"), { title: "Incident Report", series, labels, metrics: [], wide: true });
     // (2) AnimatedCard × 3: 도넛 = 1위 비중(호버: 1+2위 누적), 알약 = 상위 6 항목
     const mk = (id, list, name, opts) => {
       const total = list.reduce((a, r) => a + r.v, 0) || 1; const sorted = list.slice().sort((a, b) => b.v - a.v);
@@ -55,8 +55,11 @@
     rangeSeg($("#rangeSeg"), S.days, (v) => { S.days = v; S.page = 1; load(); });
     renderCards();
     const tb = $("#incTable");
-    tb.innerHTML = TABLE_HEAD() + `<tbody>${list.items.length ? list.items.map((i) => incidentRow(i)).join("") : `<tr><td colspan="6" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
-    bindRows(tb);
+    const fc = (facets && facets.types) ? facets : list.facets;
+    const ctl = { sort: { key: S.sort, dir: S.dir }, filters: { type: S.type, chain: S.chain }, options: { type: KL.optsType(fc.types), chain: KL.optsChain(fc.chains) },
+      onSort: (k, d) => { S.sort = k; S.dir = d; S.page = 1; load(true); }, onFilter: (k, v) => { S[k] = v; S.page = 1; load(); } };
+    tb.innerHTML = TABLE_HEAD(false, ctl) + `<tbody>${list.items.length ? list.items.map((i) => incidentRow(i)).join("") : `<tr><td colspan="6" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
+    bindRows(tb); KL.bindHead(tb, ctl);
     const pages = Math.max(1, Math.ceil(list.total / S.size));
     $("#pager").innerHTML = `<span>${list.total ? (S.page - 1) * S.size + 1 : 0}–${Math.min(list.total, S.page * S.size)} / ${list.total}</span><button id="pgPrev" type="button" ${S.page <= 1 ? "disabled" : ""}>‹</button><span>${S.page}/${pages}</span><button id="pgNext" type="button" ${S.page >= pages ? "disabled" : ""}>›</button>`;
     $("#pgPrev").onclick = () => { S.page--; load(true); }; $("#pgNext").onclick = () => { S.page++; load(true); };

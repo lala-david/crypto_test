@@ -57,7 +57,7 @@ def test_assemble_structure_and_dates():
     lines = b["briefing_ko"].split("\n")
     assert lines[0].startswith("- **[SBA PPP]") and "**$245M**" in lines[0] and "9.14" in lines[0]  # 법집행은 발표일
     assert lines[1].startswith("- **[Big Hack]") and "Ethereum · 해킹 · **$7.8M** · 9.15 — 멀티콜로 탈취" in lines[1]
-    assert lines[2].startswith("- **소액·미상 1건** — ") and "$25K" in lines[2]
+    assert lines[2].startswith("- **소액·unknown 1건** — ") and "$25K" in lines[2]
     assert lines[3].startswith("- **후속 1건** — ") and "첫 보도 9.16" in lines[3]
     assert lines[4] == "- **시사점** — 오라클 조작이 반복."
     assert event_date(legal) == "2026-09-14" and event_date(big) == "2026-09-15"

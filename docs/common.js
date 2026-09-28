@@ -6,15 +6,15 @@ window.KL = (() => {
   const I18N = {
     ko: {
       nav_home: "개요", nav_incidents: "사건", nav_briefings: "브리핑", nav_stats: "통계", nav_addresses: "지갑 주소",
-      recent_addresses: "최근 수집 주소", all_addresses: "수집 주소", th_address: "주소", th_kind: "종류", th_label: "라벨", th_tx: "tx 수", detail_more: "자세히", hero_1: "가상자산 해킹·범죄", hero_2: "사건 원장", hero_since: "{d} 이후", total: "전체", ticker_mid: "", ticker_on: "·", tab_amount: "피해액", tab_type: "유형", tab_chain: "체인", top5_title: "피해액 상위 5", prev_period: "이전 기간", top5_amount: "금액 상위 5", top5_count: "건수 상위 5", top5_chains_addr: "주소 많은 체인 5", th_sources: "출처", src_gauge_tip: "출처 {n}곳", follow_n: "후속 {n}", follow_reports: "후속 보도 {n}건", case_code: "사건 코드", case_timeline: "경과", ev_occurred: "사건 발생", ev_reported: "최초 보도", ev_followup: "후속 보도", ev_original: "원 사건", ev_blacklist: "블랙리스트 등재", ev_verified: "주소 검증", th_addr_tx: "주소 · 트랜잭션", th_link: "링크", open_page: "새 창", share: "링크 복사", copied_link: "복사됨", method_short: "수법", none: "없음", not_yet: "정보 없음", unit_addr: "개 주소", kind_all: "전체 종류", kinds_map: { eoa: "EOA", contract: "CA", wallet: "지갑", txhash: "TX 해시", invalid: "무효", unfunded: "미사용", unknown: "미확인", unchecked: "미검증", system: "시스템" }, ctypes_map: { token: "토큰", lp_pool: "풀(LP)", v3_pool: "풀(V3)", balancer_pool: "풀(Balancer)", vault: "볼트", atoken: "aToken", ctoken: "cToken", proxy: "프록시", safe: "멀티시그", router: "라우터", nft: "NFT", contract: "컨트랙트", program: "프로그램", mint: "토큰 민트", token_account: "토큰 계정", destroyed: "소멸" }, role_all: "전체 역할", lookup_title: "주소 조회", addr_list_hint: "사건에서 수집한 지갑 주소. 역할은 우선순위(제재 > 공격자 > 세탁 > 피해자)로 하나만 표시.", top_amount5: "금액 상위 5",
+      recent_addresses: "최근 수집 주소", all_addresses: "수집 주소", th_address: "주소", th_kind: "종류", th_label: "라벨", th_tx: "tx 수", detail_more: "자세히", hero_1: "가상자산 해킹·범죄", hero_2: "사건 원장", hero_since: "{d} 이후", total: "전체", ticker_mid: "", ticker_on: "·", tab_amount: "피해액", tab_type: "유형", tab_chain: "체인", top5_title: "피해액 상위 5", prev_period: "이전 기간", tip_incident: "사건(프로젝트·대상) 이름", tip_amount: "피해액 또는 제재·수사 금액(USD). 앞 칩은 등급: S ≥ $100M · A ≥ $10M · B ≥ $1M · C ≥ $100K · D 그 외", tip_type: "사건 유형", tip_date: "사건 발생일(법집행은 발표일)", tip_chain: "관련 체인", tip_sources: "이 사건을 보도한 출처 수", res_new: "사건", res_loss: "피해액", res_addr: "주소", tip_res_new: "수집 시작 이후 신규 사건 수", tip_res_loss: "수집 시작 이후 피해액 합계(제재·수사 금액 제외)", tip_res_addr: "수집한 지갑 주소 수", tip_role_sanctioned: "OFAC 등 제재 목록에 오른 주소", tip_role_attacker: "공격자·범인 지갑", tip_role_laundering: "자금 세탁·경유 지갑", tip_role_victim: "피해자·피해 프로토콜 주소", tip_role_unknown: "역할 미분류", top5_amount: "금액 상위 5", top5_count: "건수 상위 5", top5_chains_addr: "주소 많은 체인 5", th_sources: "출처", src_gauge_tip: "출처 {n}곳", follow_n: "후속 {n}", follow_reports: "후속 보도 {n}건", case_code: "사건 코드", case_timeline: "경과", ev_occurred: "사건 발생", ev_reported: "최초 보도", ev_followup: "후속 보도", ev_original: "원 사건", ev_blacklist: "블랙리스트 등재", ev_verified: "주소 검증", th_addr_tx: "주소 · 트랜잭션", th_link: "링크", open_page: "새 창", share: "링크 복사", copied_link: "복사됨", method_short: "수법", none: "없음", not_yet: "정보 없음", unit_addr: "개 주소", kind_all: "전체 종류", kinds_map: { eoa: "EOA", contract: "CA", wallet: "지갑", txhash: "TX 해시", invalid: "무효", unfunded: "미사용", unknown: "미확인", unchecked: "미검증", system: "시스템" }, ctypes_map: { token: "토큰", lp_pool: "풀(LP)", v3_pool: "풀(V3)", balancer_pool: "풀(Balancer)", vault: "볼트", atoken: "aToken", ctoken: "cToken", proxy: "프록시", safe: "멀티시그", router: "라우터", nft: "NFT", contract: "컨트랙트", program: "프로그램", mint: "토큰 민트", token_account: "토큰 계정", destroyed: "소멸" }, role_all: "전체 역할", lookup_title: "주소 조회", addr_list_hint: "사건에서 수집한 지갑 주소. 역할은 우선순위(제재 > 공격자 > 세탁 > 피해자)로 하나만 표시.", top_amount5: "금액 상위 5", th_sort_tip: "클릭: 정렬 전환", th_filter_tip: "클릭: 필터", filter_all: "전체", filter_search: "검색…", clear_filter: "필터 해제", th_kind_tip: "주소 종류(EOA·CA·지갑 등)", th_label_tip: "온체인 검증 라벨(컨트랙트명·토큰·7702 위임 등)", th_role_tip: "사건 내 주소 역할", th_tx_tip: "온체인 트랜잭션 수", th_address_tip: "앞 6자·뒤 4자만 표시. 마우스를 올리면 전체 주소",
       updated: "수집", all: "전체", unit: "건", no_data: "데이터 없음", search_ph: "사건·주소 검색", hide_follow: "후속 제외", days_n: "{n}일", collected_days: "{n}일",
-      k_latest_new: "최근일 신규", k_new: "신규 사건", k_follow: "후속 보도", k_loss: "피해액", k_legal: "제재·수사 금액", k_addr: "주소", k_unknown_amt: "금액 미상", vs_prev: "이전 기간 대비",
+      k_latest_new: "최근일 신규", k_new: "신규 사건", k_follow: "후속 보도", k_loss: "피해액", k_legal: "제재·수사 금액", k_addr: "주소", k_unknown_amt: "금액 unknown", vs_prev: "이전 기간 대비",
       daily_count: "일별 사건 수", daily_amount: "일별 피해액", share_type: "유형 비중", share_chain: "대표 체인 비중", by_source: "출처별 사건", top_amount: "금액 상위 10", recent: "최근 사건", roles: "주소 역할",
       basis_new: "신규 기준", basis_collected: "수집일 기준", basis_event: "사건일 기준", basis_first_chain: "첫 체인 기준", daily_avg: "일평균", peak: "최대", coverage: "커버리지", legal_daily: "제재·수사 일별", event_date: "사건일", collected_date: "수집일",
       th_incident: "사건", th_amount: "금액", th_report: "보고일", th_date: "사건일", th_type: "유형", th_chain: "체인", th_addr: "주소 수", th_src: "출처 수", th_count: "건수", th_new: "신규", th_share: "비중", th_last: "최근 수집", th_source: "출처", th_rank: "#",
-      th_count_pct: "건수 %", th_amount_pct: "금액 %", th_avg: "평균", sum: "합계", other: "기타", unknown: "미상", legend_follow: "후속 = 이전 사건의 후속 보도", legend_bl: "BL = 블랙리스트 일치 주소 수",
+      th_count_pct: "건수 %", th_amount_pct: "금액 %", th_avg: "평균", sum: "합계", other: "기타", unknown: "unknown", legend_follow: "후속 = 이전 사건의 후속 보도", legend_bl: "BL = 블랙리스트 일치 주소 수",
       briefing: "브리핑", latest_briefing: "최신 브리핑", day_incidents: "당일 사건", follow: "후속", new_label: "신규", background: "배경", method: "수법", summary: "요약", flow: "자금 흐름", addresses: "지갑 주소", sources: "출처", actors: "관련 주체",
-      tx: "트랜잭션", blacklist: "블랙리스트", copy: "복사", copied: "복사됨", back: "사건 목록", incident_date: "사건일", report_date: "보고일", amount_unknown: "금액 미상", not_found: "사건을 찾을 수 없습니다", loss_label: "피해액", revised_from: "이전 보고",
+      tx: "트랜잭션", blacklist: "블랙리스트", copy: "복사", copied: "복사됨", back: "사건 목록", incident_date: "사건일", report_date: "보고일", amount_unknown: "unknown", not_found: "사건을 찾을 수 없습니다", loss_label: "피해액", revised_from: "이전 보고",
       all_types: "유형: 전체", all_chains: "체인: 전체", all_sources: "출처: 전체", sort: "정렬", sort_day: "보고일", sort_amount: "금액", sort_date: "사건일", related: "관련 사건", report: "GitHub 보고서", show_more: "{n}개 더 보기", show_less: "접기", all_roles: "전체", note: "메모",
       addr_ph: "지갑 주소 입력 (6자 이상)", addr_scope: "조회 범위: 사건 주소 · OFAC SDN · 블랙리스트", addr_found_in: "사건 내 주소", addr_sdn: "OFAC SDN", addr_bl: "블랙리스트", addr_none: "일치 없음", addr_role: "역할", lookup: "조회",
       th_entity: "제재 대상", th_programs: "프로그램", th_first_seen: "최초 등재",
@@ -27,7 +27,7 @@ window.KL = (() => {
     },
     en: {
       nav_home: "Overview", nav_incidents: "Incidents", nav_briefings: "Briefings", nav_stats: "Stats", nav_addresses: "Wallet addresses",
-      recent_addresses: "Recently collected addresses", all_addresses: "Collected addresses", th_address: "Address", th_kind: "Kind", th_label: "Label", th_tx: "Txs", detail_more: "Details", hero_1: "Crypto hacks & crime", hero_2: "incident ledger", hero_since: "since {d}", total: "Total", ticker_mid: "was hacked from", ticker_on: "on", tab_amount: "Losses", tab_type: "Type", tab_chain: "Chain", top5_title: "Top 5 by loss", prev_period: "previous period", top5_amount: "Top 5 by amount", top5_count: "Top 5 by count", top5_chains_addr: "Top 5 chains by addresses", th_sources: "Sources", src_gauge_tip: "{n} sources", follow_n: "+{n} reports", follow_reports: "{n} follow-up reports", case_code: "Case ID", case_timeline: "Timeline", ev_occurred: "Incident", ev_reported: "First report", ev_followup: "Follow-ups", ev_original: "Original", ev_blacklist: "Blacklisted", ev_verified: "Addresses verified", th_addr_tx: "Address / tx", th_link: "Link", open_page: "Open page", share: "Copy link", copied_link: "Copied", method_short: "Method", none: "None", not_yet: "No data", unit_addr: " addresses", kind_all: "All kinds", kinds_map: { eoa: "EOA", contract: "CA", wallet: "wallet", txhash: "tx hash", invalid: "invalid", unfunded: "unfunded", unknown: "unknown", unchecked: "unchecked", system: "system" }, ctypes_map: { token: "token", lp_pool: "pool (LP)", v3_pool: "pool (V3)", balancer_pool: "pool (Balancer)", vault: "vault", atoken: "aToken", ctoken: "cToken", proxy: "proxy", safe: "multisig", router: "router", nft: "NFT", contract: "contract", program: "program", mint: "token mint", token_account: "token account", destroyed: "destroyed" }, role_all: "All roles", lookup_title: "Address lookup", addr_list_hint: "Wallet addresses collected from incidents. One role per address by priority (sanctioned > attacker > laundering > victim).", top_amount5: "Top 5 by amount",
+      recent_addresses: "Recently collected addresses", all_addresses: "Collected addresses", th_address: "Address", th_kind: "Kind", th_label: "Label", th_tx: "Txs", detail_more: "Details", hero_1: "Crypto hacks & crime", hero_2: "incident ledger", hero_since: "since {d}", total: "Total", ticker_mid: "was hacked from", ticker_on: "on", tab_amount: "Losses", tab_type: "Type", tab_chain: "Chain", top5_title: "Top 5 by loss", prev_period: "previous period", tip_incident: "Incident (project / target)", tip_amount: "Loss or enforcement amount (USD). Chip = tier: S ≥ $100M · A ≥ $10M · B ≥ $1M · C ≥ $100K · D otherwise", tip_type: "Incident type", tip_date: "Incident date (announcement date for enforcement)", tip_chain: "Chains involved", tip_sources: "Number of sources reporting this incident", res_new: "incidents", res_loss: "loss", res_addr: "addresses", tip_res_new: "New incidents since collection started", tip_res_loss: "Total loss since collection started (excl. enforcement amounts)", tip_res_addr: "Wallet addresses collected", tip_role_sanctioned: "On a sanctions list (OFAC etc.)", tip_role_attacker: "Attacker / perpetrator wallet", tip_role_laundering: "Laundering / pass-through wallet", tip_role_victim: "Victim / affected protocol address", tip_role_unknown: "Role not classified", top5_amount: "Top 5 by amount", top5_count: "Top 5 by count", top5_chains_addr: "Top 5 chains by addresses", th_sources: "Sources", src_gauge_tip: "{n} sources", follow_n: "+{n} reports", follow_reports: "{n} follow-up reports", case_code: "Case ID", case_timeline: "Timeline", ev_occurred: "Incident", ev_reported: "First report", ev_followup: "Follow-ups", ev_original: "Original", ev_blacklist: "Blacklisted", ev_verified: "Addresses verified", th_addr_tx: "Address / tx", th_link: "Link", open_page: "Open page", share: "Copy link", copied_link: "Copied", method_short: "Method", none: "None", not_yet: "No data", unit_addr: " addresses", kind_all: "All kinds", kinds_map: { eoa: "EOA", contract: "CA", wallet: "wallet", txhash: "tx hash", invalid: "invalid", unfunded: "unfunded", unknown: "unknown", unchecked: "unchecked", system: "system" }, ctypes_map: { token: "token", lp_pool: "pool (LP)", v3_pool: "pool (V3)", balancer_pool: "pool (Balancer)", vault: "vault", atoken: "aToken", ctoken: "cToken", proxy: "proxy", safe: "multisig", router: "router", nft: "NFT", contract: "contract", program: "program", mint: "token mint", token_account: "token account", destroyed: "destroyed" }, role_all: "All roles", lookup_title: "Address lookup", addr_list_hint: "Wallet addresses collected from incidents. One role per address by priority (sanctioned > attacker > laundering > victim).", top_amount5: "Top 5 by amount", th_sort_tip: "Click to sort", th_filter_tip: "Click to filter", filter_all: "All", filter_search: "Search…", clear_filter: "Clear filter", th_kind_tip: "Address kind (EOA / CA / wallet…)", th_label_tip: "On-chain label (contract name, token, 7702 delegate…)", th_role_tip: "Role of the address in the incident", th_tx_tip: "On-chain transaction count", th_address_tip: "First 6 / last 4 chars shown. Hover for the full address",
       updated: "Collected", all: "All", unit: "", no_data: "No data", search_ph: "Search incidents / addresses", hide_follow: "Hide follow-ups", days_n: "{n}d", collected_days: "{n} days",
       k_latest_new: "New (latest day)", k_new: "New incidents", k_follow: "Follow-ups", k_loss: "Loss", k_legal: "Enforcement amount", k_addr: "Addresses", k_unknown_amt: "Unknown amount", vs_prev: "vs previous period",
       daily_count: "Incidents per day", daily_amount: "Loss per day", share_type: "By type", share_chain: "By primary chain", by_source: "By source", top_amount: "Top 10 by amount", recent: "Recent incidents", roles: "Address roles",
@@ -86,7 +86,11 @@ window.KL = (() => {
   const isAddrLike = (s) => /^(0x[0-9a-fA-F]{20,}|T[1-9A-HJ-NP-Za-km-z]{33}|bc1[0-9a-z]{20,}|[13][1-9A-HJ-NP-Za-km-z]{25,})$/.test((s || "").trim());
   const sw = (type) => `<span class="sw" style="background:${TYPE_COLOR[type] || "var(--t-other)"}"></span>`;
   const pill = (i) => `<span class="pill" title="${esc(typeFull(i.type))}">${sw(i.type)}${esc(typeName(i.type))}</span>`;
-  const chainPills = (chains, max = 1) => (chains || []).slice(0, max).map((c) => `<span class="chain">${esc(c)}</span>`).join(" ") + ((chains || []).length > max ? ` <span class="faint small" title="${esc(chains.slice(max).join(", "))}">+${chains.length - max}</span>` : "") + (!(chains || []).length ? '<span class="faint">-</span>' : "");
+  const chainPill = (c, withName = false) => { const nm = c === "unknown" ? t("unknown") : c; const ic = KL.chainIcon ? KL.chainIcon(nm) : ""; const col = KL.chainColor ? KL.chainColor(nm) : "var(--ink-3)";
+    return withName ? `<span class="chain named" style="--cc:${col}">${ic}<span>${esc(nm)}</span></span>` : `<span class="chain ic" data-tip="${esc(nm)}" aria-label="${esc(nm)}">${ic}</span>`; };
+  // 아이콘만 max개 + 나머지는 "+N"(툴팁에 나머지 체인 이름) · 이름 포함형은 전부 표시
+  const chainPillsAll = (chains) => (chains || []).map((c) => chainPill(c, true)).join("");
+  const chainPills = (chains, max = 1) => (chains || []).slice(0, max).map((c) => chainPill(c)).join("") + ((chains || []).length > max ? ` <span class="faint small more" data-tip="${esc((chains || []).slice(max).join(" · "))}">+${(chains || []).length - max}</span>` : "");
   const detailUrl = (i) => `incident.html?id=${encodeURIComponent(i.uid)}`;
   const mdToHtml = (md, max = 99) => { const items = (md || "").split(/\n/).map((l) => l.trim()).filter(Boolean).map((l) => l.replace(/^[-•]\s*/, "")).slice(0, max);
     const inline = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
@@ -99,7 +103,7 @@ window.KL = (() => {
   function renderNav(active, meta) {
     const nav = $("#nav"); if (!nav) return;
     const upd = meta && meta.generated_at ? meta.generated_at.replace("T", " ").slice(5, 16) : "";
-    nav.innerHTML = `<a class="brand" href="index.html"><span class="mark"></span><span>Incident Ledger</span></a>
+    nav.innerHTML = `<a class="brand" href="index.html"><img class="mark" src="logo.svg" alt="" width="22" height="22"><span>Incident Ledger</span></a>
       <div class="tabs">${PAGES.map(([h, k]) => `<a class="tab ${active === h ? "on" : ""}" href="${h}">${esc(t(k))}</a>`).join("")}</div>
       <div class="nav-r"><span class="resbar" id="resBar"></span><button id="themeBtn" class="ibtn" type="button" aria-label="${esc(t("a_theme"))}" title="${esc(t("a_theme"))}">◐</button><button id="langBtn" class="ibtn" type="button" aria-label="${esc(t("a_lang"))}">${state.lang === "ko" ? "EN" : "KO"}</button></div>`;
     if (KL.resourceBar) KL.resourceBar($("#resBar"));
@@ -125,8 +129,11 @@ window.KL = (() => {
     el.innerHTML = [["event", t("event_date")], ["collected", t("collected_date")]].map(([v, l]) => `<button data-basis="${v}" class="${current === v ? "on" : ""}" type="button">${esc(l)}</button>`).join("");
     $$("button", el).forEach((b) => b.addEventListener("click", () => onChange(b.dataset.basis)));
   }
+  document.addEventListener("mousemove", (e) => { const el = e.target && e.target.closest && e.target.closest("[data-tip]"); const tp = $("#tip"); if (!tp) return;
+    if (!el || el.dataset.bound) { if (!el) tp.classList.remove("show"); return; }
+    tp.innerHTML = el.dataset.tip; tp.classList.add("show"); tp.classList.toggle("below", e.clientY < 70); tp.style.left = e.clientX + "px"; tp.style.top = (e.clientY < 70 ? e.clientY + 14 : e.clientY - 8) + "px"; }, { passive: true });
   const bindTips = (root) => $$("[data-tip]", root).forEach((el) => {
-    el.addEventListener("mousemove", (e) => { const tp = $("#tip"); if (!tp) return; tp.innerHTML = el.dataset.tip; tp.classList.add("show"); tp.classList.toggle("below", e.clientY < 70); tp.style.left = e.clientX + "px"; tp.style.top = (e.clientY < 70 ? e.clientY + 14 : e.clientY - 8) + "px"; });
+    el.dataset.bound = "1"; el.addEventListener("mousemove", (e) => { const tp = $("#tip"); if (!tp) return; tp.innerHTML = el.dataset.tip; tp.classList.add("show"); tp.classList.toggle("below", e.clientY < 70); tp.style.left = e.clientX + "px"; tp.style.top = (e.clientY < 70 ? e.clientY + 14 : e.clientY - 8) + "px"; });
     el.addEventListener("mouseleave", () => { const tp = $("#tip"); if (tp) tp.classList.remove("show"); }); });
 
   // ---- 차트 (viewBox = 실제 px → 글자 크기가 카드 폭에 따라 변하지 않음) ----
@@ -194,7 +201,7 @@ window.KL = (() => {
     return `<span class="gauge" title="${esc(t("src_gauge_tip").replace("{n}", n || 0))}"><svg viewBox="0 0 60 35" width="52" height="30"><path d="M2.5 30 A27.5 27.5 0 0 1 57.5 30" class="g-muted"/><path d="M2.5 30 A27.5 27.5 0 0 1 57.5 30" class="g-val" style="stroke:${col}" stroke-dasharray="${GAUGE_L}" stroke-dashoffset="${(GAUGE_L * (1 - score)).toFixed(2)}"/></svg><b>${n || 0}</b></span>`; };
   const typeBadge = (type) => (KL.typeBadge ? KL.typeBadge(type) : `<span class="badge" style="--c:${TYPE_COLOR[type] || "var(--t-other)"}" title="${esc(typeFull(type))}"><span class="dot"></span>${esc(typeName(type))}</span>`);
   const badges = (i) => `${i.followup_of ? `<span class="tag" title="${esc(t("legend_follow"))} · ${esc(i.followup_of.day || "")}">${esc(t("follow"))}</span>` : ""}${(i.followups || []).length ? `<span class="tag" title="${esc(t("follow_reports").replace("{n}", i.followups.length))} · ${esc(i.followups.map((f) => f.day).join(", "))}">${esc(t("follow_n").replace("{n}", i.followups.length))}</span>` : ""}${i.blacklist_hits ? `<span class="tag warn" title="${esc(t("legend_bl"))}">BL ${i.blacklist_hits}</span>` : ""}${i.amount_revised_from ? `<span class="tag" title="${esc(t("revised_from"))} ${moneyFull(i.amount_revised_from)}">↑</span>` : ""}`;
-  const amountCell = (i) => i.amount_usd != null ? `${KL.tierChip ? KL.tierChip(i.amount_usd) : ""}<span class="amt" title="${moneyFull(i.amount_usd)}"><span class="cur">$</span>${fmtInt(i.amount_usd)}</span>` : `<span class="faint" title="${esc(i.amount_text || "")}">${esc(t("unknown"))}</span>`;
+  const amountCell = (i) => i.amount_usd != null ? `<span class="amtwrap">${KL.tierChip ? KL.tierChip(i.amount_usd) : ""}<span class="amt" title="${moneyFull(i.amount_usd)}"><span class="cur">$</span>${fmtInt(i.amount_usd)}</span></span>` : `<span class="faint" title="${esc(i.amount_text || "")}">${esc(t("unknown"))}</span>`;
   const zeroDash = (n) => (n ? fmtInt(n) : '<span class="faint">–</span>');
   function incidentRow(i, compact = false) {
     compact = compact === true;
@@ -203,17 +210,70 @@ window.KL = (() => {
     const ev = i.event_date || i.incident_date || i.day;
     const tk = KL.tier ? KL.tier(i.amount_usd) : "";
     if (compact) return `<tr class="link ${tk ? "row-" + tk : ""}" data-href="${detailUrl(i)}">${name}${amt}<td>${pill(i)}</td><td class="date">${esc(fmtDate(ev))}</td></tr>`;
-    return `<tr class="link ${tk ? "row-" + tk : ""}" data-href="${detailUrl(i)}">${name}${amt}<td class="date" title="${esc(t("th_report"))} ${esc(fmtDate(i.day))}">${esc(fmtDate(ev))}</td><td class="nowrap">${typeBadge(i.type)}</td><td>${chainPills(i.chains, 2) || '<span class="faint">–</span>'}</td><td class="center">${gauge((i.sources || []).length)}</td></tr>`;
+    return `<tr class="link ${tk ? "row-" + tk : ""}" data-href="${detailUrl(i)}">${name}${amt}<td class="date" title="${esc(t("th_report"))} ${esc(fmtDate(i.day))}">${esc(fmtDate(ev))}</td><td class="nowrap">${typeBadge(i.type)}</td><td>${chainPills(i.chains, 4) || '<span class="faint">–</span>'}</td><td class="center">${gauge((i.sources || []).length)}</td></tr>`;
   }
-  const TABLE_HEAD = (compact = false) => compact
-    ? `<thead><tr><th>${esc(t("th_incident"))}</th><th class="num">${esc(t("th_amount"))}</th><th>${esc(t("th_type"))}</th><th>${esc(t("th_date"))}</th></tr></thead>`
-    : `<thead><tr><th>${esc(t("th_incident"))}</th><th class="num">${esc(t("th_amount"))}</th><th>${esc(t("th_date"))}</th><th>${esc(t("th_type"))}</th><th>${esc(t("th_chain"))}</th><th class="center">${esc(t("th_sources"))}</th></tr></thead>`;
+  const COLS_FULL = `<colgroup><col class="c-name"><col class="c-amt"><col class="c-date"><col class="c-type"><col class="c-chain"><col class="c-src"></colgroup>`;
+  const COLS_COMPACT = `<colgroup><col class="c-name"><col class="c-amt"><col class="c-type"><col class="c-date"></colgroup>`;
+  // ---- 컬럼 헤더 컨트롤: ctl = { sort:{key,dir}, filters:{key:value}, options:{key:[{value,label,n}]}, onSort(key,dir), onFilter(key,value) } ----
+  const thSort = (ctl, key, label, tip, cls = "") => { const on = ctl && ctl.sort && ctl.sort.key === key; const dir = on ? ctl.sort.dir : "";
+    return `<th class="th-sort ${cls} ${on ? "on" : ""}" data-sort="${key}" title="${esc(tip || "")}${tip ? " · " : ""}${esc(t("th_sort_tip"))}"><span class="th-l">${esc(label)}</span><span class="th-ic">${dir === "asc" ? "↑" : dir === "desc" ? "↓" : "↕"}</span></th>`; };
+  const thFilter = (ctl, key, label, tip, cls = "") => { const v = ctl && ctl.filters ? ctl.filters[key] : ""; const opt = v && ctl.options && (ctl.options[key] || []).find((o) => o.value === v);
+    return `<th class="th-filter ${cls} ${v ? "on" : ""}" data-filter="${key}" title="${esc(tip || "")}${tip ? " · " : ""}${esc(t("th_filter_tip"))}"><span class="th-l">${esc(label)}</span>${v ? `<span class="th-val">${opt ? opt.icon || "" : ""}${esc(opt ? opt.label : v)}<button class="th-x" data-clear="${key}" type="button" title="${esc(t("clear_filter"))}">×</button></span>` : `<span class="th-ic">▾</span>`}</th>`; };
+  let menuEl = null;
+  const closeMenu = () => { if (menuEl) { menuEl.remove(); menuEl = null; } };
+  document.addEventListener("click", (e) => { if (menuEl && !menuEl.contains(e.target) && !e.target.closest("th.th-filter")) closeMenu(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeMenu(); });
+  function openMenu(anchor, options, current, onPick) {
+    closeMenu();
+    const r = anchor.getBoundingClientRect();
+    const el = document.createElement("div"); el.className = "hmenu"; menuEl = el;
+    const many = options.length > 8;
+    const list = (q = "") => { const ql = q.toLowerCase(); const opts = options.filter((o) => !ql || o.label.toLowerCase().includes(ql) || String(o.value).toLowerCase().includes(ql));
+      return `<button class="opt ${current ? "" : "on"}" data-v="" type="button"><span class="ol">${esc(t("filter_all"))}</span></button>` + opts.map((o) => `<button class="opt ${o.value === current ? "on" : ""}" data-v="${esc(o.value)}" type="button"><span class="ol">${o.icon || ""}${esc(o.label)}</span>${o.n != null ? `<span class="on">${fmtInt(o.n)}</span>` : ""}</button>`).join(""); };
+    el.innerHTML = `${many ? `<input class="hm-q" type="search" placeholder="${esc(t("filter_search"))}" autocomplete="off">` : ""}<div class="hm-list">${list()}</div>`;
+    document.body.appendChild(el);
+    const w = el.offsetWidth, left = Math.min(Math.max(8, r.left), window.innerWidth - w - 8);
+    el.style.left = left + window.scrollX + "px"; el.style.top = r.bottom + 4 + window.scrollY + "px";
+    const bind = () => $$(".opt", el).forEach((b) => b.addEventListener("click", () => { closeMenu(); onPick(b.dataset.v); }));
+    bind();
+    const q = $(".hm-q", el); if (q) { q.focus(); q.addEventListener("input", () => { $(".hm-list", el).innerHTML = list(q.value); bind(); }); }
+  }
+  function bindHead(table, ctl) {
+    if (!ctl) return;
+    $$("th.th-sort", table).forEach((th) => th.addEventListener("click", () => { const k = th.dataset.sort; const cur = ctl.sort || {}; const dflt = ["amount", "date", "day", "sources", "tx"].includes(k) ? "desc" : "asc";
+      const dir = cur.key === k ? (cur.dir === "desc" ? "asc" : "desc") : dflt; ctl.onSort && ctl.onSort(k, dir); }));
+    $$("th.th-filter", table).forEach((th) => th.addEventListener("click", (e) => { const k = th.dataset.filter; if (e.target.closest(".th-x")) { ctl.onFilter && ctl.onFilter(k, ""); return; }
+      openMenu(th, (ctl.options && ctl.options[k]) || [], (ctl.filters || {})[k] || "", (v) => ctl.onFilter && ctl.onFilter(k, v)); }));
+  }
+  // 옵션 빌더: {value:n} 맵 → [{value,label,n,icon}]
+  const optsType = (counts) => Object.entries(counts || {}).sort((a, b) => b[1] - a[1]).map(([v, n]) => ({ value: v, label: typeName(v), n, icon: KL.typeIcon ? `<span class="oi" style="--c:${TYPE_COLOR[v] || "var(--t-other)"}">${KL.typeIcon(v)}</span>` : "" }));
+  const optsChain = (counts) => Object.entries(counts || {}).sort((a, b) => b[1] - a[1]).map(([v, n]) => ({ value: v, label: chainName(v), n, icon: KL.chainIcon ? KL.chainIcon(chainName(v), 14) : "" }));
+  const countBy = (rows, fn) => { const m = {}; rows.forEach((r) => { const ks = fn(r); (Array.isArray(ks) ? ks : [ks]).forEach((k) => { if (k != null && k !== "") m[k] = (m[k] || 0) + 1; }); }); return m; };
+  // 클라이언트 측 정렬·필터(브리핑 당일 표 등)
+  const SORT_KEY = { amount: (r) => r.amount_usd, date: (r) => r.event_date || r.incident_date || r.day, day: (r) => r.day, name: (r) => (r.project || "").toLowerCase(), type: (r) => r.type || "", chain: (r) => ((r.chains || [])[0] || "~").toLowerCase(), sources: (r) => (r.sources || []).length };
+  function applyCtl(rows, ctl) {
+    let out = rows.slice();
+    const f = ctl.filters || {};
+    if (f.type) out = out.filter((r) => r.type === f.type);
+    if (f.chain) out = out.filter((r) => (r.chains || []).includes(f.chain));
+    const sk = ctl.sort && SORT_KEY[ctl.sort.key];
+    if (sk) { const desc = ctl.sort.dir === "desc"; const known = out.filter((r) => sk(r) != null), unk = out.filter((r) => sk(r) == null);
+      known.sort((a, b) => { const x = sk(a), y = sk(b); return (x < y ? -1 : x > y ? 1 : 0) * (desc ? -1 : 1); }); out = known.concat(unk); }
+    return out;
+  }
+  const TABLE_HEAD = (compact = false, ctl = null) => compact
+    ? `${COLS_COMPACT}<thead><tr><th title="${esc(t("tip_incident"))}">${esc(t("th_incident"))}</th><th class="num" title="${esc(t("tip_amount"))}">${esc(t("th_amount"))}</th><th title="${esc(t("tip_type"))}">${esc(t("th_type"))}</th><th title="${esc(t("tip_date"))}">${esc(t("th_date"))}</th></tr></thead>`
+    : ctl
+      ? `${COLS_FULL}<thead><tr>${thSort(ctl, "name", t("th_incident"), t("tip_incident"))}${thSort(ctl, "amount", t("th_amount"), t("tip_amount"), "num")}${thSort(ctl, "date", t("th_date"), t("tip_date"))}${thFilter(ctl, "type", t("th_type"), t("tip_type"))}${thFilter(ctl, "chain", t("th_chain"), t("tip_chain"))}${thSort(ctl, "sources", t("th_sources"), t("tip_sources"), "center")}</tr></thead>`
+      : `${COLS_FULL}<thead><tr><th title="${esc(t("tip_incident"))}">${esc(t("th_incident"))}</th><th class="num" title="${esc(t("tip_amount"))}">${esc(t("th_amount"))}</th><th title="${esc(t("tip_date"))}">${esc(t("th_date"))}</th><th title="${esc(t("tip_type"))}">${esc(t("th_type"))}</th><th title="${esc(t("tip_chain"))}">${esc(t("th_chain"))}</th><th class="center" title="${esc(t("tip_sources"))}">${esc(t("th_sources"))}</th></tr></thead>`;
+  // 주소 축약: 앞 6자 + … + 뒤 4자 (전체는 툴팁)
+  const shortAddr = (a) => { a = String(a || ""); return a.length > 14 ? `${a.slice(0, 6)}…${a.slice(-4)}` : a; };
   const tableLegend = () => "";
   function bindRows(root) { $$("tr[data-href]", root).forEach((tr) => tr.addEventListener("click", (e) => { if (e.target.closest("a")) return; location.href = tr.dataset.href; })); }
   function fillSelect(sel, values, allLabel, current) { sel.innerHTML = `<option value="">${esc(allLabel)}</option>` + values.map((v) => `<option value="${esc(v.value)}"${v.value === current ? " selected" : ""}>${esc(v.label)}</option>`).join(""); }
   const typeColorHex = (k) => { const v = TYPE_COLOR[k] || "var(--t-other)"; return getComputedStyle(document.documentElement).getPropertyValue(v.slice(4, -1)).trim() || "#888"; };
   const chainName = (k) => (k === "unknown" ? t("unknown") : k);
 
-  return { $, $$, TYPE_COLOR, REPO, state, t, typeName, typeFull, roleName, srcLabel, esc, fmtInt, fmtPct, money, moneyFull, moneyCell, fmtDate, fmtMD, dayOf, txt, explorer, txExplorer, stripAddr, isAddrLike, sw, pill, chainPills, detailUrl, mdToHtml, api, errorBox, kindName, kindCell, labelCell, txCell, gauge, typeBadge,
-    renderNav, renderFoot, applyI18n, applyTheme, bindChrome, rangeSeg, basisSeg, bindTips, columns, hbars, donut, spark, statCard, amountCell, incidentRow, TABLE_HEAD, tableLegend, bindRows, fillSelect, typeColorHex, chainName, niceMax };
+  return { $, $$, TYPE_COLOR, REPO, state, t, typeName, typeFull, roleName, srcLabel, esc, fmtInt, fmtPct, money, moneyFull, moneyCell, fmtDate, fmtMD, dayOf, txt, explorer, txExplorer, stripAddr, isAddrLike, sw, pill, chainPills, chainPill, chainPillsAll, detailUrl, mdToHtml, api, errorBox, kindName, kindCell, labelCell, txCell, gauge, typeBadge,
+    renderNav, renderFoot, applyI18n, applyTheme, bindChrome, rangeSeg, basisSeg, bindTips, thSort, thFilter, bindHead, openMenu, optsType, optsChain, countBy, applyCtl, shortAddr, columns, hbars, donut, spark, statCard, amountCell, incidentRow, TABLE_HEAD, tableLegend, bindRows, fillSelect, typeColorHex, chainName, niceMax };
 })();

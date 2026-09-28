@@ -5,7 +5,8 @@
   // 피해액 등급: S ≥ $100M · A ≥ $10M · B ≥ $1M · C ≥ $100K · D 그 외 (미상은 –)
   const TIERS = [["S", 1e8], ["A", 1e7], ["B", 1e6], ["C", 1e5], ["D", 0]];
   const tier = (amount) => { if (amount == null || !(amount > 0)) return ""; for (const [k, min] of TIERS) if (amount >= min) return k; return "D"; };
-  const tierChip = (amount) => { const k = tier(amount); return k ? `<span class="tier t-${k}" title="${esc(money(amount))}">${k}</span>` : ""; };
+  const TIER_TIP = { S: "S · $100M 이상", A: "A · $10M 이상", B: "B · $1M 이상", C: "C · $100K 이상", D: "D · $100K 미만" };
+  const tierChip = (amount) => { const k = tier(amount); return k ? `<span class="tier t-${k}" title="${esc(TIER_TIP[k])} (${esc(money(amount))})">${k}</span>` : ""; };
   // 위협 레벨 1~5: 기간 피해액 기준
   const threat = (loss) => (loss >= 5e8 ? 5 : loss >= 1e8 ? 4 : loss >= 1e7 ? 3 : loss >= 1e6 ? 2 : loss > 0 ? 1 : 0);
   const threatBar = (loss, label = "THREAT") => { const lv = threat(loss); const names = ["", "LOW", "GUARDED", "ELEVATED", "HIGH", "CRITICAL"];
@@ -26,7 +27,8 @@
     if (!el) return;
     try { resCache = resCache || await api("/api/stats", { days: "all" }); } catch (_) { return; }
     const s = resCache;
-    el.innerHTML = `<span class="res r-crystal" title="${esc(KL.t("k_new"))}">${RES.crystal}<b data-countup="${s.new_count}">0</b></span><span class="res r-gas" title="${esc(KL.t("k_loss"))}">${RES.gas}<b data-countup="${s.loss_amount}" data-money="1">$0</b></span><span class="res r-supply" title="${esc(KL.t("k_addr"))}">${RES.supply}<b data-countup="${s.addresses}">0</b></span>`;
+    const T = KL.t;
+    el.innerHTML = `<span class="res r-crystal" title="${esc(T("tip_res_new"))}">${RES.crystal}<span class="rl">${esc(T("res_new"))}</span><b data-countup="${s.new_count}">0</b></span><span class="res r-gas" title="${esc(T("tip_res_loss"))}">${RES.gas}<span class="rl">${esc(T("res_loss"))}</span><b data-countup="${s.loss_amount}" data-money="1">$0</b></span><span class="res r-supply" title="${esc(T("tip_res_addr"))}">${RES.supply}<span class="rl">${esc(T("res_addr"))}</span><b data-countup="${s.addresses}">0</b></span>`;
     countUpAll(el);
   }
   Object.assign(KL, { tier, tierChip, threat, threatBar, countUp, countUpAll, resourceBar, RES });

@@ -7,7 +7,7 @@
   headline:  9월 18일 브리핑 · 신규 5건 · 피해 $7.8M            (법집행 금액이 있으면 " · 제재·수사 $245M" 덧붙임)
   - **[사건명](url)** · 체인 · 유형 · **$금액** · 사건일 — 한 줄 설명 (BL n)
   - **후속 N건** — 이름(첫 보도일) …
-  - **소액·미상 N건** — 이름 $금액, 이름 금액 미상 …
+  - **소액·unknown N건** — 이름 $금액, 이름 금액 unknown …
   - **시사점** — 한 문장
 """
 from __future__ import annotations
@@ -137,7 +137,7 @@ def _bullet(i: Incident, line: str, lang: str) -> str:
     link = f"**[{name}]({i.url})**" if i.url else f"**{name}**"
     chain = i.chains[0] if i.chains else ("체인 미상" if lang == "ko" else "chain n/a")
     typ = TYPE_KO_SHORT.get(i.incident_type, i.incident_type) if lang == "ko" else TYPE_EN.get(i.incident_type, i.incident_type)
-    amt = money(i.amount_usd) or (i.amount_text or ("금액 미상" if lang == "ko" else "amount n/a"))
+    amt = money(i.amount_usd) or (i.amount_text or ("금액 unknown" if lang == "ko" else "amount n/a"))
     d = event_date(i)
     when = md_short(d) if lang == "ko" else d_en(d)
     parts = [link] + ([] if i.incident_type in LEGAL else [chain]) + [typ, f"**{amt}**", when]
@@ -161,9 +161,9 @@ def assemble(day: str, cards: List[Incident], lines: Dict[str, dict], insight_ko
         ko.append(_bullet(i, _strip_line(l.get("line_ko", ""), i.project) or _fallback_line(i, "ko"), "ko"))
         en.append(_bullet(i, _strip_line(l.get("line_en", ""), i.project) or _fallback_line(i, "en"), "en"))
     if minor:
-        item_ko = ", ".join(f"[{i.project or i.title}]({i.url}) {money(i.amount_usd) or (i.amount_text or '금액 미상')}" for i in minor)
+        item_ko = ", ".join(f"[{i.project or i.title}]({i.url}) {money(i.amount_usd) or (i.amount_text or '금액 unknown')}" for i in minor)
         item_en = ", ".join(f"[{i.project or i.title}]({i.url}) {money(i.amount_usd) or (i.amount_text or 'amount n/a')}" for i in minor)
-        ko.append(f"- **소액·미상 {len(minor)}건** — {item_ko}")
+        ko.append(f"- **소액·unknown {len(minor)}건** — {item_ko}")
         en.append(f"- **Smaller / unknown ({len(minor)})** — {item_en}")
     if follow:
         f_ko, f_en = [], []

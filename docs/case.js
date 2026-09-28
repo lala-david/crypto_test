@@ -59,7 +59,7 @@
     const more = [["method", t("method")], ["background", t("background")], ["fund_flow", t("flow")]].filter(([k]) => txt(inc, k === "method" ? "attack_method" : k));
     return `<div class="case" data-uid="${esc(inc.uid)}">
       <div class="case-h">
-        <div class="case-id">${avatar(inc, "lg")}<div class="min0"><div class="case-name">${esc(inc.project)}</div><div class="case-sub">${KL.tierChip(inc.amount_usd)}${badge(typeName(inc.type), TYPE_COLOR[inc.type] || "var(--t-other)")}${chainPills(inc.chains, 3)}${inc.followup_of ? `<span class="tag">${esc(t("follow"))}</span>` : ""}</div></div></div>
+        <div class="case-id">${avatar(inc, "lg")}<div class="min0"><div class="case-name">${esc(inc.project)}</div><div class="case-sub">${KL.tierChip(inc.amount_usd)}${badge(typeName(inc.type), TYPE_COLOR[inc.type] || "var(--t-other)")}${chainPills(inc.chains, 99)}${inc.followup_of ? `<span class="tag">${esc(t("follow"))}</span>` : ""}</div></div></div>
         <div class="case-actions">${opts.standalone ? "" : `<a class="btn" href="incident.html?id=${esc(inc.uid)}" title="${esc(t("open_page"))}">${esc(t("open_page"))}</a>`}<button class="btn primary" data-share type="button">${esc(t("share"))}</button>${opts.standalone ? "" : `<button class="case-close" data-close type="button" aria-label="close">×</button>`}</div>
       </div>
       <div class="case-amt">
@@ -70,7 +70,7 @@
         <div><span class="k">${esc(t("incident_date"))}</span><span class="val">${esc(fmtDate(inc.incident_date))}</span></div>
         <div><span class="k">${esc(t("case_code"))}</span><span class="val"><span class="code">${esc(inc.uid.slice(0, 8).toUpperCase())}</span></span></div>
         <div><span class="k">${esc(t("report_date"))}</span><span class="val">${esc(fmtDate(d10(inc.published_at) || inc.day))}</span></div>
-        <div><span class="k">${esc(t("chain"))}</span><span class="val">${esc(inc.chains.join(", ") || "–")}</span></div>
+        <div><span class="k">${esc(t("chain"))}</span><span class="val wrap">${KL.chainPillsAll(inc.chains) || "–"}</span></div>
         <div><span class="k">${esc(t("type"))}</span><span class="val" title="${esc(typeFull(inc.type))}">${badge(typeName(inc.type), TYPE_COLOR[inc.type] || "var(--t-other)")}</span></div>
         <div><span class="k">${esc(t("method_short"))}</span><span class="val" title="${esc(txt(inc, "attack_method") || "")}">${method ? `<span class="badge">${esc(method)}</span>` : "–"}</span></div>
       </div>
