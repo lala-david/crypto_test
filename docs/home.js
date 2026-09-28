@@ -1,86 +1,80 @@
+/* 개요 (LUMOS 구조): 히어로(제목 + 사건 티커) → 패널(전체 · 유형/체인/기간 필터 · 탭: 피해액/유형/체인/주소 · 차트 + Top 5) → 검색 → 사건 표(20행) */
 (() => {
   "use strict";
-  const { $, $$, t, roleName, esc, fmtInt, money, moneyFull, fmtDate, explorer, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, statCard, sw, chainPills, detailUrl, bindRows, errorBox, kindCell } = KL;
-  const S = { days: "30" };
-  let D = null;
+  const { $, $$, t, typeName, typeFull, roleName, esc, fmtInt, money, fmtDate, fmtMD, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, columns, hbars, donut, fillSelect, incidentRow, TABLE_HEAD, bindRows, typeColorHex, chainName, errorBox } = KL;
+  const S = { days: "90", type: "", chain: "", q: "", page: 1, size: 20, tab: "amount", mode: "amount" };
+  let meta = null, st = null, facets = null, list = null, addrs = null, tickerRows = null;
 
-  async function load() {
-    const meta = await api("/api/meta");
-    const [cur, recent, addrs] = await Promise.all([
-      api("/api/stats", { days: S.days }),
-      api("/api/incidents", { days: S.days, size: 10, sort: "date" }),
-      api("/api/addresses", { days: S.days, size: 60 }),
-    ]);
-    D = { meta, cur, recent: recent.items, addrs };
+  async function load(tableOnly = false) {
+    const f = { days: S.days, type: S.type, chain: S.chain };
+    const jobs = [api("/api/incidents", { ...f, q: S.q, page: S.page, size: S.size, sort: "date" })];
+    if (!tableOnly) jobs.push(api("/api/stats", f), api("/api/addresses", { ...f, size: 1 }));
+    const res = await Promise.all(jobs);
+    list = res[0];
+    if (!tableOnly) { st = res[1]; addrs = res[2]; if (!facets || (!S.type && !S.chain)) facets = st.facets; }
+    if (!tickerRows) tickerRows = (await api("/api/incidents", { days: "all", size: 24, sort: "amount" })).items.filter((i) => i.amount_usd);
     render();
   }
-  const shortAddr = (a) => (a.length > 20 ? a.slice(0, 8) + "…" + a.slice(-6) : a);
-  const amountCell = (i) => (i.amount_usd != null ? `<span class="amt" title="${moneyFull(i.amount_usd)}"><span class="cur">$</span>${fmtInt(i.amount_usd)}</span>` : `<span class="faint">${esc(t("unknown"))}</span>`);
 
-  let render = function () {
-    renderNav("index.html", D.meta); renderFoot(); applyI18n(); bindChrome(() => render());
-    rangeSeg($("#rangeSeg"), S.days, (v) => { S.days = v; load(); });
-    const c = D.cur;
-    $("#sub").innerHTML = `<span>${esc(fmtDate(c.range.from))} – ${esc(fmtDate(c.range.to))}</span>`;
-    $("#stats").innerHTML = [
-      statCard(t("k_new"), fmtInt(c.new_count), "", null, { cls: "plain" }),
-      statCard(t("k_loss"), money(c.loss_amount), "", null, { cls: "plain", title: moneyFull(c.loss_amount) }),
-      statCard(t("k_addr"), fmtInt(D.addrs.total), "", null, { cls: "plain" }),
-    ].map((h) => h.replace('class="card stat ', 'class="card stat c4 ')).join("");
-    // 최근 사건: 사건 · 금액($) · 체인 · 사건일
-    const tb = $("#recentTable");
-    tb.innerHTML = `<thead><tr><th>${esc(t("th_incident"))}</th><th class="num">${esc(t("th_amount"))}</th><th>${esc(t("th_chain"))}</th><th>${esc(t("th_date"))}</th></tr></thead><tbody>${
-      D.recent.map((i) => `<tr class="link" data-href="${detailUrl(i)}"><td class="nowrap">${KL.avatar ? KL.avatar(i) : sw(i.type)}<a class="name" href="${detailUrl(i)}">${esc(i.project)}</a>${(i.followups || []).length ? ` <span class="tag">${esc(t("follow_n").replace("{n}", i.followups.length))}</span>` : ""}</td><td class="num">${amountCell(i)}</td><td>${chainPills(i.chains, 2) || '<span class="faint">–</span>'}</td><td class="date">${esc(fmtDate(i.event_date || i.incident_date || i.day))}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
-    bindRows(tb);
-    // 최근 수집 주소: 주소 · 체인 · 역할 · 사건 (제재·공격자·세탁 우선)
-    const pri = { sanctioned: 0, attacker: 1, laundering: 2, victim: 3, unknown: 4 };
-    const addrs = D.addrs.items.filter((a) => a.role !== "unknown").sort((a, b) => (b.first_day > a.first_day ? 1 : b.first_day < a.first_day ? -1 : pri[a.role] - pri[b.role])).slice(0, 10);
-    $("#addrTable").innerHTML = `<thead><tr><th>${esc(t("th_address"))}</th><th>${esc(t("chain"))}</th><th>${esc(t("th_kind"))}</th><th>${esc(t("addr_role"))}</th><th>${esc(t("th_incident"))}</th></tr></thead><tbody>${
-      addrs.map((a) => { const i = a.incidents[0]; const url = explorer(a.chain, a.address);
-        return `<tr><td class="addr nowrap">${url ? `<a href="${url}" target="_blank" rel="noopener" title="${esc(a.address)}">${esc(shortAddr(a.address))}</a>` : `<span title="${esc(a.address)}">${esc(shortAddr(a.address))}</span>`}<button class="copy" data-copy="${esc(a.address)}" type="button">${esc(t("copy"))}</button>${a.blacklist ? `<span class="tag warn">BL</span>` : ""}</td><td class="mono muted">${esc(a.chain)}</td><td class="nowrap">${kindCell(a, true)}</td><td><span class="role ${esc(a.role)}">${esc(roleName(a.role))}</span></td><td class="nowrap">${sw(i.type)}<a class="name" href="incident.html?id=${esc(i.uid)}">${esc(i.project)}</a></td></tr>`; }).join("") || `<tr><td colspan="5" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
-    $$(".copy[data-copy]", $("#addrTable")).forEach((b) => b.addEventListener("click", async () => { try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = t("copied"); setTimeout(() => (b.textContent = t("copy")), 1200); } catch (_) {} }));
-  };
-  // ---- 상단 배너: 21st.dev "All about the Benjamins" 디더 효과 (배너 안에만) ----
-  // 소스 = 검정 바탕 + 왼쪽 초상(docs/hero.jpg, 달러) + $ 코인 · ₿ 코인 · Ξ 다이아몬드(가상자산). 글자·숫자 텍스트 없음, 글리치 끔.
-  let fxInst = null, heroImg = null, heroTried = false;
-  const FX_PARAMS = { renderMode: "dither", bgMode: "solid", cellSize: 8, coverage: 96, charSet: "binary", contrast: 115, edgeEmphasis: 40, tint: "#8c61ff", tintOpacity: 45, overlayBlend: "overlay",
-    pfx: { vignette: { enabled: true, intensity: 38 }, scanLines: { enabled: true, intensity: 28 }, chromatic: { enabled: true, intensity: 25 }, bloom: { enabled: true, intensity: 60 }, filmGrain: { enabled: true, intensity: 40 }, glitch: { enabled: false, intensity: 0 } },
-    animated: true, animStyle: "flicker", animSpeed: { enabled: true, intensity: 100 }, animIntensity: { enabled: true, intensity: 25 } };
-  function coin(ctx, cx, cy, r, glyph) { // 밝은 코인 + 어두운 기호 (디더 후 기호가 구멍으로 읽힘)
-    const g = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.4, r * 0.1, cx, cy, r); g.addColorStop(0, "#f2f2f2"); g.addColorStop(0.7, "#b4b4b4"); g.addColorStop(1, "#5a5a5a");
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill();
-    ctx.lineWidth = Math.max(2, r * 0.07); ctx.strokeStyle = "#ffffff"; ctx.beginPath(); ctx.arc(cx, cy, r * 0.88, 0, Math.PI * 2); ctx.stroke();
-    ctx.save(); ctx.translate(cx, cy); if (glyph === "B") ctx.rotate(-14 * Math.PI / 180);
-    ctx.fillStyle = "#101010"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `800 ${Math.round(r * 1.25)}px Inter, Arial, sans-serif`;
-    ctx.fillText(glyph, 0, r * 0.04);
-    if (glyph === "B") { const bw = r * 0.09, bh = r * 0.2; ctx.fillRect(-r * 0.2, -r * 0.72, bw, bh); ctx.fillRect(-r * 0.02, -r * 0.72, bw, bh); ctx.fillRect(-r * 0.2, r * 0.52, bw, bh); ctx.fillRect(-r * 0.02, r * 0.52, bw, bh); }
-    ctx.restore();
+  function ticker() {
+    const el = $("#ticker"); if (!el || !tickerRows) return;
+    const li = tickerRows.map((i) => `<li><b class="amt"><span class="cur">$</span>${fmtInt(i.amount_usd)}</b><span class="w">${esc(t("ticker_mid"))}</span><a href="incident.html?id=${esc(i.uid)}">${esc(i.project)}</a><span class="w">${esc(t("ticker_on"))} ${esc(fmtMD(i.event_date || i.day))}</span></li>`).join("");
+    el.innerHTML = `<ul>${li}${li}</ul>`;
   }
-  function ethDiamond(ctx, cx, cy, H) { // 이더리움 다이아몬드: 상단 4면 + 하단 2면, 면마다 밝기 차이
-    const W = H * 0.62, y0 = cy - H / 2, L = cx - W / 2, R = cx + W / 2, yM = y0 + H * 0.62, yC = y0 + H * 0.78, yL = y0 + H * 0.68, yB = y0 + H, yI = y0 + H * 0.42;
-    const poly = (pts, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let k = 1; k < pts.length; k++) ctx.lineTo(pts[k][0], pts[k][1]); ctx.closePath(); ctx.fill(); };
-    poly([[cx, y0], [L, yM], [cx, yI]], "#d8d8d8"); poly([[cx, y0], [R, yM], [cx, yI]], "#8c8c8c");
-    poly([[cx, yI], [L, yM], [cx, yC]], "#a8a8a8"); poly([[cx, yI], [R, yM], [cx, yC]], "#5e5e5e");
-    poly([[L, yL], [cx, yB], [cx, yL + H * 0.16]], "#cfcfcf"); poly([[R, yL], [cx, yB], [cx, yL + H * 0.16]], "#707070");
-  }
-  function heroSource(ctx, w, h) {
-    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, w, h);
-    let x0 = 0;
-    if (heroImg && w > h * 2.4) { // 초상: 왼쪽에 높이 맞춤, 오른쪽 가장자리 검정 페이드
-      ctx.drawImage(heroImg, 0, 0, h, h);
-      const g = ctx.createLinearGradient(h * 0.8, 0, h, 0); g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "#000");
-      ctx.fillStyle = g; ctx.fillRect(h * 0.8, 0, h * 0.2, h); x0 = h;
+
+  function renderPanel() {
+    const tabs = [["amount", t("tab_amount")], ["type", t("tab_type")], ["chain", t("tab_chain")], ["roles", t("roles")]];
+    $("#tabs").innerHTML = tabs.map(([k, l]) => `<button data-tab="${k}" class="${S.tab === k ? "on" : ""}" type="button">${esc(l)}</button>`).join("");
+    $$("#tabs button").forEach((b) => b.addEventListener("click", () => { S.tab = b.dataset.tab; renderPanel(); }));
+    const byAmt = S.mode === "amount";
+    const modeEl = $("#modeSeg");
+    if (S.tab === "roles") modeEl.innerHTML = "";
+    else { modeEl.innerHTML = [["amount", t("mode_amount")], ["count", t("mode_count")]].map(([k, l]) => `<button data-mode="${k}" class="${S.mode === k ? "on" : ""}" type="button">${esc(l)}</button>`).join(""); $$("#modeSeg button").forEach((b) => b.addEventListener("click", () => { S.mode = b.dataset.mode; renderPanel(); })); }
+    const cnt = (v) => String(Math.round(v));
+    const plot = $("#mainPlot"), top = $("#top5"), tt = $("#top5Title"), pt = $("#panelTotal");
+    if (S.tab === "amount") {
+      pt.innerHTML = byAmt ? `${esc(t("k_loss"))} <b>${esc(money(st.loss_amount))}</b>${st.legal_amount ? ` <span class="faint">· ${esc(t("k_legal"))} ${esc(money(st.legal_amount))}</span>` : ""}` : `${esc(t("k_new"))} <b>${fmtInt(st.new_count)}</b>`;
+      columns(plot, st.daily.map((d) => ({ label: fmtMD(d.day), v: byAmt ? d.amount : d.new, extra: byAmt ? `${d.new}${t("unit")}` : money(d.amount) })), byAmt ? money : cnt, t("daily_amount"), { height: 230 });
+      tt.textContent = t("top5_title");
+      const top5 = (st.top || []).slice(0, 5);
+      hbars(top, top5.map((x) => ({ k: x.project, v: x.amount_usd, extra: fmtDate(x.event_date || x.day) })), money, t("top5_title"));
+      $$(".hit", top).forEach((h, k) => { h.style.cursor = "pointer"; h.addEventListener("click", () => { if (top5[k]) KL.openCase(top5[k].uid); }); });
+    } else if (S.tab === "type" || S.tab === "chain") {
+      const rows = (S.tab === "type" ? st.by_type : st.by_chain).filter((r) => r.new);
+      const key = S.tab === "type" ? (r) => typeName(r.key) : (r) => chainName(r.key);
+      const items = rows.map((r) => ({ k: key(r), v: byAmt ? r.amount : r.new, color: S.tab === "type" ? typeColorHex(r.key) : "var(--chart)", title: S.tab === "type" ? typeFull(r.key) : r.key })).filter((x) => x.v > 0).sort((a, b) => b.v - a.v);
+      pt.innerHTML = `${esc(S.tab === "type" ? t("tab_type") : t("tab_chain"))} <b>${rows.length}</b>`;
+      donut(plot, items, byAmt ? money(items.reduce((a, x) => a + x.v, 0)) : fmtInt(st.new_count), byAmt ? t("k_loss") : t("new_label"), byAmt ? money : null);
+      tt.textContent = byAmt ? t("top5_amount") : t("top5_count");
+      hbars(top, items.slice(0, 5), byAmt ? money : cnt, tt.textContent);
+    } else {
+      const roles = Object.entries(st.roles || {}).sort((a, b) => b[1] - a[1]); const rt = roles.reduce((a, r) => a + r[1], 0) || 1;
+      pt.innerHTML = `${esc(t("addresses"))} <b>${fmtInt(st.addresses)}</b>`;
+      hbars(plot, roles.map(([k, v]) => ({ k: roleName(k), v, pct: v / rt })), cnt, t("roles"));
+      tt.textContent = t("top5_chains_addr");
+      const ch = Object.entries((addrs && addrs.chains) || {}).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      hbars(top, ch.map(([k, v]) => ({ k, v })), cnt, tt.textContent);
     }
-    const A = w - x0; const n = A / h > 2.2 ? 3 : 2; const slot = A / n; const r = Math.min(h * 0.34, slot * 0.3);
-    const items = [(x) => coin(ctx, x, h / 2, r, "$"), (x) => coin(ctx, x, h / 2, r, "B"), (x) => ethDiamond(ctx, x, h / 2, r * 2.1)].slice(0, n);
-    items.forEach((f, k) => f(x0 + slot * (k + 0.5)));
   }
-  function initFx() {
-    const cv = $("#fx"); if (!cv || !KL.ascii) return;
-    if (!fxInst) { fxInst = KL.ascii(cv, { params: FX_PARAMS, source: heroSource }); if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fxInst.setSource(heroSource)); }
-    else fxInst.setSource(heroSource);
-    if (!heroTried) { heroTried = true; const img = new Image(); img.onload = () => { heroImg = img; fxInst.setSource(heroSource); }; img.src = "hero.jpg"; }
+
+  function render() {
+    renderNav("index.html", meta); renderFoot(); applyI18n(); bindChrome(() => render());
+    rangeSeg($("#rangeSeg"), S.days, (v) => { S.days = v; S.page = 1; load(); });
+    fillSelect($("#typeSel"), Object.keys(facets.types).map((v) => ({ value: v, label: `${typeName(v)} (${facets.types[v]})` })), t("all_types"), S.type);
+    fillSelect($("#chainSel"), Object.keys(facets.chains).map((v) => ({ value: v, label: `${v} (${facets.chains[v]})` })), t("all_chains"), S.chain);
+    const lossAll = tickerRows.reduce((a, i) => a + (i.legal ? 0 : i.amount_usd || 0), 0);
+    $("#heroSub").innerHTML = `<span>${esc(t("hero_since").replace("{d}", fmtDate(meta.first_day)))}</span><span class="dot">·</span><span>${esc(t("k_new"))} <b>${fmtInt(meta.new_total)}</b></span><span class="dot">·</span><span>${esc(t("k_addr"))} <b>${fmtInt(meta.addresses_total)}</b></span><span class="dot">·</span><span>${esc(t("k_loss"))} <b>${esc(money(lossAll))}</b></span>`;
+    $("#total").textContent = fmtInt(list.total);
+    ticker(); renderPanel();
+    const tb = $("#incTable");
+    tb.innerHTML = TABLE_HEAD() + `<tbody>${list.items.length ? list.items.map((i) => incidentRow(i)).join("") : `<tr><td colspan="6" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
+    bindRows(tb);
+    const pages = Math.max(1, Math.ceil(list.total / S.size));
+    $("#pager").innerHTML = `<span>${list.total ? (S.page - 1) * S.size + 1 : 0}–${Math.min(list.total, S.page * S.size)} / ${list.total}</span><button id="pgPrev" type="button" ${S.page <= 1 ? "disabled" : ""}>‹</button><span>${S.page}/${pages}</span><button id="pgNext" type="button" ${S.page >= pages ? "disabled" : ""}>›</button>`;
+    $("#pgPrev").onclick = () => { S.page--; load(true); }; $("#pgNext").onclick = () => { S.page++; load(true); };
   }
-  const _render = render; render = function () { _render(); initFx(); };
-  load().catch((e) => { $("main").insertAdjacentHTML("afterbegin", errorBox(e)); });
+  $("#typeSel").addEventListener("change", (e) => { S.type = e.target.value; S.page = 1; load(); });
+  $("#chainSel").addEventListener("change", (e) => { S.chain = e.target.value; S.page = 1; load(); });
+  let qT; $("#q").addEventListener("input", (e) => { clearTimeout(qT); qT = setTimeout(() => { S.q = e.target.value.trim(); S.page = 1; load(true); }, 250); });
+  api("/api/meta").then((m) => { meta = m; return load(); }).catch((e) => { $("main").insertAdjacentHTML("afterbegin", errorBox(e)); });
 })();

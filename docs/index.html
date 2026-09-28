@@ -9,18 +9,34 @@
 </head>
 <body>
 <header class="nav" id="nav"></header>
-<main class="page">
-  <div class="page-h"><div><h1 data-i18n="nav_home">개요</h1><div class="sub" id="sub"></div></div><div class="controls"><div class="seg" id="rangeSeg"></div></div></div>
-  <section class="hero-fx" id="heroFx"><canvas id="fx" aria-hidden="true"></canvas></section>
-  <section class="grid" id="stats"></section>
-  <section class="grid">
-    <div class="card c5"><div class="card-h"><h2 data-i18n="recent">최근 사건</h2><a class="meta link" href="incidents.html" data-i18n="all">전체</a></div><div class="card-b flush table-wrap"><table class="tbl" id="recentTable"></table></div></div>
-    <div class="card c7"><div class="card-h"><h2 data-i18n="recent_addresses">최근 수집 주소</h2><a class="meta link" href="addresses.html" data-i18n="all">전체</a></div><div class="card-b flush table-wrap"><table class="tbl" id="addrTable"></table></div></div>
+<main class="page lumos">
+  <section class="hero">
+    <div class="hero-l">
+      <h1 class="hero-title"><span data-i18n="hero_1">가상자산 해킹·범죄</span><br><span data-i18n="hero_2">사건 원장</span><br><em>Incident Ledger</em></h1>
+      <div class="hero-sub" id="heroSub"></div>
+    </div>
+    <div class="hero-r" aria-hidden="true"><div class="ticker" id="ticker"></div></div>
   </section>
+
+  <section class="panel">
+    <div class="panel-top">
+      <div class="total"><span data-i18n="total">전체</span> <b id="total">–</b></div>
+      <div class="controls"><label class="ctl"><select id="typeSel"></select></label><label class="ctl"><select id="chainSel"></select></label><div class="seg" id="rangeSeg"></div></div>
+    </div>
+    <div class="tabs2" id="tabs"></div>
+    <div class="panel-body">
+      <div class="panel-head"><div class="seg" id="modeSeg"></div><div class="panel-total" id="panelTotal"></div></div>
+      <div class="panel-grid"><div class="plot" id="mainPlot"></div><div class="top5"><h4 id="top5Title"></h4><div class="hb" id="top5"></div></div></div>
+    </div>
+  </section>
+
+  <div class="search big lumos-search"><span class="ico">⌕</span><input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="" data-i18n-ph="search_ph" aria-label="search"></div>
+
+  <section class="card"><div class="table-wrap"><table class="tbl lumos-tbl" id="incTable"></table></div><div class="pager" id="pager"></div></section>
 </main>
-<footer class="foot" id="foot"></footer>
+<footer class="foot lumos-foot" id="foot"></footer>
 <div class="case-backdrop" id="caseBackdrop"></div><aside class="case-drawer" id="caseDrawer" aria-label="case"></aside>
 <div class="tooltip" id="tip" role="tooltip"></div>
-<script src="common.js"></script><script src="case.js"></script><script src="ascii.js"></script><script src="home.js"></script>
+<script src="common.js"></script><script src="case.js"></script><script src="home.js"></script>
 </body>
 </html>

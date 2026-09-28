@@ -17,7 +17,7 @@
     $("#sortSel").innerHTML = [["date", t("sort_date")], ["day", t("sort_day")], ["amount", t("sort_amount")]].map(([v, l]) => `<option value="${v}"${S.sort === v ? " selected" : ""}>${esc(t("sort"))}: ${esc(l)}</option>`).join("");
     $("#sub").innerHTML = `<span class="m">${esc(t("page_total").replace("{n}", fmtInt(res.total)))}</span>${res.followup_total ? `<span class="m">${esc(t("follow_n").replace("{n}", fmtInt(res.followup_total)))}</span>` : ""}<span class="m" title="${moneyFull(res.amount_total)}">${esc(t("total_amount").replace("{v}", money(res.amount_total)))}</span>`;
     const tb = $("#incTable");
-    tb.innerHTML = TABLE_HEAD() + `<tbody>${res.items.length ? res.items.map((i) => incidentRow(i)).join("") : `<tr><td colspan="5" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
+    tb.innerHTML = TABLE_HEAD() + `<tbody>${res.items.length ? res.items.map((i) => incidentRow(i)).join("") : `<tr><td colspan="6" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
     bindRows(tb);
     const pages = Math.max(1, Math.ceil(res.total / S.size));
     $("#pager").innerHTML = `<span>${res.total ? (S.page - 1) * S.size + 1 : 0}–${Math.min(res.total, S.page * S.size)} / ${res.total}</span><button id="pgPrev" type="button" aria-label="${esc(t("a_prev"))}" ${S.page <= 1 ? "disabled" : ""}>‹</button><span>${S.page}/${pages}</span><button id="pgNext" type="button" aria-label="${esc(t("a_next"))}" ${S.page >= pages ? "disabled" : ""}>›</button>`;
