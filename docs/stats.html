@@ -9,19 +9,19 @@
 </head>
 <body>
 <header class="nav" id="nav"></header>
-<main class="page">
+<main class="page lumos">
   <div class="page-h"><div><h1 data-i18n="nav_stats">통계</h1><div class="sub" id="sub"></div></div>
     <div class="controls"><div class="seg" id="rangeSeg"></div></div></div>
   <section class="grid">
     <div class="card c12"><div class="card-h"><h2 id="tsTitle"></h2><div class="seg" id="valueMode"><button data-mode="amount" class="on" data-i18n="mode_amount">금액</button><button data-mode="count" data-i18n="mode_count">건수</button></div></div><div class="card-b plot" id="tsPlot"></div></div>
   </section>
   <section class="grid start">
-    <div class="card c4"><div class="card-h"><h2 data-i18n="tab_type">유형</h2><span class="meta" id="metaType"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="typeTable"></table></div></div>
-    <div class="card c4"><div class="card-h"><h2 data-i18n="tab_chain">체인</h2><span class="meta" id="metaChain"></span></div><div class="card-b flush table-wrap"><table class="tbl" id="chainTable"></table></div></div>
+    <div class="card c4"><div class="card-h"><h2 data-i18n="tab_type">유형</h2><span class="meta" id="metaType"></span></div><div class="card-b flush table-wrap"><table class="tbl lumos-tbl" id="typeTable"></table></div></div>
+    <div class="card c4"><div class="card-h"><h2 data-i18n="tab_chain">체인</h2><span class="meta" id="metaChain"></span></div><div class="card-b flush table-wrap"><table class="tbl lumos-tbl" id="chainTable"></table></div></div>
     <div class="card c4"><div class="card-h"><h2 data-i18n="roles">주소 역할</h2><span class="meta" id="metaRoles"></span></div><div class="card-b hb" id="rolesBars"></div></div>
   </section>
 </main>
-<footer class="foot" id="foot"></footer>
+<footer class="foot lumos-foot" id="foot"></footer>
 <div class="case-backdrop" id="caseBackdrop"></div><aside class="case-drawer" id="caseDrawer" aria-label="case"></aside>
 <div class="tooltip" id="tip" role="tooltip"></div>
 <script src="common.js"></script><script src="case.js"></script><script src="stats.js"></script>
