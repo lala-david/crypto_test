@@ -1,9 +1,9 @@
-/* 개요: 히어로(제목 + 사건 흐름 버블 차트) → 패널(전체 · 유형/체인/기간 필터 · 탭: 피해액/유형/체인/주소 · 차트 + Top 5) → 검색 → 사건 표(20행) */
+/* 개요: 히어로(제목 + Incident Report 카드) → AnimatedCard 3장 → 패널(전체 · 유형/체인/기간 필터 · 탭: 피해액/유형/체인/주소 · 차트 + Top 5) → 검색 → 사건 표(20행) */
 (() => {
   "use strict";
   const { $, $$, t, typeName, typeFull, roleName, esc, fmtInt, money, moneyFull, fmtDate, fmtMD, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, bindTips, columns, hbars, donut, fillSelect, incidentRow, TABLE_HEAD, bindRows, typeColorHex, chainName, errorBox } = KL;
   const S = { days: "90", type: "", chain: "", q: "", page: 1, size: 20, tab: "amount", mode: "amount" };
-  let meta = null, st = null, allSt = null, facets = null, list = null, addrs = null, flowRows = null;
+  let meta = null, st = null, allSt = null, prevSt = null, facets = null, list = null, addrs = null, flowRows = null;
 
   async function load(tableOnly = false) {
     const f = { days: S.days, type: S.type, chain: S.chain };
@@ -12,53 +12,47 @@
     if (!allSt) jobs.push(api("/api/stats", { days: "all" }));
     const res = await Promise.all(jobs);
     list = res[0];
-    if (!tableOnly) { st = res[1]; addrs = res[2]; flowRows = res[3].items; if (!facets || (!S.type && !S.chain)) facets = st.facets; }
+    if (!tableOnly) { st = res[1]; addrs = res[2]; flowRows = res[3].items; if (!facets || (!S.type && !S.chain)) facets = st.facets;
+      const d0 = new Date(st.range.from + "T00:00:00"), d1 = new Date(st.range.to + "T00:00:00"); const len = Math.max(1, Math.round((d1 - d0) / 86400000) + 1);
+      const pTo = new Date(d0.getTime() - 86400000), pFrom = new Date(pTo.getTime() - (len - 1) * 86400000);
+      try { prevSt = await api("/api/stats", { from: pFrom.toISOString().slice(0, 10), to: pTo.toISOString().slice(0, 10), type: S.type, chain: S.chain }); } catch (_) { prevSt = null; } }
     if (!allSt) allSt = res[res.length - 1];
     render();
   }
 
-  // ---- 사건 흐름: x = 사건일, 행 = 유형, 원 크기 = 금액(√), 색 = 유형. 상위 5건 이름 표시, 클릭 → 케이스 패널 ----
-  function flow(el, rows, from, to) {
-    const W = Math.max(420, el.clientWidth || 560), H = 280, m = { l: 84, r: 16, t: 14, b: 28 };
-    const lanesAll = {}; rows.forEach((r) => { lanesAll[r.type] = (lanesAll[r.type] || 0) + 1; });
-    const lanes = Object.entries(lanesAll).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k]) => k);
-    if (!rows.length || !lanes.length) { el.innerHTML = `<div class="empty">${esc(t("no_data"))}</div>`; return; }
-    // x 범위: 선택 기간 안에서 실제 사건이 있는 구간만(앞쪽 빈 달은 잘라냄), 양쪽 2일 여유
-    const dates = rows.map((r) => r.event_date || r.day).filter(Boolean).sort();
-    const lo = dates.length && dates[0] > from ? dates[0] : from;
-    const d0 = new Date(lo + "T00:00:00"); d0.setDate(d0.getDate() - 2); const d1 = new Date(to + "T00:00:00"); d1.setDate(d1.getDate() + 1); const span = Math.max(1, (d1 - d0) / 86400000);
-    const x = (d) => m.l + Math.min(1, Math.max(0, ((new Date((d || to) + "T00:00:00") - d0) / 86400000) / span)) * (W - m.l - m.r);
-    const lh = (H - m.t - m.b) / lanes.length; const y = (type) => m.t + lanes.indexOf(type) * lh + lh / 2;
-    const maxA = Math.max(...rows.map((r) => r.amount_usd || 0), 1); const rad = (a) => (a ? 5 + 22 * Math.sqrt(a / maxA) : 3.5);
-    const top = rows.filter((r) => r.amount_usd).sort((a, b) => b.amount_usd - a.amount_usd).slice(0, 5).map((r) => r.uid);
-    let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" class="flow-svg" role="img" aria-label="${esc(t("flow_title"))}">`;
-    lanes.forEach((k) => { const yy = y(k); s += `<line class="lane" x1="${m.l}" x2="${W - m.r}" y1="${yy}" y2="${yy}"/><text class="lane-lbl" x="${m.l - 10}" y="${yy + 4}" text-anchor="end">${esc(typeName(k))}</text>`; });
-    const nT = Math.min(6, Math.max(2, Math.floor((W - m.l) / 110)));
-    for (let k = 0; k <= nT; k++) { const d = new Date(d0.getTime() + (span * k / nT) * 86400000); const xx = m.l + (k / nT) * (W - m.l - m.r); s += `<text class="ax" x="${xx}" y="${H - 8}" text-anchor="middle">${esc(fmtMD(d.toISOString().slice(0, 10)))}</text>`; }
-    const sorted = rows.slice().sort((a, b) => (b.amount_usd || 0) - (a.amount_usd || 0));
-    const hash = (u) => { let h = 0; for (const c of u) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
-    const boxes = []; const hit = (b) => boxes.some((o) => !(b.x2 < o.x1 || b.x1 > o.x2 || b.y2 < o.y1 || b.y1 > o.y2));
-    let labels = "";
-    sorted.forEach((r) => {
-      if (!lanes.includes(r.type)) return;
-      const rr = rad(r.amount_usd), col = typeColorHex(r.type);
-      const cx = x(r.event_date || r.day), cy = y(r.type) + (rr < 10 ? ((hash(r.uid) % 7) - 3) * lh * 0.07 : 0);  // 작은 원은 행 안에서 살짝 흩어 겹침 완화
-      const tip = `<b>${esc(r.project)}</b><br>${esc(r.amount_usd ? moneyFull(r.amount_usd) : t("unknown"))} · ${esc(fmtDate(r.event_date || r.day))}`;
-      s += `<circle class="bub ${r.amount_usd ? "" : "hollow"}" cx="${cx}" cy="${cy}" r="${rr}" style="--c:${col}" data-uid="${esc(r.uid)}" data-tip="${tip}"/>`;
-      boxes.push({ x1: cx - rr, x2: cx + rr, y1: cy - rr, y2: cy + rr });
-      if (top.includes(r.uid)) {
-        const name = r.project.length > 18 ? r.project.slice(0, 17) + "…" : r.project; const tw = name.length * 6.6 + 4;
-        const cands = [[cx + rr + 6, cy + 4, "start"], [cx - rr - 6, cy + 4, "end"], [cx, cy - rr - 6, "middle"], [cx, cy + rr + 13, "middle"]];
-        for (const [lx, ly, anc] of cands) {
-          const x1 = anc === "start" ? lx : anc === "end" ? lx - tw : lx - tw / 2, b = { x1, x2: x1 + tw, y1: ly - 11, y2: ly + 2 };
-          if (b.x1 < m.l - 4 || b.x2 > W - 2 || hit(b)) continue;
-          labels += `<text class="bub-lbl" x="${lx}" y="${ly}" text-anchor="${anc}">${esc(name)}</text>`; boxes.push(b); break;
-        }
-      }
-    });
-    s += labels;
-    el.innerHTML = s + "</svg>"; bindTips(el);
-    $$("circle.bub", el).forEach((c) => c.addEventListener("click", () => KL.openCase(c.dataset.uid)));
+  // ---- 21st.dev 카드 2종 (cards.js) ----
+  const TYPE_SHADES = ["#5B14C5", "#B58BF3", "#DAC5F9"];  // area-chart-1 원본 팔레트(DLP · SysLog · Threat Intel)
+  function bucketize(rows, from, to) {
+    const d0 = new Date(from + "T00:00:00"), d1 = new Date(to + "T00:00:00"); const days = Math.max(1, Math.round((d1 - d0) / 86400000) + 1);
+    const step = days <= 14 ? 1 : days <= 100 ? 7 : 30; const nb = Math.ceil(days / step);
+    const labels = []; for (let k = 0; k < nb; k++) { const d = new Date(d0.getTime() + k * step * 86400000); labels.push(fmtMD(d.toISOString().slice(0, 10))); }
+    const idx = (r) => Math.min(nb - 1, Math.max(0, Math.floor((new Date((r.event_date || r.day) + "T00:00:00") - d0) / 86400000 / step)));
+    return { labels, idx };
+  }
+  function renderCards() {
+    // (1) Incident Report: 상위 3개 유형의 기간별 신규 건수(스무스 그룹 영역) + 지표 3행(이전 같은 길이 기간 대비 추세)
+    const byType = {}; flowRows.forEach((r) => { byType[r.type] = (byType[r.type] || 0) + 1; });
+    const top3 = Object.entries(byType).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k]) => k);
+    const { labels, idx } = bucketize(flowRows, st.range.from, st.range.to);
+    const series = top3.map((tp, k) => { const data = new Array(labels.length).fill(0); flowRows.forEach((r) => { if (r.type === tp) data[idx(r)] += 1; }); return { key: typeName(tp), color: TYPE_SHADES[k], data }; });
+    const pv = prevSt || {};
+    const trend = (cur, prev) => ({ up: cur >= (prev || 0), good: cur < (prev || 0) });
+    KL.reportCard($("#reportCard"), { title: "Incident Report", series, labels, metrics: [
+      { icon: "diamond", label: t("k_new"), value: `${fmtInt(st.new_count)}${t("unit")}`, ...trend(st.new_count, pv.new_count), tooltip: `${t("prev_period")} ${fmtInt(pv.new_count || 0)}` },
+      { icon: "circle", label: t("k_loss"), value: money(st.loss_amount), ...trend(st.loss_amount, pv.loss_amount), tooltip: `${t("prev_period")} ${money(pv.loss_amount || 0)}` },
+      { icon: "triangle", label: t("k_addr"), value: fmtInt(st.addresses), ...trend(st.addresses, pv.addresses), tooltip: `${t("prev_period")} ${fmtInt(pv.addresses || 0)}` },
+    ] });
+    // (2) AnimatedCard × 3: 도넛 = 1위 비중(호버: 1+2위 누적), 알약 = 상위 6 항목
+    const mk = (id, list, name, opts) => {
+      const total = list.reduce((a, r) => a + r.v, 0) || 1; const sorted = list.slice().sort((a, b) => b.v - a.v);
+      const p1 = (sorted[0] ? sorted[0].v / total : 0) * 100, p2 = ((sorted[0] ? sorted[0].v : 0) + (sorted[1] ? sorted[1].v : 0)) / total * 100;
+      KL.animatedCard($(id), { ...opts, mainPct: p1, hoverMainPct: p1, hoverSecondaryPct: p2,
+        badgeTitle: sorted[0] ? `${name(sorted[0])} ${Math.round(p1)}%` : "–", badgeSub: `${fmtInt(total)}${opts.unit || ""}`,
+        pills: sorted.slice(0, 6).map(name), description: sorted.slice(0, 3).map((r) => `${name(r)} ${Math.round(r.v / total * 100)}%`).join(" · ") });
+    };
+    mk("#acType", st.by_type.filter((r) => r.new).map((r) => ({ k: r.key, v: r.new })), (r) => typeName(r.k), { title: t("tab_type"), mainColor: "#8b5cf6", secondaryColor: "#fbbf24", unit: t("unit"), onClick: () => { S.tab = "type"; renderPanel(); $("#tabs").scrollIntoView({ behavior: "smooth", block: "start" }); } });
+    mk("#acChain", st.by_chain.filter((r) => r.new).map((r) => ({ k: r.key, v: r.new })), (r) => chainName(r.k), { title: t("tab_chain"), mainColor: "#ff6900", secondaryColor: "#f54900", unit: t("unit"), onClick: () => { S.tab = "chain"; renderPanel(); $("#tabs").scrollIntoView({ behavior: "smooth", block: "start" }); } });
+    mk("#acRoles", Object.entries(st.roles || {}).map(([k, v]) => ({ k, v })), (r) => roleName(r.k), { title: t("roles"), mainColor: "#34d399", secondaryColor: "#40E5D1", unit: "", onClick: () => { S.tab = "roles"; renderPanel(); $("#tabs").scrollIntoView({ behavior: "smooth", block: "start" }); } });
   }
 
   function renderPanel() {
@@ -102,9 +96,7 @@
     fillSelect($("#typeSel"), Object.keys(facets.types).map((v) => ({ value: v, label: `${typeName(v)} (${facets.types[v]})` })), t("all_types"), S.type);
     fillSelect($("#chainSel"), Object.keys(facets.chains).map((v) => ({ value: v, label: `${v} (${facets.chains[v]})` })), t("all_chains"), S.chain);
     $("#heroSub").innerHTML = `<span>${esc(t("hero_since").replace("{d}", fmtDate(meta.first_day)))}</span><span class="dot">·</span><span>${esc(t("k_new"))} <b>${fmtInt(allSt.new_count)}</b></span><span class="dot">·</span><span>${esc(t("k_loss"))} <b>${esc(money(allSt.loss_amount))}</b></span><span class="dot">·</span><span>${esc(t("k_legal"))} <b>${esc(money(allSt.legal_amount))}</b></span><span class="dot">·</span><span>${esc(t("k_addr"))} <b>${fmtInt(meta.addresses_total)}</b></span>`;
-    $("#flowTitle").textContent = t("flow_title");
-    $("#flowMeta").textContent = `${fmtDate(st.range.from)} – ${fmtDate(st.range.to)} · ${fmtInt(flowRows.length)}${t("unit")}`;
-    flow($("#flow"), flowRows, st.range.from, st.range.to);
+    renderCards();
     $("#total").textContent = fmtInt(list.total);
     renderPanel();
     const tb = $("#incTable");
@@ -117,6 +109,5 @@
   $("#typeSel").addEventListener("change", (e) => { S.type = e.target.value; S.page = 1; load(); });
   $("#chainSel").addEventListener("change", (e) => { S.chain = e.target.value; S.page = 1; load(); });
   let qT; $("#q").addEventListener("input", (e) => { clearTimeout(qT); qT = setTimeout(() => { S.q = e.target.value.trim(); S.page = 1; load(true); }, 250); });
-  let rT; window.addEventListener("resize", () => { clearTimeout(rT); rT = setTimeout(() => { if (st && flowRows) flow($("#flow"), flowRows, st.range.from, st.range.to); }, 150); });
   api("/api/meta").then((m) => { meta = m; return load(); }).catch((e) => { $("main").insertAdjacentHTML("afterbegin", errorBox(e)); });
 })();
