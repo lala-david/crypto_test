@@ -85,3 +85,9 @@ def test_mentions_amount_guards_audit_amount_removal():
     assert mentions_amount("roughly $0.12M was moved", 121000)
     assert not mentions_amount("amount $118,000 appears to be the value of WETH withdrawn", 121000)
     assert not mentions_amount("no numbers here", 5000)
+
+
+def test_listing_urls_are_not_used_as_evidence():
+    from collector.relabel import LISTING_URL_RE
+    assert LISTING_URL_RE.search("https://defillama.com/hacks") and LISTING_URL_RE.search("https://example.com/hacks/")
+    assert not LISTING_URL_RE.search("https://rekt.news/liquid-network-rekt") and not LISTING_URL_RE.search("https://defillama.com/hacks/bitget")

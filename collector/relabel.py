@@ -119,7 +119,13 @@ def qa_flags(inc: Incident, text: str = "") -> List[str]:
 # ---------------------------------------------------------------------------
 # 원문
 # ---------------------------------------------------------------------------
+# 여러 사건을 한 페이지에 나열하는 목록 URL(DeFiLlama hacks 등): 본문에 다른 사건의 금액·날짜가 섞여 있어 근거로 쓰면 오염된다 → 원문 없음으로 취급
+LISTING_URL_RE = re.compile(r"(?i)(defillama\.com/hacks/?$|/hacks/?$|/exploits/?$|/incidents/?$)")
+
+
 def fetch_text(http: Http, inc: Incident, max_chars: int = 30000) -> str:
+    if LISTING_URL_RE.search((inc.url or "").split("?")[0]):
+        return ""
     try:
         raw = http.get_text(inc.url, cache_ttl_hours=24 * 365)
     except Exception as e:

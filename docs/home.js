@@ -1,25 +1,64 @@
-/* 개요 (LUMOS 구조): 히어로(제목 + 사건 티커) → 패널(전체 · 유형/체인/기간 필터 · 탭: 피해액/유형/체인/주소 · 차트 + Top 5) → 검색 → 사건 표(20행) */
+/* 개요: 히어로(제목 + 사건 흐름 버블 차트) → 패널(전체 · 유형/체인/기간 필터 · 탭: 피해액/유형/체인/주소 · 차트 + Top 5) → 검색 → 사건 표(20행) */
 (() => {
   "use strict";
-  const { $, $$, t, typeName, typeFull, roleName, esc, fmtInt, money, fmtDate, fmtMD, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, columns, hbars, donut, fillSelect, incidentRow, TABLE_HEAD, bindRows, typeColorHex, chainName, errorBox } = KL;
+  const { $, $$, t, typeName, typeFull, roleName, esc, fmtInt, money, moneyFull, fmtDate, fmtMD, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, bindTips, columns, hbars, donut, fillSelect, incidentRow, TABLE_HEAD, bindRows, typeColorHex, chainName, errorBox } = KL;
   const S = { days: "90", type: "", chain: "", q: "", page: 1, size: 20, tab: "amount", mode: "amount" };
-  let meta = null, st = null, facets = null, list = null, addrs = null, tickerRows = null;
+  let meta = null, st = null, allSt = null, facets = null, list = null, addrs = null, flowRows = null;
 
   async function load(tableOnly = false) {
     const f = { days: S.days, type: S.type, chain: S.chain };
     const jobs = [api("/api/incidents", { ...f, q: S.q, page: S.page, size: S.size, sort: "date" })];
-    if (!tableOnly) jobs.push(api("/api/stats", f), api("/api/addresses", { ...f, size: 1 }));
+    if (!tableOnly) jobs.push(api("/api/stats", f), api("/api/addresses", { ...f, size: 1 }), api("/api/incidents", { ...f, size: 400, sort: "amount" }));
+    if (!allSt) jobs.push(api("/api/stats", { days: "all" }));
     const res = await Promise.all(jobs);
     list = res[0];
-    if (!tableOnly) { st = res[1]; addrs = res[2]; if (!facets || (!S.type && !S.chain)) facets = st.facets; }
-    if (!tickerRows) tickerRows = (await api("/api/incidents", { days: "all", size: 24, sort: "amount" })).items.filter((i) => i.amount_usd);
+    if (!tableOnly) { st = res[1]; addrs = res[2]; flowRows = res[3].items; if (!facets || (!S.type && !S.chain)) facets = st.facets; }
+    if (!allSt) allSt = res[res.length - 1];
     render();
   }
 
-  function ticker() {
-    const el = $("#ticker"); if (!el || !tickerRows) return;
-    const li = tickerRows.map((i) => `<li><b class="amt"><span class="cur">$</span>${fmtInt(i.amount_usd)}</b><span class="w">${esc(t("ticker_mid"))}</span><a href="incident.html?id=${esc(i.uid)}">${esc(i.project)}</a><span class="w">${esc(t("ticker_on"))} ${esc(fmtMD(i.event_date || i.day))}</span></li>`).join("");
-    el.innerHTML = `<ul>${li}${li}</ul>`;
+  // ---- 사건 흐름: x = 사건일, 행 = 유형, 원 크기 = 금액(√), 색 = 유형. 상위 5건 이름 표시, 클릭 → 케이스 패널 ----
+  function flow(el, rows, from, to) {
+    const W = Math.max(420, el.clientWidth || 560), H = 280, m = { l: 84, r: 16, t: 14, b: 28 };
+    const lanesAll = {}; rows.forEach((r) => { lanesAll[r.type] = (lanesAll[r.type] || 0) + 1; });
+    const lanes = Object.entries(lanesAll).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k]) => k);
+    if (!rows.length || !lanes.length) { el.innerHTML = `<div class="empty">${esc(t("no_data"))}</div>`; return; }
+    // x 범위: 선택 기간 안에서 실제 사건이 있는 구간만(앞쪽 빈 달은 잘라냄), 양쪽 2일 여유
+    const dates = rows.map((r) => r.event_date || r.day).filter(Boolean).sort();
+    const lo = dates.length && dates[0] > from ? dates[0] : from;
+    const d0 = new Date(lo + "T00:00:00"); d0.setDate(d0.getDate() - 2); const d1 = new Date(to + "T00:00:00"); d1.setDate(d1.getDate() + 1); const span = Math.max(1, (d1 - d0) / 86400000);
+    const x = (d) => m.l + Math.min(1, Math.max(0, ((new Date((d || to) + "T00:00:00") - d0) / 86400000) / span)) * (W - m.l - m.r);
+    const lh = (H - m.t - m.b) / lanes.length; const y = (type) => m.t + lanes.indexOf(type) * lh + lh / 2;
+    const maxA = Math.max(...rows.map((r) => r.amount_usd || 0), 1); const rad = (a) => (a ? 5 + 22 * Math.sqrt(a / maxA) : 3.5);
+    const top = rows.filter((r) => r.amount_usd).sort((a, b) => b.amount_usd - a.amount_usd).slice(0, 5).map((r) => r.uid);
+    let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" class="flow-svg" role="img" aria-label="${esc(t("flow_title"))}">`;
+    lanes.forEach((k) => { const yy = y(k); s += `<line class="lane" x1="${m.l}" x2="${W - m.r}" y1="${yy}" y2="${yy}"/><text class="lane-lbl" x="${m.l - 10}" y="${yy + 4}" text-anchor="end">${esc(typeName(k))}</text>`; });
+    const nT = Math.min(6, Math.max(2, Math.floor((W - m.l) / 110)));
+    for (let k = 0; k <= nT; k++) { const d = new Date(d0.getTime() + (span * k / nT) * 86400000); const xx = m.l + (k / nT) * (W - m.l - m.r); s += `<text class="ax" x="${xx}" y="${H - 8}" text-anchor="middle">${esc(fmtMD(d.toISOString().slice(0, 10)))}</text>`; }
+    const sorted = rows.slice().sort((a, b) => (b.amount_usd || 0) - (a.amount_usd || 0));
+    const hash = (u) => { let h = 0; for (const c of u) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
+    const boxes = []; const hit = (b) => boxes.some((o) => !(b.x2 < o.x1 || b.x1 > o.x2 || b.y2 < o.y1 || b.y1 > o.y2));
+    let labels = "";
+    sorted.forEach((r) => {
+      if (!lanes.includes(r.type)) return;
+      const rr = rad(r.amount_usd), col = typeColorHex(r.type);
+      const cx = x(r.event_date || r.day), cy = y(r.type) + (rr < 10 ? ((hash(r.uid) % 7) - 3) * lh * 0.07 : 0);  // 작은 원은 행 안에서 살짝 흩어 겹침 완화
+      const tip = `<b>${esc(r.project)}</b><br>${esc(r.amount_usd ? moneyFull(r.amount_usd) : t("unknown"))} · ${esc(fmtDate(r.event_date || r.day))}`;
+      s += `<circle class="bub ${r.amount_usd ? "" : "hollow"}" cx="${cx}" cy="${cy}" r="${rr}" style="--c:${col}" data-uid="${esc(r.uid)}" data-tip="${tip}"/>`;
+      boxes.push({ x1: cx - rr, x2: cx + rr, y1: cy - rr, y2: cy + rr });
+      if (top.includes(r.uid)) {
+        const name = r.project.length > 18 ? r.project.slice(0, 17) + "…" : r.project; const tw = name.length * 6.6 + 4;
+        const cands = [[cx + rr + 6, cy + 4, "start"], [cx - rr - 6, cy + 4, "end"], [cx, cy - rr - 6, "middle"], [cx, cy + rr + 13, "middle"]];
+        for (const [lx, ly, anc] of cands) {
+          const x1 = anc === "start" ? lx : anc === "end" ? lx - tw : lx - tw / 2, b = { x1, x2: x1 + tw, y1: ly - 11, y2: ly + 2 };
+          if (b.x1 < m.l - 4 || b.x2 > W - 2 || hit(b)) continue;
+          labels += `<text class="bub-lbl" x="${lx}" y="${ly}" text-anchor="${anc}">${esc(name)}</text>`; boxes.push(b); break;
+        }
+      }
+    });
+    s += labels;
+    el.innerHTML = s + "</svg>"; bindTips(el);
+    $$("circle.bub", el).forEach((c) => c.addEventListener("click", () => KL.openCase(c.dataset.uid)));
   }
 
   function renderPanel() {
@@ -62,10 +101,12 @@
     rangeSeg($("#rangeSeg"), S.days, (v) => { S.days = v; S.page = 1; load(); });
     fillSelect($("#typeSel"), Object.keys(facets.types).map((v) => ({ value: v, label: `${typeName(v)} (${facets.types[v]})` })), t("all_types"), S.type);
     fillSelect($("#chainSel"), Object.keys(facets.chains).map((v) => ({ value: v, label: `${v} (${facets.chains[v]})` })), t("all_chains"), S.chain);
-    const lossAll = tickerRows.reduce((a, i) => a + (i.legal ? 0 : i.amount_usd || 0), 0);
-    $("#heroSub").innerHTML = `<span>${esc(t("hero_since").replace("{d}", fmtDate(meta.first_day)))}</span><span class="dot">·</span><span>${esc(t("k_new"))} <b>${fmtInt(meta.new_total)}</b></span><span class="dot">·</span><span>${esc(t("k_addr"))} <b>${fmtInt(meta.addresses_total)}</b></span><span class="dot">·</span><span>${esc(t("k_loss"))} <b>${esc(money(lossAll))}</b></span>`;
+    $("#heroSub").innerHTML = `<span>${esc(t("hero_since").replace("{d}", fmtDate(meta.first_day)))}</span><span class="dot">·</span><span>${esc(t("k_new"))} <b>${fmtInt(allSt.new_count)}</b></span><span class="dot">·</span><span>${esc(t("k_loss"))} <b>${esc(money(allSt.loss_amount))}</b></span><span class="dot">·</span><span>${esc(t("k_legal"))} <b>${esc(money(allSt.legal_amount))}</b></span><span class="dot">·</span><span>${esc(t("k_addr"))} <b>${fmtInt(meta.addresses_total)}</b></span>`;
+    $("#flowTitle").textContent = t("flow_title");
+    $("#flowMeta").textContent = `${fmtDate(st.range.from)} – ${fmtDate(st.range.to)} · ${fmtInt(flowRows.length)}${t("unit")}`;
+    flow($("#flow"), flowRows, st.range.from, st.range.to);
     $("#total").textContent = fmtInt(list.total);
-    ticker(); renderPanel();
+    renderPanel();
     const tb = $("#incTable");
     tb.innerHTML = TABLE_HEAD() + `<tbody>${list.items.length ? list.items.map((i) => incidentRow(i)).join("") : `<tr><td colspan="6" class="empty">${esc(t("no_data"))}</td></tr>`}</tbody>`;
     bindRows(tb);
@@ -76,5 +117,6 @@
   $("#typeSel").addEventListener("change", (e) => { S.type = e.target.value; S.page = 1; load(); });
   $("#chainSel").addEventListener("change", (e) => { S.chain = e.target.value; S.page = 1; load(); });
   let qT; $("#q").addEventListener("input", (e) => { clearTimeout(qT); qT = setTimeout(() => { S.q = e.target.value.trim(); S.page = 1; load(true); }, 250); });
+  let rT; window.addEventListener("resize", () => { clearTimeout(rT); rT = setTimeout(() => { if (st && flowRows) flow($("#flow"), flowRows, st.range.from, st.range.to); }, 150); });
   api("/api/meta").then((m) => { meta = m; return load(); }).catch((e) => { $("main").insertAdjacentHTML("afterbegin", errorBox(e)); });
 })();
