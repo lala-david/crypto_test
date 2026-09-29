@@ -304,3 +304,24 @@ def test_other_type_is_not_an_incident():
     assert inc.enriched and inc.relevant is False and "other" in inc.relevance_reason
     out2 = out.model_copy(update={"incident_type": "hack_exploit"})
     assert build_incident(item, out2, "ollama:test", {}).relevant is True
+
+
+def test_same_incident_across_families_when_name_and_amount_match():
+    from collector.merge import same_incident
+    from collector.models import Incident
+    a = Incident(uid="a", source="doj", source_id="1", url="https://justice.gov/a", title="Civil Forfeiture Action to Recover Cryptocurrency",
+                 published_at="2026-09-29", collected_at="2026-09-29T10:00:00", project="Coinbase", incident_type="law_enforcement_action", amount_usd=47000.0)
+    b = Incident(uid="b", source="rss:tokenpost", source_id="2", url="https://tokenpost.kr/b", title="11만270 USDT 몰수 청구",
+                 published_at="2026-09-28", collected_at="2026-09-29T10:04:00", project="Coinbase", incident_type="phishing_social_engineering", amount_usd=47000.0)
+    assert same_incident(a, b)
+    c = Incident(uid="c", source="rss:x", source_id="3", url="https://x/c", title="Coinbase phishing wave", published_at="2026-09-28",
+                 collected_at="2026-09-29T10:04:00", project="Coinbase", incident_type="phishing_social_engineering", amount_usd=2_000_000.0)
+    assert not same_incident(a, c)   # 이름은 같아도 금액이 다르면 다른 사건
+
+
+def test_review_categories_include_crypto_incidental():
+    from collector.relabel import EXCLUDE_CATEGORIES, REVIEW_CATEGORIES, REVIEW_SCHEMA
+    from collector.prompts import REVIEW_SYSTEM
+    assert "crypto_incidental" in REVIEW_CATEGORIES and "crypto_incidental" in EXCLUDE_CATEGORIES
+    assert set(REVIEW_SCHEMA["properties"]["category"]["enum"]) == set(REVIEW_CATEGORIES)
+    assert "crypto_incidental" in REVIEW_SYSTEM

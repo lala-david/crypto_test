@@ -134,6 +134,12 @@ def same_incident(a: Incident, b: Incident) -> bool:
         return True
     if _keys(a) & _keys(b):
         return True
+    # 유형 계열이 달라도(법집행 보도자료 ↔ 뉴스가 '피싱'으로 분류) 피해 대상 이름이 같고 금액이 ±5% 안이며 게시일 7일 이내면 같은 사건
+    if a.amount_usd and b.amount_usd and abs(a.amount_usd - b.amount_usd) / max(a.amount_usd, b.amount_usd) <= 0.05:
+        dp = _days_apart(a.published_at, b.published_at)
+        na, nb = normalize_name(a.project or a.title), normalize_name(b.project or b.title)
+        if dp is not None and dp <= 7 and na and na == nb and len(na) >= 4:
+            return True
     if family(a.incident_type) != family(b.incident_type):
         return False
     if same_legal_release(a, b):

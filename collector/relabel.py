@@ -366,8 +366,8 @@ def run_relabel(store: Store, http: Http, provider: Optional[LLMProvider], data_
 # 사건 여부 판정(review): 모든 relevant 카드를 같은 기준으로 LLM 에 묻고, 확신도 0.8 이상의 제외 판정만 적용한다.
 # ---------------------------------------------------------------------------
 REVIEW_CATEGORIES = ["new_attack", "new_enforcement", "sanctions", "laundering_report", "exchange_self_report", "court_procedure",
-                     "retrospective", "general_crime_no_crypto", "market_or_opinion", "duplicate_or_update_only", "other"]
-EXCLUDE_CATEGORIES = {"exchange_self_report", "court_procedure", "retrospective", "general_crime_no_crypto", "market_or_opinion"}
+                     "retrospective", "general_crime_no_crypto", "crypto_incidental", "market_or_opinion", "duplicate_or_update_only", "other"]
+EXCLUDE_CATEGORIES = {"exchange_self_report", "court_procedure", "retrospective", "general_crime_no_crypto", "crypto_incidental", "market_or_opinion"}
 REVIEW_SCHEMA = {
     "type": "object",
     "properties": {

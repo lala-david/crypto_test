@@ -38,6 +38,7 @@ CHAIN_ALIAS = {
     # 표시 이름의 대소문자 변형(과거 merge_addresses 가 대문자로 저장한 값 포함)
     "ethereum": "Ethereum", "bitcoin": "Bitcoin", "solana": "Solana", "polygon": "Polygon", "arbitrum": "Arbitrum", "optimism": "Optimism",
     "avalanche": "Avalanche", "base": "Base", "hyperevm": "HyperEVM", "hyperliquid": "HyperEVM", "cronos": "Cronos", "sonic": "Sonic", "linea": "Linea",
+    "coinbase": "", "binance": "", "upbit": "", "bithumb": "", "okx": "", "kraken": "", "bybit": "", "bitget": "", "metamask": "", "ledger": "", "trezor": "",
     "monero": "Monero", "xmr": "Monero", "xrp": "XRP Ledger", "xrpl": "XRP Ledger", "ripple": "XRP Ledger", "xrp ledger": "XRP Ledger", "osmosis": "Osmosis", "nomic": "Nomic", "noble": "Noble", "axelar": "Axelar", "cosmos": "Cosmos", "starknet": "Starknet",
 }
 
