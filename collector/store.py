@@ -64,8 +64,9 @@ class Store:
         self.db_path = os.path.join(data_dir, "collector.db")
         self.state_path = os.path.join(data_dir, "state.json")
         self.jsonl_path = os.path.join(data_dir, "incidents.jsonl")
-        self.conn = sqlite3.connect(self.db_path)
+        self.conn = sqlite3.connect(self.db_path, timeout=60)
         self.conn.row_factory = sqlite3.Row
+        self.conn.execute("PRAGMA busy_timeout=60000")   # 요약·주소검증 같은 긴 작업과 동시에 써도 잠금으로 죽지 않게
         self.conn.executescript(SCHEMA)
         self.conn.commit()
         self._restore_if_empty()

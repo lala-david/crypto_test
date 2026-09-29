@@ -1,6 +1,8 @@
 """정적 사이트 데이터 내보내기 (docs/data/*.json) — docs/index.html 이 fetch 해서 그린다.
 
 incidents.json  : 최근 N일(기본 90)의 병합 사건 (날짜별 규칙+캐시 판정 병합, 후속 표시 포함)
+all.json        : 전체 기간 사건의 요약 필드만(목록·통계용 slim). 상세는 archive/YYYY-MM.json 에서 가져온다
+addresses.json  : 전체 지갑 주소(주소·체인·역할·사건 요약) — 정적 배포에서 지갑 주소 페이지용
 archive/YYYY-MM.json : 월별 전체 (오래된 달은 사이트가 필요할 때만 로드)
 briefings.json  : 날짜별 브리핑(한/영) + 건수
 meta.json       : 생성 시각, 누적 통계, 소스 목록
@@ -61,6 +63,29 @@ def export_site(store, docs_dir: str, recent_days: int = 90, judge=None, crimial
             by_month[d[:7]].append(rec)
             if d >= cutoff:
                 recent.append(rec)
+    # 전체 기간 slim: 목록·통계·차트가 쓰는 필드만(상세는 월별 아카이브에서)
+    slim = []
+    addr_rows = []
+    for d, lst in merged_by_day.items():
+        for i in lst:
+            slim.append({
+                "uid": i.uid, "day": d, "event_date": i.incident_date or d, "project": i.project or i.title,
+                "type": i.incident_type, "incident_date": i.incident_date, "chains": i.chains,
+                "amount_usd": i.amount_usd, "amount_text": i.amount_text, "source": i.source,
+                "src_count": 1 + len(i.merged_from), "addr_count": len(i.addresses),
+                "blacklist_hits": len(i.blacklist_hits), "followup_of": i.followup_of, "month": d[:7],
+            })
+            for a in i.addresses:
+                addr_rows.append({"address": a.address, "chain": a.chain, "role": a.role, "note": a.note,
+                                  "uid": i.uid, "project": i.project or i.title, "type": i.incident_type,
+                                  "day": d, "event_date": i.incident_date or d,
+                                  "blacklist": bool((i.blacklist_hits or {}).get(a.address))})
+    slim.sort(key=lambda r: (r["event_date"] or r["day"]), reverse=True)
+    with open(os.path.join(data_dir, "all.json"), "w", encoding="utf-8") as f:
+        json.dump(slim, f, ensure_ascii=False)
+    with open(os.path.join(data_dir, "addresses.json"), "w", encoding="utf-8") as f:
+        json.dump(addr_rows, f, ensure_ascii=False)
+
     recent.sort(key=lambda r: (r["day"], r["incident_date"] or ""), reverse=True)
     with open(os.path.join(data_dir, "incidents.json"), "w", encoding="utf-8") as f:
         json.dump(recent, f, ensure_ascii=False)
@@ -90,6 +115,7 @@ def export_site(store, docs_dir: str, recent_days: int = 90, judge=None, crimial
         "sdn_addresses": store.sdn_count(),
         "sources": sorted({i.source for i in all_inc} | {m.get("source") for i in all_inc for m in i.merged_from if m.get("source")}),
         "months": sorted(by_month.keys()),
+        "slim_total": len(slim), "addresses_rows": len(addr_rows),
         "recent_days": recent_days,
     }
     with open(os.path.join(data_dir, "meta.json"), "w", encoding="utf-8") as f:

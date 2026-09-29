@@ -12,7 +12,8 @@ API (모두 JSON):
   GET /api/stats?days=30&type=&chain=&source=&q=
   GET /api/addresses?days=30&role=attacker|laundering|sanctioned|victim|unknown&chain=&q=&page=&size=
   GET /api/addresses/lookup?q=  GET /api/search?q=
-정적 파일: docs/ (index.html, incidents.html, …)
+정적 파일: site/ (React 빌드, `cd web && npm run build`) 가 있으면 그걸 서빙하고, 없으면 예전 docs/ 를 쓴다.
+         옛 화면은 /legacy/ 로 항상 열 수 있다.
 """
 from __future__ import annotations
 
@@ -33,6 +34,8 @@ from collector.service import DataService
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DOCS = os.path.join(ROOT, "docs")
+SITE = os.path.join(ROOT, "site")            # React 빌드 결과(web/ → vite build)
+USE_SITE = os.path.isdir(SITE) and os.path.isfile(os.path.join(SITE, "index.html"))
 
 with open(os.path.join(ROOT, "config.yaml"), encoding="utf-8") as f:
     CFG = yaml.safe_load(f)
@@ -207,6 +210,12 @@ def _versioned_html(name: str) -> str | None:
     return _ASSET_RE.sub(sub, html)
 
 
+async def spa(req: Request):
+    """React 앱(site/index.html). 해시 라우팅이라 모든 경로가 이 파일 하나로 간다."""
+    with open(os.path.join(SITE, "index.html"), encoding="utf-8") as f:
+        return HTMLResponse(f.read())
+
+
 async def page(req: Request):
     name = req.path_params.get("name") or "index"
     html = _versioned_html(f"{name}.html")
@@ -218,8 +227,11 @@ app = Starlette(routes=[
     Route("/api", api_index), Route("/api/meta", meta), Route("/api/incidents", incidents), Route("/api/incidents/{uid}", incident),
     Route("/api/briefings", briefings), Route("/api/briefings/{day}", briefing), Route("/api/stats", stats),
     Route("/api/addresses", addresses), Route("/api/addresses/lookup", lookup), Route("/api/search", search),
-    Route("/", page), Route("/{name:str}.html", page),
-    Mount("/", app=StaticFiles(directory=DOCS, html=True), name="static"),
+    *([Route("/", spa)] if USE_SITE else [Route("/", page)]),
+    Route("/{name:str}.html", page),
+    Mount("/legacy", app=StaticFiles(directory=DOCS, html=True), name="legacy"),
+    Mount("/data", app=StaticFiles(directory=os.path.join(DOCS, "data")), name="data"),
+    Mount("/", app=StaticFiles(directory=SITE if USE_SITE else DOCS, html=True), name="static"),
 ], exception_handlers={HTTPException: http_error})
 app = NoStore(app)
 

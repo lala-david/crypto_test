@@ -1,0 +1,21 @@
+{
+  "name": "incident-ledger-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Incident Ledger 대시보드 (React). 로컬 API(/api/*) 가 있으면 실시간, 없으면 data/*.json 스냅샷으로 동작한다.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router-dom": "6.26.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.3.1",
+    "vite": "5.4.8"
+  }
+}

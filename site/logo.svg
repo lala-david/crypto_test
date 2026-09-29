@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#b48cff"/><stop offset="0.55" stop-color="#7a3cff"/><stop offset="1" stop-color="#3b0fbf"/>
+    </linearGradient>
+    <linearGradient id="s" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.08"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <!-- 육각 방패 -->
+  <path d="M32 3 L57 17.5 V46.5 L32 61 L7 46.5 V17.5 Z" fill="url(#g)"/>
+  <path d="M32 3 L57 17.5 V46.5 L32 61 L7 46.5 V17.5 Z" fill="url(#s)"/>
+  <path d="M32 6.5 L54 19.3 V44.7 L32 57.5 L10 44.7 V19.3 Z" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1.2"/>
+  <!-- 원장(ledger) 줄 3개 + 균열(사건) -->
+  <g stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" filter="url(#glow)">
+    <line x1="19" y1="24" x2="45" y2="24"/>
+    <line x1="19" y1="32" x2="34" y2="32"/>
+    <line x1="19" y1="40" x2="41" y2="40"/>
+  </g>
+  <path d="M47 29 L41 35 L45 37 L38 45" fill="none" stroke="#ffd166" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+</svg>
