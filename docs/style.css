@@ -773,3 +773,4 @@ body.case-open { overflow: hidden; }
 .avatar { background: color-mix(in srgb, var(--c, var(--ink-3)) 55%, transparent); }
 .avatar::before { background: color-mix(in srgb, var(--c, var(--ink-3)) 14%, #15151a); }
 .avatar svg, .badge.tb svg, .role svg, .rk-ri svg, .rtile .ic svg { filter: none; }
+.cico.logo { border-radius: 50%; object-fit: contain; background: rgba(255,255,255,.06); display: block; }
