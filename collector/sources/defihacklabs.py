@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from datetime import date
 from typing import List
 
 from ..models import Address, RawItem
@@ -40,18 +41,33 @@ def _header_comment(sol: str, max_lines: int = 80) -> str:
     return "\n".join(lines)
 
 
+def year_archives(since: date, today: date) -> List[int]:
+    """메인 README 는 올해 사고만 담고, 지난 연도는 past/<연도>/README.md 에 있다. since 가 지난 연도면 그 연도부터 작년까지."""
+    return list(range(max(2021, since.year), today.year)) if since.year < today.year else []
+
+
 class DefiHackLabsSource(Source):
     name = "defihacklabs"
 
     def collect(self, ctx: SourceContext) -> List[RawItem]:
-        md = ctx.http.get_text(README, cache_ttl_hours=1)
+        items = self._collect_md(ctx, ctx.http.get_text(README, cache_ttl_hours=1), "README")
+        for y in year_archives(ctx.since, date.today()):
+            try:
+                md = ctx.http.get_text(f"{RAW}past/{y}/README.md", cache_ttl_hours=24 * 7)
+            except Exception as e:
+                ctx.log.warning("defihacklabs 연도 아카이브 %s 로드 실패: %s", y, e)
+                continue
+            items += self._collect_md(ctx, md, f"past/{y}", stop_early=False)
+        return items
+
+    def _collect_md(self, ctx: SourceContext, md: str, label: str, stop_early: bool = True) -> List[RawItem]:
         entries = list(_ENTRY.finditer(md))
         items: List[RawItem] = []
         for idx, m in enumerate(entries):
             ymd, name, tech = m.group(1), m.group(2).strip(), m.group(3).strip()
             day = f"{ymd[:4]}-{ymd[4:6]}-{ymd[6:]}"
             if day < ctx.since.isoformat():
-                if idx > 5:
+                if stop_early and idx > 5:
                     break
                 continue
             block = md[m.end(): entries[idx + 1].start() if idx + 1 < len(entries) else m.end() + 1500]
@@ -85,5 +101,5 @@ class DefiHackLabsSource(Source):
                     tx_hashes=sorted(set(txs)), tags=["defihacklabs"], needs_llm=True,
                 )
             )
-        ctx.log.info("defihacklabs: README %d건 중 기간 내 %d건", len(entries), len(items))
+        ctx.log.info("defihacklabs: %s %d건 중 기간 내 %d건", label, len(entries), len(items))
         return items

@@ -220,6 +220,18 @@ def chains_from_text(text: str, kw_cfg: dict, limit: int = 3) -> List[str]:
 PENDING_REASON = "LLM 미처리(공급자 실패) — 다음 실행에서 재시도"
 
 
+def backfill_stamp(inc: Incident, item: RawItem) -> Incident:
+    """과거 사건 백필용: 수집 시각을 사건일(없으면 게시일)로 두어 '오늘 카드'에 섞이지 않게 하고, 구조화 소스(확정 사고 목록)의 항목은 관련 사건으로 확정한다."""
+    day = (inc.incident_date or (item.published_at or "")[:10] or inc.collected_at[:10])[:10]
+    inc.collected_at = f"{day}T00:00:00"
+    if "backfill" not in inc.tags:
+        inc.tags = list(inc.tags) + ["backfill"]
+    if (item.structured or {}).get("incident_type"):
+        inc.relevant = True
+        inc.relevance_reason = inc.relevance_reason or "backfill: 구조화 소스(확정 사고 목록)"
+    return inc
+
+
 def finalize_unenriched(inc: Incident, item: RawItem, llm_expected: bool) -> bool:
     """LLM 이 필요한 항목인데 LLM 이 실패해 규칙 기반으로만 만들어진 카드는 공개하지 않는다(relevant=False).
     True 를 돌려주면 호출자가 항목을 pending_llm 으로 표시해 다음 실행에서 다시 처리한다. --no-llm 처럼 애초에 LLM 을 안 쓰는 실행은 해당 없음."""

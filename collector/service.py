@@ -30,6 +30,8 @@ from .store import Store
 
 LEGAL = {"sanctions_designation", "law_enforcement_action", "laundering_report"}
 ROLE_PRIORITY = {"sanctioned": 0, "attacker": 1, "laundering": 2, "victim": 3, "unknown": 4}
+FOLLOWUP_DAYS = 14   # 후속 보도로 보는 최대 간격(run.py followup_days 와 동일)
+
 CHAIN_ALIAS = {
     "tron": "Tron", "trx": "Tron", "eth": "Ethereum", "ether": "Ethereum", "ethereum mainnet": "Ethereum",
     "bsc": "BSC", "bnb chain": "BSC", "bnb smart chain": "BSC", "binance smart chain": "BSC", "binance chain": "BSC",
@@ -215,7 +217,8 @@ class DataService:
                 raw = self.store.incidents_collected_on(d)
                 raw_by_uid.update({i.uid: i for i in raw})
                 merged = [i for i in merge_incidents(raw, judge) if i.relevant]
-                mark_followups(merged, history, judge)
+                lo = (date.fromisoformat(d) - timedelta(days=FOLLOWUP_DAYS)).isoformat() if len(d) == 10 else ""
+                mark_followups(merged, [h for h in history if (h.collected_at or "")[:10] >= lo], judge)
                 for i in merged:
                     i.blacklist_hits = self.crimial.hits(i.addresses)
                 per_day[d] = merged

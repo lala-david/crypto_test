@@ -26,7 +26,7 @@ import yaml
 
 from collector.briefing import write_briefing
 from collector.crimial import CrimialHunter
-from collector.enrich import Enricher, build_incident, finalize_unenriched
+from collector.enrich import Enricher, backfill_stamp, build_incident, finalize_unenriched
 from collector.http import Http
 from collector.llm import build_provider
 from collector.dedupe import LLMJudge
@@ -78,7 +78,14 @@ def main() -> int:
     ap.add_argument("--audit", action="store_true", help="최근 30일 사건 목록을 로컬 LLM 이 교차 검토(중복·금액·유형·날짜·이름) → data/audits/")
     ap.add_argument("--addrcheck", action="store_true", help="모든 카드의 지갑 주소를 온체인으로 검증·분류(EOA/CA·토큰·풀, 활동 체인) 후 카드 교정 + 보고서")
     ap.add_argument("--addrcheck-force", action="store_true", help="--addrcheck 에서 캐시된 결과도 다시 조회")
+    ap.add_argument("--backfill", action="store_true", help="과거 사건 백필: --sources 와 --since 로 구조화 소스를 LLM 없이 수집해 카드만 저장(수집일=사건일). 판정·주소검증·브리핑·리포트·알림·푸시 생략")
     args = ap.parse_args()
+    if args.backfill:
+        if not args.sources or not args.since:
+            ap.error("--backfill 은 --sources 와 --since 가 필요합니다 (예: --backfill --sources defillama,defihacklabs --since 2020-01-01)")
+        if not args.provider:
+            args.no_llm = True
+        args.no_briefing = args.no_push = args.no_alert = True
 
     with open(args.config, encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
@@ -216,13 +223,27 @@ def main() -> int:
         for item, inc in zip(new_items, ex.map(process, new_items)):
             pending = finalize_unenriched(inc, item, llm_expected)
             n_pending += int(pending)
-            store.mark_item(item, "pending_llm" if pending else ("enriched" if inc.enriched else "rule_based"))
+            if args.backfill:
+                backfill_stamp(inc, item)
+            store.mark_item(item, "backfill" if args.backfill else ("pending_llm" if pending else ("enriched" if inc.enriched else "rule_based")))
             store.save_incident(inc)
             run_incidents.append(inc)
             log.info("[%s] %s | relevant=%s enriched=%s addrs=%d%s", inc.source, inc.title[:60], inc.relevant,
                      inc.enriched, len(inc.addresses), " (pending_llm: 다음 실행에서 재시도)" if pending else "")
     if n_pending:
         log.warning("LLM 미처리 %d건 — 카드로 올리지 않음. 공급자 복구 후 다음 실행에서 다시 처리됩니다.", n_pending)
+    if args.backfill:
+        # 백필은 카드 저장까지만. 병합·후속·금액 합의는 대시보드(service.refresh)가 수집일(=사건일) 단위로 계산한다.
+        rel = sum(1 for i in run_incidents if i.relevant)
+        by_year: Dict[str, int] = {}
+        for i in run_incidents:
+            if i.relevant:
+                by_year[(i.incident_date or i.collected_at)[:4]] = by_year.get((i.incident_date or i.collected_at)[:4], 0) + 1
+        store.export_jsonl(); store.export_state()
+        store.log_run(since.isoformat(), len(collected), len(new_items), 0, errors + ["backfill"])
+        log.info("=== 백필 완료: 신규 %d건(관련 %d건) 연도별 %s ===", len(new_items), rel, json.dumps(dict(sorted(by_year.items())), ensure_ascii=False))
+        print(f"백필 완료: 신규 {len(new_items)}건 / 관련 {rel}건 / 연도별 {dict(sorted(by_year.items()))} / 오류 {len(errors)}건")
+        return 0
 
     # 3.5) 이번에 새로 만든 카드는 곧바로 '새 사건인가' 판정(로컬 LLM, 카드당 ~5초). 제외 판정은 확신도 0.8 이상만.
     if provider and run_incidents and not args.rebuild_day:

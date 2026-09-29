@@ -325,3 +325,22 @@ def test_review_categories_include_crypto_incidental():
     assert "crypto_incidental" in REVIEW_CATEGORIES and "crypto_incidental" in EXCLUDE_CATEGORIES
     assert set(REVIEW_SCHEMA["properties"]["category"]["enum"]) == set(REVIEW_CATEGORIES)
     assert "crypto_incidental" in REVIEW_SYSTEM
+
+
+def test_backfill_stamp_sets_collected_day_and_relevance():
+    from datetime import date
+    from collector.enrich import backfill_stamp
+    from collector.sources.defihacklabs import year_archives
+    item = RawItem(source="defillama", source_id="X|2021-08-10", url="https://defillama.com/hacks", title="X — Protocol Logic", published_at="2021-08-10",
+                   text="", needs_llm=False, structured={"name": "X", "incident_date": "2021-08-10", "incident_type": "hack_exploit", "amount_usd": 5.0e8})
+    inc = build_incident(item, None, "", {})
+    backfill_stamp(inc, item)
+    assert inc.collected_at == "2021-08-10T00:00:00" and inc.relevant and "backfill" in inc.tags
+    item2 = RawItem(source="defihacklabs", source_id="20220301|Y", url="https://github.com/x", title="Y — Reentrancy", published_at="2022-03-01",
+                    text="Y (2022-03-01) — Reentrancy", needs_llm=True, structured={"name": "Y", "incident_date": "2022-03-01", "incident_type": "hack_exploit"})
+    inc2 = build_incident(item2, None, "", {"crypto": ["crypto"], "crime": ["hack"]})
+    assert not inc2.relevant                      # 키워드만으로는 무관 판정
+    backfill_stamp(inc2, item2)
+    assert inc2.relevant and inc2.collected_at.startswith("2022-03-01")   # 구조화 소스는 확정 사고
+    assert year_archives(date(2020, 1, 1), date(2026, 9, 29)) == [2021, 2022, 2023, 2024, 2025]
+    assert year_archives(date(2026, 9, 1), date(2026, 9, 29)) == []

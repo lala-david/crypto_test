@@ -13,7 +13,15 @@
     $("#sub").innerHTML = `<span>${esc(fmtDate(st.range.from))} – ${esc(fmtDate(st.range.to))}</span><span class="m">${esc(t("new_label"))} ${fmtInt(st.new_count)}${esc(t("unit"))}</span><span class="m">${esc(t("follow"))} ${fmtInt(st.followup_count)}</span><span class="m" title="${moneyFull(st.total_amount)}">${esc(money(st.total_amount))}</span>`;
     const byAmt = S.mode === "amount"; const cnt = (v) => String(Math.round(v));
     $("#tsTitle").textContent = byAmt ? t("daily_amount") : t("daily_count");
-    columns($("#tsPlot"), st.daily.map((d) => ({ label: fmtMD(d.day), v: byAmt ? d.amount : d.count, extra: byAmt ? `${d.count}${t("unit")}` : money(d.amount) })), byAmt ? money : cnt, $("#tsTitle").textContent, { height: 240 });
+    // 일별 → 기간이 길면 주(60일 초과)/월(200일 초과) 단위로 묶는다
+    const span = st.daily.length, unit = span > 200 ? "month" : span > 60 ? "week" : "day";
+    const keyOf = (day) => unit === "day" ? day : unit === "month" ? day.slice(0, 7) : (() => { const dt = new Date(day + "T00:00:00Z"); dt.setUTCDate(dt.getUTCDate() - ((dt.getUTCDay() + 6) % 7)); return dt.toISOString().slice(0, 10); })();
+    const labelOf = (k) => unit === "month" ? `${k.slice(2, 4)}.${k.slice(5, 7)}` : fmtMD(k);
+    const agg = new Map();
+    st.daily.forEach((d) => { const k = keyOf(d.day); const a = agg.get(k) || { amount: 0, count: 0 }; a.amount += d.amount || 0; a.count += d.count || 0; agg.set(k, a); });
+    const buckets = [...agg.entries()].map(([k, a]) => ({ label: labelOf(k), v: byAmt ? a.amount : a.count, extra: byAmt ? `${a.count}${t("unit")}` : money(a.amount) }));
+    $("#tsTitle").textContent += unit === "month" ? ` · ${t("per_month")}` : unit === "week" ? ` · ${t("per_week")}` : "";
+    columns($("#tsPlot"), buckets, byAmt ? money : cnt, $("#tsTitle").textContent, { height: 240 });
     // 순위 막대 행: 라벨 | 건수 · 비중 · 금액 (숫자 열 고정 폭으로 세로 정렬) + 비중 막대(전체 대비 %)
     const rk = (o) => `<div class="rk ${o.cls || ""}" ${o.title ? `title="${esc(o.title)}"` : ""}><div class="rk-h"><span class="rk-l">${o.icon || ""}<span class="rk-t">${esc(o.label)}</span>${o.tag || ""}</span><span class="rk-n"><b>${fmtInt(o.n)}</b><span class="pct">${fmtPct(o.pct)}</span><span class="amt">${o.amt != null ? o.amt : ""}</span></span></div><div class="rk-bar"><i style="width:${(o.pct * 100).toFixed(1)}%;background:${o.color}"></i>${o.sub ? `<i class="sub" style="width:${(o.sub * 100).toFixed(1)}%"></i>` : ""}</div></div>`;
     const amtOf = (r) => (r.known ? `<span title="${moneyFull(r.amount)}">${esc(money(r.amount))}</span>` : `<span class="faint">–</span>`);

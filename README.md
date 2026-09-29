@@ -145,6 +145,14 @@ LLM 설정(`config.yaml > llm`): 기본 `ollama` (`http://192.168.150.225:11434`
 (`OPENROUTER_API_KEY` 또는 `../vllm/openrouter.txt`). `prompt_style: few_shot | zero_shot`.
 비교(Tectonic 기사 1건): gpt-oss:120b 81s — 주소 역할 구분·자금흐름 정확 / qwen3-30b 37s — 역할 뭉뚱그림 / gemini-3.8-flash ~10s.
 
+### 과거 사건 백필 (2020년 ~)
+```
+python run.py --backfill --sources defillama,defihacklabs --since 2020-01-01 --no-push
+```
+- 구조화 소스(DeFiLlama hacks API 1,200여 건, DeFiHackLabs README + `past/<연도>/README.md` 740여 건)를 LLM 없이 카드로 저장합니다. 수집 시각을 **사건일**로 두어 '오늘 카드'에 섞이지 않고, 판정·주소 검증·브리핑·리포트·알림·푸시는 생략합니다. 이미 있는 항목(uid)은 건너뛰므로 다시 실행해도 안전합니다.
+- 대시보드는 수집일(=사건일) 단위로 병합하고 후속 보도는 14일 창 안에서만 찾습니다(`service.FOLLOWUP_DAYS`). 통계 시계열은 기간이 60일을 넘으면 주별, 200일을 넘으면 월별로 묶습니다. 상단 카운터는 '전체 사건 수'입니다.
+- 백필 카드의 요약은 소스 필드(분류·수법·손실)로만 채워지며 한국어 요약은 없습니다. 상위 사건에 LLM 요약을 붙이려면 `python run.py --relabel-all --limit N` 류의 재처리를 별도로 돌립니다.
+
 ### 매시간 자동 실행 (이 PC)
 ```powershell
 powershell -ExecutionPolicy Bypass -File install_task.ps1 -EveryHours 1
