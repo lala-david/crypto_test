@@ -9,3 +9,10 @@
 .rc-tip-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
 .rc-tip-row b { margin-left: auto; font-family: var(--mono); }
 .hero.hero-solo #reportCard { min-height: 320px; }
+.rc .rc-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.rc .rc-seg { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.12); margin-right: 32px; }
+.rc .rc-seg button { color: rgba(255,255,255,.62); font-size: 12px; }
+.rc .rc-seg button.on { background: rgba(255,255,255,.14); color: #fff; }
+:root[data-theme="light"] .rc .rc-seg { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.1); }
+:root[data-theme="light"] .rc .rc-seg button { color: rgba(0,0,0,.55); }
+:root[data-theme="light"] .rc .rc-seg button.on { background: rgba(0,0,0,.12); color: #000; }

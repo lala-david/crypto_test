@@ -233,3 +233,40 @@ export function listAddresses(rows, params = {}) {
     kinds: count((x) => x.kind || "unchecked"),
   };
 }
+
+/** 유형별 시계열(개요 차트). service.timeseries 와 같은 규칙. */
+export function timeseriesOf(rows, params = {}) {
+  const basis = params.basis === "collected" ? "collected" : "event";
+  const [lo, hi] = rangeOf(params, rows, basis);
+  const span = Math.round((new Date(hi) - new Date(lo)) / 86400000) + 1;
+  const unit = params.unit && params.unit !== "auto" ? params.unit : span <= 45 ? "day" : span <= 400 ? "week" : "month";
+  const bucket = (d) => {
+    if (unit === "month") return d.slice(0, 7);
+    if (unit === "week") {
+      const dt = new Date(d + "T00:00:00Z");
+      dt.setUTCDate(dt.getUTCDate() - ((dt.getUTCDay() + 6) % 7));
+      return dt.toISOString().slice(0, 10);
+    }
+    return d;
+  };
+  const labels = [];
+  const seen = new Set();
+  const step = unit === "day" ? 1 : unit === "week" ? 7 : 28;
+  for (let d = new Date(lo + "T00:00:00Z"), end = new Date(hi + "T00:00:00Z"), g = 0; d <= end && g < 5000; d.setUTCDate(d.getUTCDate() + step), g++) {
+    const b = bucket(d.toISOString().slice(0, 10));
+    if (!seen.has(b)) { seen.add(b); labels.push(b); }
+  }
+  if (!seen.has(bucket(hi))) labels.push(bucket(hi));
+  labels.sort();
+  const idx = new Map(labels.map((b, i) => [b, i]));
+  const counts = {};
+  rows.forEach((r) => (counts[r.type] = (counts[r.type] || 0) + 1));
+  const top = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, Math.max(1, Number(params.top) || 3)).map(([k]) => k);
+  const series = Object.fromEntries(top.map((t) => [t, new Array(labels.length).fill(0)]));
+  rows.forEach((r) => {
+    if (!series[r.type]) return;
+    const i = idx.get(bucket(dayKey(r, basis)));
+    if (i != null) series[r.type][i] += 1;
+  });
+  return { unit, from: lo, to: hi, labels, total: rows.length, series: top.map((t) => ({ key: t, values: series[t] })) };
+}

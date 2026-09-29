@@ -10,22 +10,9 @@ import IncidentTable from "../components/IncidentTable.jsx";
 import { Pager, RangeSeg } from "../components/Controls.jsx";
 import { TYPE_COLOR } from "../components/Icons.jsx";
 
-const bucketize = (rows, days) => {
-  const step = days === "7" ? 1 : days === "30" ? 1 : days === "90" ? 3 : 30;
-  const keys = rows.map((r) => r.event_date || r.day).filter(Boolean).sort();
-  if (!keys.length) return { labels: [], index: () => -1, count: 0 };
-  const from = new Date(keys[0] + "T00:00:00Z");
-  const to = new Date(keys[keys.length - 1] + "T00:00:00Z");
-  const buckets = [];
-  for (let d = new Date(from); d <= to; d.setUTCDate(d.getUTCDate() + step)) buckets.push(new Date(d));
-  if (!buckets.length) buckets.push(from);
-  const labels = buckets.map((d) => `${String(d.getUTCMonth() + 1).padStart(2, "0")}.${String(d.getUTCDate()).padStart(2, "0")}`);
-  const index = (day) => {
-    const t = new Date(day + "T00:00:00Z").getTime();
-    const k = Math.floor((t - from.getTime()) / (step * 86400000));
-    return Math.max(0, Math.min(buckets.length - 1, k));
-  };
-  return { labels, index, count: buckets.length };
+const fmtLabel = (key, unit) => {
+  if (unit === "month") return `${key.slice(2, 4)}.${key.slice(5, 7)}`;
+  return `${key.slice(5, 7)}.${key.slice(8, 10)}`;
 };
 
 export default function Overview() {
@@ -38,7 +25,8 @@ export default function Overview() {
   const [page, setPage] = useState(1);
   const [list, setList] = useState(null);
   const [stats, setStats] = useState(null);
-  const [flow, setFlow] = useState([]);
+  const [chartRange, setChartRange] = useState("all");
+  const [ts, setTs] = useState(null);
   const size = 20;
 
   useEffect(() => {
@@ -47,32 +35,27 @@ export default function Overview() {
   }, [days, q, filters.type, filters.chain, page, sort.key, sort.dir]);
 
   useEffect(() => {
-    const p = { days, type: filters.type, chain: filters.chain };
-    api("/api/stats", p).then(setStats).catch(() => {});
-    api("/api/incidents", { ...p, size: 500, sort: "date", dir: "desc" })
-      .then((r) => setFlow(r.items || []))
-      .catch(() => setFlow([]));
+    api("/api/stats", { days, type: filters.type, chain: filters.chain }).then(setStats).catch(() => {});
   }, [days, filters.type, filters.chain]);
 
+  // 차트는 표와 따로 기간을 고른다(전체 · 1년 · 한달)
+  useEffect(() => {
+    api("/api/timeseries", { days: chartRange, type: filters.type, chain: filters.chain, top: 3 })
+      .then(setTs)
+      .catch(() => setTs(null));
+  }, [chartRange, filters.type, filters.chain]);
+
   const chart = useMemo(() => {
-    if (!flow.length) return { series: [], labels: [] };
-    const byType = {};
-    flow.forEach((r) => (byType[r.type] = (byType[r.type] || 0) + 1));
-    const top3 = Object.entries(byType)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([k]) => k);
-    const b = bucketize(flow, days);
-    const series = top3.map((type, i) => {
-      const values = new Array(b.count).fill(0);
-      flow.filter((r) => r.type === type).forEach((r) => {
-        const k = b.index(r.event_date || r.day);
-        if (k >= 0) values[k] += 1;
-      });
-      return { key: typeName(type), color: ["#8c61ff", "#a78bfa", "#e9d5ff"][i], values };
-    });
-    return { series, labels: b.labels };
-  }, [flow, days, typeName]);
+    if (!ts || !ts.labels?.length) return { series: [], labels: [] };
+    return {
+      labels: ts.labels.map((k) => fmtLabel(k, ts.unit)),
+      series: (ts.series || []).map((s, i) => ({
+        key: typeName(s.key),
+        color: ["#8c61ff", "#a78bfa", "#e9d5ff"][i] || "#c4b5fd",
+        values: s.values,
+      })),
+    };
+  }, [ts, typeName]);
 
   const ctl = {
     sort,
@@ -110,7 +93,20 @@ export default function Overview() {
     <>
       <section className="hero hero-solo">
         <div id="reportCard">
-          {chart.series.length > 0 && <ReportCard series={chart.series} labels={chart.labels} wide />}
+          {chart.series.length > 0 && (
+            <ReportCard
+              series={chart.series}
+              labels={chart.labels}
+              wide
+              range={chartRange}
+              onRange={setChartRange}
+              ranges={[
+                { value: "all", label: t("chart_all") },
+                { value: "365", label: t("chart_1y") },
+                { value: "30", label: t("chart_1m") },
+              ]}
+            />
+          )}
         </div>
       </section>
 

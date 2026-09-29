@@ -335,6 +335,56 @@ class DataService:
             "incidents": len(rows),
         }
 
+    def timeseries(self, rows: List[dict], lo: Optional[str] = None, hi: Optional[str] = None, basis: str = "event",
+                   unit: str = "auto", top: int = 3) -> dict:
+        """유형별 사건 수 시계열(개요 Incident Report 차트용). 기간이 길면 주·월로 묶는다."""
+        key = lambda r: self.date_key(r, basis)
+        days = [key(r) for r in rows if key(r)]
+        lo = lo or (min(days) if days else date.today().isoformat())
+        hi = hi or (max(days) if days else date.today().isoformat())
+        span = (date.fromisoformat(hi) - date.fromisoformat(lo)).days + 1
+        if unit == "auto":
+            unit = "day" if span <= 45 else ("week" if span <= 400 else "month")
+
+        def bucket(d: str) -> str:
+            if unit == "month":
+                return d[:7]
+            if unit == "week":
+                dt = date.fromisoformat(d)
+                return (dt - timedelta(days=dt.weekday())).isoformat()
+            return d
+
+        # 빈 구간도 채운다
+        labels: List[str] = []
+        cur = date.fromisoformat(lo)
+        end = date.fromisoformat(hi)
+        seen = set()
+        guard = 0
+        while cur <= end and guard < 5000:
+            b = bucket(cur.isoformat())
+            if b not in seen:
+                seen.add(b); labels.append(b)
+            cur += timedelta(days=1 if unit == "day" else (7 if unit == "week" else 28))
+            guard += 1
+        if bucket(hi) not in seen:
+            labels.append(bucket(hi))
+        labels.sort()
+        idx = {b: i for i, b in enumerate(labels)}
+
+        counts: Dict[str, int] = defaultdict(int)
+        for r in rows:
+            counts[r["type"]] += 1
+        top_types = [t for t, _ in sorted(counts.items(), key=lambda x: -x[1])[:max(1, top)]]
+        series = {t: [0] * len(labels) for t in top_types}
+        for r in rows:
+            if r["type"] not in series:
+                continue
+            i = idx.get(bucket(key(r)))
+            if i is not None:
+                series[r["type"]][i] += 1
+        return {"unit": unit, "from": lo, "to": hi, "labels": labels, "total": len(rows),
+                "series": [{"key": t, "values": series[t]} for t in top_types]}
+
     def stats(self, rows: List[dict], lo: Optional[str] = None, hi: Optional[str] = None, basis: str = "event") -> dict:
         base = [r for r in rows if not r["followup_of"]]
         known = [r for r in base if r["amount_usd"]]

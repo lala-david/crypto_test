@@ -18,7 +18,7 @@ const smoothPath = (pts) => {
   return d;
 };
 
-export default function ReportCard({ title = "Incident Report", series, labels, wide = true }) {
+export default function ReportCard({ title = "Incident Report", series, labels, wide = true, range, onRange, ranges = [] }) {
   const W = wide ? 1108 : 448;
   const H = wide ? 300 : 200;
   const m = { l: 14, r: 14, t: 12, b: 28 };
@@ -39,6 +39,15 @@ export default function ReportCard({ title = "Incident Report", series, labels, 
     <div className="rc rc-wide">
       <div className="rc-head">
         <h3 className="rc-title">{title}</h3>
+        {ranges.length > 0 && (
+          <div className="seg rc-seg">
+            {ranges.map((r) => (
+              <button key={r.value} type="button" className={range === r.value ? "on" : ""} onClick={() => onRange(r.value)}>
+                {r.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       <div className="rc-legend">
         {series.map((s) => (
@@ -72,7 +81,8 @@ export default function ReportCard({ title = "Incident Report", series, labels, 
             );
           })}
           {labels.map((lb, i) =>
-            i % step === 0 || i === n - 1 ? (
+            // 마지막 라벨은 직전 라벨과 겹치지 않을 때만 그린다
+            i % step === 0 || (i === n - 1 && (n - 1) % step > step * 0.6) ? (
               <text key={i} className="rc-tick" x={x(i)} y={H - 8} textAnchor={i === 0 ? "start" : i === n - 1 ? "end" : "middle"}>
                 {lb}
               </text>

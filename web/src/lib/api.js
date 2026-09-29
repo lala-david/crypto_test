@@ -1,5 +1,5 @@
 // 데이터 접근: 로컬 백엔드(/api/*)가 있으면 실시간, 없으면 data/*.json 스냅샷(정적 배포)으로 같은 화면을 그린다.
-import { filterRows, statsOf, listAddresses, sortRows, collapseFollowups } from "./static-engine.js";
+import { filterRows, statsOf, listAddresses, sortRows, collapseFollowups, timeseriesOf } from "./static-engine.js";
 
 let mode = null; // "live" | "static"
 let snapshot = null;
@@ -99,6 +99,7 @@ export async function api(path, params) {
     const full = (await loadArchive(hit.month || String(hit.day).slice(0, 7))).find((r) => r.uid === uid);
     return { ...hit, ...(full || {}), addresses: full?.addresses || hit.addresses || [], related: [] };
   }
+  if (path === "/api/timeseries") return timeseriesOf(filterRows(snap.collapsed, p), p);
   if (path === "/api/stats") return statsOf(filterRows(snap.collapsed, p), p);
   if (path === "/api/addresses") return listAddresses(filterRows(snap.collapsed, p), p);
   if (path === "/api/addresses/lookup") {

@@ -142,6 +142,13 @@ async def briefing(req: Request):
     return J({**b, "incidents": rows})
 
 
+async def timeseries(req: Request):
+    f = _filters(req)
+    rows = svc.filter(**f)
+    lo, hi = svc.range_bounds(f["days"], f["from_"], f["to"])
+    return J(svc.timeseries(rows, lo, hi, f["basis"], _p(req, "unit", "auto"), _int(req, "top", 3)))
+
+
 async def stats(req: Request):
     f = _filters(req)
     rows = svc.filter(**f)
@@ -225,7 +232,7 @@ async def page(req: Request):
 
 app = Starlette(routes=[
     Route("/api", api_index), Route("/api/meta", meta), Route("/api/incidents", incidents), Route("/api/incidents/{uid}", incident),
-    Route("/api/briefings", briefings), Route("/api/briefings/{day}", briefing), Route("/api/stats", stats),
+    Route("/api/briefings", briefings), Route("/api/briefings/{day}", briefing), Route("/api/stats", stats), Route("/api/timeseries", timeseries),
     Route("/api/addresses", addresses), Route("/api/addresses/lookup", lookup), Route("/api/search", search),
     *([Route("/", spa)] if USE_SITE else [Route("/", page)]),
     Route("/{name:str}.html", page),
