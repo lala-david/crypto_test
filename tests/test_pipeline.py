@@ -357,3 +357,38 @@ def test_defihacklabs_amount_and_chain_parsing():
     from collector.sources.defihacklabs import _SOL
     assert _SOL.search("[X_exp.sol](../../src/test/2023-12/X_exp.sol)").group(1) == "src/test/2023-12/X_exp.sol"
     assert _SOL.search("[Y_exp.sol](src/test/2026-09/Y_exp.sol)").group(1) == "src/test/2026-09/Y_exp.sol"
+
+
+def test_rekt_leaderboard_date_parsing():
+    from collector.sources.rekt import _lb_date
+    assert _lb_date("8/7/2025") == "2025-08-07" and _lb_date("03/23/2022") == "2022-03-23"
+    assert _lb_date("11/12/22") == "2022-11-12"
+    assert _lb_date("2/22") is None and _lb_date("") is None and _lb_date("not a date") is None
+
+
+def test_needs_korean_summary_and_prompt():
+    from collector.models import Incident
+    from collector.prompts import SUMMARY_SYSTEM
+    from collector.relabel import SUMMARY_SCHEMA, needs_korean_summary, _summary_card
+    base = dict(uid="u", source="defillama", source_id="s", url="https://x", title="X — Oracle", published_at="2023-01-02", collected_at="2023-01-02T00:00:00")
+    assert needs_korean_summary(Incident(**base, summary_ko="DeFiLlama: X (BSC) — Oracle Manipulation, 손실 $1,000"))  # 영문 요약은 대상
+    assert needs_korean_summary(Incident(**base, summary_ko=""))
+    assert not needs_korean_summary(Incident(**base, summary_ko="2023년 1월 2일 BSC의 X에서 가격 오라클 조작으로 $1,000이 탈취됐다."))
+    card = _summary_card(Incident(**base, project="X", incident_type="hack_exploit", chains=["BSC"], amount_usd=1000.0))
+    assert '"project": "X"' in card and '"chains": ["BSC"]' in card
+    assert set(SUMMARY_SCHEMA["required"]) == {"summary_ko", "attack_method_ko"} and "카드에 있는 사실만" in SUMMARY_SYSTEM
+
+
+def test_backfill_drops_unstructured_article_and_leaderboard_amount_yields():
+    from collector.enrich import backfill_stamp
+    from collector.merge import consensus_amount
+    from collector.models import Incident
+    art = RawItem(source="rekt", source_id="/mantra-rekt", url="https://rekt.news/mantra-rekt", title="Mantra - Rekt",
+                  published_at="2026-08-31", text="OM 시가총액 $5 billion 이 증발했다", needs_llm=True)
+    inc = build_incident(art, None, "", {"crypto": ["OM"], "crime": ["rekt"]})
+    backfill_stamp(inc, art)
+    assert inc.relevant is False and "구조화 정보 없는" in inc.relevance_reason
+    base = dict(source_id="s", url="https://x", published_at="2025-08-07", collected_at="2020-12-20T00:00:00", incident_type="hack_exploit", project="Lubian")
+    lb = Incident(uid="a", source="rekt", title="The One That Got Away", amount_usd=14_847_374_246.0, tags=["rekt_leaderboard"], **base)
+    dl = Incident(uid="b", source="defillama", title="LuBian", amount_usd=3_500_000_000.0, **base)
+    assert consensus_amount([lb, dl])[0] == 3_500_000_000.0   # 리더보드 재평가 금액이 아니라 사건 당시 금액

@@ -229,6 +229,10 @@ def backfill_stamp(inc: Incident, item: RawItem) -> Incident:
     if (item.structured or {}).get("incident_type"):
         inc.relevant = True
         inc.relevance_reason = inc.relevance_reason or "backfill: 구조화 소스(확정 사고 목록)"
+    elif not inc.enriched:
+        # 구조화 정보가 없는 기사를 LLM 없이 규칙으로만 카드화하면 제목·정규식 금액이 그대로 올라간다(예: 시가총액 $5B) → 제외
+        inc.relevant = False
+        inc.relevance_reason = "backfill: 구조화 정보 없는 기사(LLM 미실행)"
     return inc
 
 

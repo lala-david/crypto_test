@@ -19,9 +19,9 @@ from typing import Dict, List, Optional, Tuple
 
 from .http import Http
 from .llm import LLMProvider
-from .enrich import is_stale_reference
+from .enrich import clean_text, is_stale_reference
 from .models import INCIDENT_TYPES, Incident
-from .prompts import AUDIT_SYSTEM, RELABEL_SYSTEM, REVIEW_SYSTEM
+from .prompts import AUDIT_SYSTEM, RELABEL_SYSTEM, REVIEW_SYSTEM, SUMMARY_SYSTEM
 from .store import Store
 from .textextract import html_to_text
 
@@ -397,6 +397,75 @@ def _save_retry(store: Store, inc: Incident) -> None:
         except sqlite3.OperationalError:
             time.sleep(1)
     store.save_incident(inc)
+
+
+SUMMARY_SCHEMA = {
+    "type": "object",
+    "properties": {"summary_ko": {"type": "string"}, "attack_method_ko": {"type": "string"}},
+    "required": ["summary_ko", "attack_method_ko"],
+    "additionalProperties": False,
+}
+_HANGUL = re.compile(r"[가-힣]")
+
+
+def needs_korean_summary(inc: Incident) -> bool:
+    """한국어 요약이 없거나 너무 짧거나, 한글 비중이 낮아 사실상 영문 소스 요약인 카드가 대상.
+    예: 'DeFiLlama: X (BSC) — Oracle Manipulation, 손실 $1,000' 은 한글 2자뿐이라 다시 쓴다."""
+    ko = (inc.summary_ko or "").strip()
+    if len(ko) < 25:
+        return True
+    body = re.sub(r"\s+", "", ko)
+    return (len(_HANGUL.findall(body)) / max(1, len(body))) < 0.2
+
+
+def _summary_card(inc: Incident) -> str:
+    card = {"project": inc.project or inc.title, "incident_date": inc.incident_date, "incident_type": inc.incident_type,
+            "chains": inc.chains, "amount_usd": inc.amount_usd, "amount_text": inc.amount_text,
+            "attack_method": (inc.attack_method_en or inc.attack_method_ko or "")[:200],
+            "source": inc.source, "title": inc.title[:160], "summary_en": (inc.summary_en or inc.summary_ko or "")[:600]}
+    return "## 카드\n" + json.dumps(card, ensure_ascii=False)
+
+
+def run_summarize(store: Store, provider: LLMProvider, data_dir: str, limit: int = 0, max_tokens: int = 1200,
+                  workers: int = 3, force: bool = False) -> dict:
+    """한국어 요약이 없는 카드(주로 백필)에 summary_ko/attack_method_ko 를 채운다. 이미 한국어가 있으면 건너뛰므로 여러 번 돌려도 안전하다."""
+    from concurrent.futures import ThreadPoolExecutor
+    from .store import incident_from_dict
+    cards = [incident_from_dict(json.loads(r[0])) for r in
+             store.conn.execute("SELECT json FROM incidents WHERE relevant=1 ORDER BY incident_date DESC").fetchall()]
+    todo = [c for c in cards if force or needs_korean_summary(c)]
+    if limit:
+        todo = todo[:limit]
+    summary = {"candidates": len(todo), "done": 0, "errors": 0, "skipped": 0, "days": set()}
+
+    def ask(inc: Incident):
+        try:
+            return inc, provider.complete_json(SUMMARY_SYSTEM, _summary_card(inc), SUMMARY_SCHEMA, max_tokens)
+        except Exception as e:
+            log.error("summarize LLM 실패 %s: %s", inc.uid, str(e)[:160])
+            return inc, None
+
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as ex:
+        for k, (inc, out) in enumerate(ex.map(ask, todo), 1):
+            if not out or not (out.get("summary_ko") or "").strip():
+                summary["errors" if out is None else "skipped"] += 1
+                continue
+            ko = clean_text(out["summary_ko"]).strip()
+            if not _HANGUL.search(ko):
+                summary["skipped"] += 1
+                continue
+            inc.summary_ko = ko
+            am = clean_text(out.get("attack_method_ko") or "").strip()
+            if am and not (inc.attack_method_ko or "").strip():
+                inc.attack_method_ko = am
+            inc.enrich_note = (inc.enrich_note + " · " if inc.enrich_note else "") + "summary_ko(LLM)"
+            _save_retry(store, inc)
+            summary["done"] += 1
+            summary["days"].add((inc.collected_at or "")[:10])
+            if k % 50 == 0:
+                log.info("한국어 요약 %d/%d (성공 %d · 실패 %d)", k, len(todo), summary["done"], summary["errors"])
+    summary["days"] = sorted(summary["days"])
+    return summary
 
 
 def run_review(store: Store, http: Http, provider: LLMProvider, data_dir: str, limit: int = 0, max_tokens: int = 8000,

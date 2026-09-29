@@ -225,6 +225,10 @@ def consensus_amount(members: List[Incident], tol: float = 0.05) -> Optional[tup
         else:
             clusters.append([m])
     def prio(x: Incident) -> int:  # 출처 우선순위(높을수록 신뢰): rekt·chainalysis·trm·… > rss
+        # Rekt 리더보드 금액은 현재 시세로 재평가된 값이 섞여 있다(LuBian 2020년 $3.5B → 리더보드 $14.8B).
+        # 다른 출처가 사건 당시 금액을 주면 그쪽을 따른다.
+        if "rekt_leaderboard" in (x.tags or []):
+            return -99
         return -(SOURCE_PRIORITY.index(x.source) if x.source in SOURCE_PRIORITY else len(SOURCE_PRIORITY) + (0 if x.source.startswith("rss:") else 1) + 1)
     def latest(c):
         return max((x.published_at or "") for x in c)

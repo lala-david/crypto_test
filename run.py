@@ -78,6 +78,9 @@ def main() -> int:
     ap.add_argument("--audit", action="store_true", help="최근 30일 사건 목록을 로컬 LLM 이 교차 검토(중복·금액·유형·날짜·이름) → data/audits/")
     ap.add_argument("--addrcheck", action="store_true", help="모든 카드의 지갑 주소를 온체인으로 검증·분류(EOA/CA·토큰·풀, 활동 체인) 후 카드 교정 + 보고서")
     ap.add_argument("--addrcheck-force", action="store_true", help="--addrcheck 에서 캐시된 결과도 다시 조회")
+    ap.add_argument("--summarize", action="store_true", help="한국어 요약이 없는 카드(백필 등)에 LLM 으로 summary_ko 를 채운다. 여러 번 돌려도 안전(이미 있으면 건너뜀)")
+    ap.add_argument("--summarize-force", action="store_true", help="--summarize 에서 이미 한국어 요약이 있는 카드도 다시 쓴다")
+    ap.add_argument("--pages", type=int, default=0, help="이번 실행에서 소스의 페이지·글 수 상한을 올린다(slowmist max_pages, rekt max_articles 등)")
     ap.add_argument("--backfill", action="store_true", help="과거 사건 백필: --sources 와 --since 로 구조화 소스를 LLM 없이 수집해 카드만 저장(수집일=사건일). 판정·주소검증·브리핑·리포트·알림·푸시 생략")
     args = ap.parse_args()
     if args.backfill:
@@ -124,6 +127,18 @@ def main() -> int:
         print(json.dumps(summ, ensure_ascii=False))
         return 0
 
+    if args.summarize or args.summarize_force:
+        from collector.relabel import run_summarize
+        llm_cfg0 = dict(cfg.get("llm", {}))
+        prov = build_provider(llm_cfg0, args.provider)
+        log.info("=== 한국어 요약 시작 (LLM: %s) ===", prov.describe())
+        summ = run_summarize(store, prov, data_dir, limit=args.limit, max_tokens=min(1500, int(llm_cfg0.get("max_tokens", 8000))),
+                             workers=max(1, int(llm_cfg0.get("workers", 2)) + 1), force=args.summarize_force)
+        log.info("한국어 요약 결과: %s", json.dumps({k: v for k, v in summ.items() if k != "days"}, ensure_ascii=False))
+        store.export_jsonl(); store.export_state()
+        print(json.dumps({k: v for k, v in summ.items() if k != "days"}, ensure_ascii=False))
+        return 0
+
     if args.review or args.review_all:
         from collector.relabel import run_review
         llm_cfg0 = dict(cfg.get("llm", {}))
@@ -155,6 +170,12 @@ def main() -> int:
     sched = cfg.get("schedule") or {}
     intervals: Dict[str, float] = sched.get("intervals") or {}
     default_iv = float(sched.get("default_interval_hours", 6))
+    if args.pages:
+        for name, sc in (cfg.get("sources") or {}).items():
+            if isinstance(sc, dict):
+                for k in ("max_pages", "max_articles"):
+                    if k in sc:
+                        sc[k] = args.pages
     sources = build_sources(cfg)
     if args.rebuild_day:
         sources = []
