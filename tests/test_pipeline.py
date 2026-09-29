@@ -374,8 +374,8 @@ def test_needs_korean_summary_and_prompt():
     assert needs_korean_summary(Incident(**base, summary_ko="DeFiLlama: X (BSC) — Oracle Manipulation, 손실 $1,000"))  # 영문 요약은 대상
     assert needs_korean_summary(Incident(**base, summary_ko=""))
     assert not needs_korean_summary(Incident(**base, summary_ko="2023년 1월 2일 BSC의 X에서 가격 오라클 조작으로 $1,000이 탈취됐다."))
-    card = _summary_card(Incident(**base, project="X", incident_type="hack_exploit", chains=["BSC"], amount_usd=1000.0))
-    assert '"project": "X"' in card and '"chains": ["BSC"]' in card
+    card = _summary_card(Incident(**base, project="X", incident_type="hack_exploit", chains=["BSC", "Ethereum"], amount_usd=1828589.378))
+    assert '"project": "X"' in card and '"chains_display": "BSC·Ethereum"' in card and '"amount_display": "$1,828,589"' in card
     assert set(SUMMARY_SCHEMA["required"]) == {"summary_ko", "attack_method_ko"} and "카드에 있는 사실만" in SUMMARY_SYSTEM
 
 
@@ -392,3 +392,12 @@ def test_backfill_drops_unstructured_article_and_leaderboard_amount_yields():
     lb = Incident(uid="a", source="rekt", title="The One That Got Away", amount_usd=14_847_374_246.0, tags=["rekt_leaderboard"], **base)
     dl = Incident(uid="b", source="defillama", title="LuBian", amount_usd=3_500_000_000.0, **base)
     assert consensus_amount([lb, dl])[0] == 3_500_000_000.0   # 리더보드 재평가 금액이 아니라 사건 당시 금액
+
+
+def test_method_ko_glossary():
+    from collector.relabel import method_ko
+    assert method_ko("Oracle Manipulation — Spot Price Manipulation") == "현물 가격 조작·가격 오라클 조작"
+    assert method_ko("Access Control — Improper Access Control") == "접근 제어 미흡"
+    assert method_ko("Key Compromise — Hot Wallet Key Compromised") == "핫월렛 키 유출·개인키 탈취"
+    assert method_ko("Reentrancy") == "재진입" and method_ko("Rug Pull") == "러그풀"
+    assert method_ko("Unknown") == "" and method_ko("") == ""

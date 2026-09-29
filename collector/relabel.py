@@ -418,10 +418,50 @@ def needs_korean_summary(inc: Incident) -> bool:
     return (len(_HANGUL.findall(body)) / max(1, len(body))) < 0.2
 
 
+# 소스가 주는 영문 수법 표기(812종)를 한국어 명사구로 옮기는 사전. 부분 일치, 앞의 규칙이 우선.
+METHOD_KO = [
+    ("spot price manipulation", "현물 가격 조작"), ("price oracle", "가격 오라클 조작"), ("oracle manipulation", "가격 오라클 조작"), ("oracle", "오라클 조작"),
+    ("price manipulation", "시세 조작"), ("arbitrary external call", "임의 외부 호출"), ("arbitrary call", "임의 외부 호출"),
+    ("improper access control", "접근 제어 미흡"), ("access control", "접근 제어 미흡"), ("permission", "권한 설정 오류"),
+    ("reentrancy", "재진입"), ("flash loan", "플래시론 공격"), ("flashloan", "플래시론 공격"),
+    ("swap logic", "스왑 로직 결함"), ("reward logic", "리워드 로직 결함"), ("bridge logic", "브리지 로직 결함"), ("bridge", "브리지 취약점"),
+    ("business logic", "비즈니스 로직 결함"), ("protocol logic", "프로토콜 로직 결함"), ("logic flaw", "로직 결함"), ("logic error", "로직 오류"),
+    ("input validation", "입력값 검증 미흡"), ("missing validation", "검증 누락"), ("unchecked", "반환값 미검증"), ("uninitialized", "초기화 누락"),
+    ("share accounting", "지분 회계 오류"), ("arithmetic", "산술 오류"), ("overflow", "정수 오버플로"), ("rounding", "반올림 오차 악용"),
+    ("infinite mint", "무한 발행"), ("mint", "발행 로직 악용"), ("first depositor", "첫 예치자 공격"), ("donation", "기부 공격"),
+    ("hot wallet", "핫월렛 키 유출"), ("private key", "개인키 유출"), ("key compromise", "개인키 탈취"), ("seed phrase", "시드구문 유출"),
+    ("account compromise", "계정 탈취"), ("account takeover", "계정 탈취"), ("insider", "내부자 소행"), ("supply chain", "공급망 침해"),
+    ("rug pull", "러그풀"), ("rugpull", "러그풀"), ("exit scam", "먹튀"), ("honeypot", "허니팟"),
+    ("impersonation", "사칭"), ("phishing", "피싱"), ("social engineering", "사회공학"), ("drainer", "드레이너"), ("scam", "사기"), ("fraud", "사기"),
+    ("smart contract vulnerability", "스마트컨트랙트 취약점"), ("contract vulnerability", "컨트랙트 취약점"), ("vulnerability", "취약점"),
+    ("misconfiguration", "설정 오류"), ("configuration", "설정 오류"), ("signature verification", "서명 검증 미흡"), ("signature", "서명 검증 미흡"),
+    ("front-end", "프런트엔드 탈취"), ("frontend", "프런트엔드 탈취"), ("dns", "DNS 탈취"), ("governance", "거버넌스 공격"), ("vote", "투표 조작"),
+    ("liquidation", "청산 로직 악용"), ("collateral", "담보 평가 오류"), ("slippage", "슬리피지 악용"), ("sandwich", "MEV 샌드위치"), ("mev", "MEV 악용"),
+    ("ransom", "랜섬"), ("sanction", "제재"), ("information leakage", "정보 유출"), ("leak", "정보 유출"), ("delegatecall", "델리게이트콜 악용"),
+    ("cross-chain", "크로스체인 취약점"), ("proxy", "프록시 취약점"), ("upgrade", "업그레이드 취약점"), ("malicious", "악성 코드"),
+]
+
+
+def method_ko(text: str) -> str:
+    """영문 수법 표기를 한국어 명사구로. 두 요소까지 '·' 로 잇는다. 매칭 없으면 빈 문자열."""
+    t = (text or "").lower()
+    if not t or t.strip() in ("unknown", "n/a", "-"):
+        return ""
+    out: List[str] = []
+    for key, ko in METHOD_KO:
+        if key in t and ko not in out:
+            out.append(ko)
+            if len(out) == 2:
+                break
+    return "·".join(out)
+
+
 def _summary_card(inc: Incident) -> str:
+    amt = f"${inc.amount_usd:,.0f}" if inc.amount_usd else ""
     card = {"project": inc.project or inc.title, "incident_date": inc.incident_date, "incident_type": inc.incident_type,
-            "chains": inc.chains, "amount_usd": inc.amount_usd, "amount_text": inc.amount_text,
-            "attack_method": (inc.attack_method_en or inc.attack_method_ko or "")[:200],
+            "chains_display": "·".join(inc.chains[:4]), "amount_display": amt, "amount_text": inc.amount_text,
+            "attack_method_ko": method_ko(inc.attack_method_en or inc.attack_method_ko or ""),
+            "attack_method_en": (inc.attack_method_en or "")[:120],
             "source": inc.source, "title": inc.title[:160], "summary_en": (inc.summary_en or inc.summary_ko or "")[:600]}
     return "## 카드\n" + json.dumps(card, ensure_ascii=False)
 
@@ -455,8 +495,8 @@ def run_summarize(store: Store, provider: LLMProvider, data_dir: str, limit: int
                 summary["skipped"] += 1
                 continue
             inc.summary_ko = ko
-            am = clean_text(out.get("attack_method_ko") or "").strip()
-            if am and not (inc.attack_method_ko or "").strip():
+            am = method_ko(inc.attack_method_en or inc.attack_method_ko or "") or clean_text(out.get("attack_method_ko") or "").strip()
+            if am and len(am) <= 40 and _HANGUL.search(am) and not _HANGUL.search(inc.attack_method_ko or ""):
                 inc.attack_method_ko = am
             inc.enrich_note = (inc.enrich_note + " · " if inc.enrich_note else "") + "summary_ko(LLM)"
             _save_retry(store, inc)

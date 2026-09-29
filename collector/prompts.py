@@ -336,8 +336,21 @@ SUMMARY_SYSTEM = """당신은 가상자산 사건 원장의 한국어 편집자�
 3. 추측 표현("~로 보인다", "~일 가능성") 금지. 카드의 수법(attack_method)이 비어 있으면 수법을 설명하지 않습니다.
 4. 고유명사(프로젝트·체인·토큰)는 원문 표기를 유지합니다.
 
+5. 금액은 카드의 amount_display 문자열을 **그대로** 씁니다(예: "$1,828,589"). 숫자를 다시 쓰거나 소수점·자릿수를 바꾸지 않습니다. amount_display 가 없으면 금액을 쓰지 않습니다.
+6. 카드의 attack_method_ko 가 있으면 문장에 **그대로** 씁니다. 비어 있으면 attack_method_en 을 아래 용어표로 한국어로 옮겨 씁니다. 영문 수법 문구를 문장에 그대로 끼워 넣지 않습니다.
+
+## 예시
+카드: {"project": "Payy Network", "incident_date": "2026-09-24", "chains_display": "Ethereum", "amount_display": "$1,828,589", "attack_method_ko": "브리지 로직 결함", "attack_method_en": "Bridge & Cross-Chain — Bridge Logic Flaw"}
+출력: {"summary_ko": "2026년 9월 24일 Ethereum의 Payy Network에서 브리지 로직 결함으로 $1,828,589가 탈취됐다.", "attack_method_ko": "브리지 로직 결함"}
+
+## 수법 용어(영문 → 한국어)
+Oracle/Price Manipulation=가격 오라클 조작 · Access Control=접근 제어 미흡 · Token Approval Abuse=토큰 승인 남용 · Reentrancy=재진입 · Flash Loan=플래시론 공격 · Bridge Logic Flaw=브리지 로직 결함 ·
+Key Compromise=개인키 탈취 · Hot Wallet=핫월렛 키 유출 · Rug Pull=러그풀 · Phishing=피싱 · Social Engineering=사회공학 · Impersonation=사칭 · Infinite Mint=무한 발행 · Business Logic Flaw=비즈니스 로직 결함 ·
+Misconfiguration=설정 오류 · Signature Verification=서명 검증 미흡 · Front-end/DNS Hijack=프런트엔드 탈취 · Governance Attack=거버넌스 공격 · Arbitrary Call=임의 호출 · Integer Overflow=정수 오버플로 ·
+Slippage=슬리피지 악용 · Sandwich/MEV=MEV 샌드위치 · Exit Scam=먹튀 · Supply Chain=공급망 침해 · Insider=내부자 소행
+
 ## 출력
-- summary_ko: 1~2문장. "YYYY년 M월 D일 <체인>의 <프로젝트>에서 <수법>으로 $금액이 탈취됐다." 형태를 기본으로, 카드에 있는 요소만 채웁니다. 80~160자.
-- attack_method_ko: 수법을 한국어 명사구로 짧게(예: "가격 오라클 조작", "접근 제어 미흡", "재진입"). 카드에 수법이 없으면 빈 문자열.
+- summary_ko: 1~2문장. "YYYY년 M월 D일 <체인>의 <프로젝트>에서 <한국어 수법>으로 <amount_display>가 탈취됐다." 형태를 기본으로, 카드에 있는 요소만 채웁니다. 60~140자. 체인이 여러 개면 카드의 chains_display 를 그대로 씁니다.
+- attack_method_ko: 수법을 한국어 명사구로 짧게(예: "가격 오라클 조작", "접근 제어 미흡", "재진입"). 영문을 그대로 두지 않습니다. 카드에 수법이 없으면 빈 문자열.
 
 JSON 객체 하나만(설명·코드펜스 금지). 키: summary_ko, attack_method_ko."""
