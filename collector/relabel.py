@@ -372,10 +372,10 @@ REVIEW_SCHEMA = {
     "type": "object",
     "properties": {
         "is_new_incident": {"type": "boolean"}, "category": {"type": "string", "enum": REVIEW_CATEGORIES},
-        "crypto_involved": {"type": "boolean"}, "amount_is_loss": {"type": "boolean"},
+        "crypto_involved": {"type": "boolean"}, "crypto_is_core": {"type": "boolean"}, "amount_is_loss": {"type": "boolean"},
         "confidence": {"type": "number"}, "evidence": {"type": "string"}, "reason": {"type": "string"},
     },
-    "required": ["is_new_incident", "category", "crypto_involved", "amount_is_loss", "confidence", "evidence", "reason"],
+    "required": ["is_new_incident", "category", "crypto_involved", "crypto_is_core", "amount_is_loss", "confidence", "evidence", "reason"],
     "additionalProperties": False,
 }
 
@@ -446,6 +446,9 @@ def run_review(store: Store, http: Http, provider: LLMProvider, data_dir: str, l
                 out = dict(out, is_new_incident=False, category="retrospective", confidence=max(conf, 0.9), reason="규칙: 사건일이 게시일보다 1년 이상 이전 · " + (out.get("reason") or ""))
             elif out.get("crypto_involved") is False or (cat in ("new_enforcement", "sanctions", "laundering_report") and not CRYPTO_WORDS.search(blob)):
                 out = dict(out, is_new_incident=False, category="general_crime_no_crypto", confidence=max(conf, 0.9), reason="규칙: 가상자산이 사건의 수단·대상이 아님 · " + (out.get("reason") or ""))
+            elif cat in ("new_enforcement", "sanctions") and out.get("crypto_is_core") is False:
+                # (4) 법집행·제재인데 가상자산이 범죄의 핵심이 아니면(횡령금 현금화 경로·배경 언급) 원장 대상이 아니다 — 사용자 지시 "해킹사건만"
+                out = dict(out, is_new_incident=False, category="crypto_incidental", confidence=max(conf, 0.9), reason="규칙: 가상자산이 범죄의 핵심이 아님(현금화 경로·배경) · " + (out.get("reason") or ""))
             cat = out.get("category", "other")
             conf = float(out.get("confidence") or 0)
             summary["categories"][cat] = summary["categories"].get(cat, 0) + 1
