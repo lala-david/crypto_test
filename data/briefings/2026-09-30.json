@@ -1,14 +1,14 @@
 {
- "headline_ko": "9월 30일 브리핑 · 신규 1건 · 피해 $2.1M",
- "headline_en": "Sep 30 briefing · 1 new · loss $2.1M",
- "briefing_ko": "- **[Fake GIWA Bridge](https://defillama.com/hacks)** · Ethereum · 피싱 · **$2.1M** · 9.27 — 소셜 엔지니어링으로 가짜 GIWA 브리지를 사칭해 사용자를 속여 자금을 탈취\n- **시사점** — 가짜 브리지 사칭 피싱이 여전히 주요 탈취 수법.",
- "briefing_en": "- **[Fake GIWA Bridge](https://defillama.com/hacks)** · Ethereum · Phishing · **$2.1M** · Sep 27 — Impersonated the Fake GIWA Bridge to trick users and steal…\n- **Takeaway** — Impersonation of bridge services remains a common phishing vector for fund theft.",
+ "headline_ko": "9월 30일 브리핑 · 신규 2건 · 피해 $17.1M · 후속 1건",
+ "headline_en": "Sep 30 briefing · 2 new · loss $17.1M · 1 follow-ups",
+ "briefing_ko": "- **[Cryptoaiml Ltd., Cryptoaiml Capital Foundation, TSAI Pro Ltd., TSAI Capital Foundation](https://www.tokenpost.kr/news/policy/415970)** · 체인 미상 · 사기 · **$15M** · 9.29 — 투자 전문가와 AI 신호를 사칭해 이상 편취, SEC가 소송 제기\n- **[Fake GIWA Bridge](https://defillama.com/hacks)** · Ethereum · 피싱 · **$2.1M** · 9.27 — 가짜 GIWA Bridge를 사칭한 피싱 사기로 손실 발생\n- **후속 1건** — [Bitget](https://www.tokenpost.kr/news/cryptocurrency/416017) (첫 보도 9.28)\n- **시사점** — 투자·AI·가짜 브리지 등 사칭 사회공학 사기가 다양한 플랫폼에서 연이어 발생하고 있다 계속.",
+ "briefing_en": "- **[Cryptoaiml Ltd., Cryptoaiml Capital Foundation, TSAI Pro Ltd., TSAI Capital Foundation](https://www.tokenpost.kr/news/policy/415970)** · chain n/a · Scam · **$15M** · Sep 29 — They impersonated investment experts with AI signals, stole…\n- **[Fake GIWA Bridge](https://defillama.com/hacks)** · Ethereum · Phishing · **$2.1M** · Sep 27 — Impersonation phishing of a fake GIWA Bridge caused a…\n- **Follow-ups (1)** — [Bitget](https://www.tokenpost.kr/news/cryptocurrency/416017) (first 9.28)\n- **Takeaway** — Impersonation-based social engineering scams repeatedly target investors on various platforms, causing multi-million losses.",
  "counts": {
-  "new": 1,
-  "followups": 0,
-  "major": 1,
+  "new": 2,
+  "followups": 1,
+  "major": 2,
   "minor": 0,
-  "loss_usd": 2080000,
+  "loss_usd": 17080000.0,
   "legal_usd": 0
  },
  "format": "structured-v2"
