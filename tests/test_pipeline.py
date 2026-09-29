@@ -401,3 +401,17 @@ def test_method_ko_glossary():
     assert method_ko("Key Compromise — Hot Wallet Key Compromised") == "핫월렛 키 유출·개인키 탈취"
     assert method_ko("Reentrancy") == "재진입" and method_ko("Rug Pull") == "러그풀"
     assert method_ko("Unknown") == "" and method_ko("") == ""
+
+
+def test_leaderboard_date_window_merges_same_project():
+    from collector.merge import same_incident
+    from collector.models import Incident
+    base = dict(source_id="s", url="https://x", incident_type="hack_exploit", collected_at="2020-12-20T00:00:00")
+    lb = Incident(uid="a", source="rekt", title="The One That Got Away", project="Lubian", incident_date="2020-12-20",
+                  published_at="2025-08-07", amount_usd=14_847_374_246.0, tags=["rekt_leaderboard"], **base)
+    dl = Incident(uid="b", source="defillama", title="LuBian", project="LuBian", incident_date="2020-12-28",
+                  published_at="2020-12-28", amount_usd=3_500_000_000.0, **base)
+    assert same_incident(lb, dl)          # 이름이 같고 사건일이 8일 차이 → 같은 사건
+    far = Incident(uid="c", source="defillama", title="LuBian", project="LuBian", incident_date="2021-03-01",
+                   published_at="2021-03-01", amount_usd=1.0, **base)
+    assert not same_incident(lb, far)     # 70일 차이는 다른 사건

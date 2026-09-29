@@ -21,14 +21,31 @@ const staticUrl = (name) => new URL(`./data/${name}.json`, document.baseURI).toS
 
 async function loadSnapshot() {
   if (snapshot) return snapshot;
-  const [incidents, briefings, meta] = await Promise.all([
-    fetch(staticUrl("incidents")).then(jsonOf),
+  // all.json = 전체 기간 slim(목록·통계), addresses.json = 전체 주소. 없으면 최근 90일 incidents.json 으로 떨어진다.
+  const [all, addrs, briefings, meta] = await Promise.all([
+    fetch(staticUrl("all")).then(jsonOf).catch(() => fetch(staticUrl("incidents")).then(jsonOf)),
+    fetch(staticUrl("addresses")).then(jsonOf).catch(() => []),
     fetch(staticUrl("briefings")).then(jsonOf).catch(() => []),
     fetch(staticUrl("meta")).then(jsonOf).catch(() => ({})),
   ]);
-  const rows = Array.isArray(incidents) ? incidents : incidents.items || [];
-  snapshot = { rows, collapsed: collapseFollowups(rows), briefings, meta };
+  const rows = (Array.isArray(all) ? all : all.items || []).map((r) => ({ ...r, addresses: [], sources: [] }));
+  const byUid = new Map(rows.map((r) => [r.uid, r]));
+  (addrs || []).forEach((a) => byUid.get(a.uid)?.addresses.push(a));
+  snapshot = { rows, collapsed: collapseFollowups(rows), briefings, meta, byUid };
   return snapshot;
+}
+
+/** 상세는 월별 아카이브(archive/YYYY-MM.json)에서 필요할 때만 읽는다. */
+const archiveCache = new Map();
+async function loadArchive(month) {
+  if (!archiveCache.has(month))
+    archiveCache.set(
+      month,
+      fetch(new URL(`./data/archive/${month}.json`, document.baseURI).toString())
+        .then(jsonOf)
+        .catch(() => []),
+    );
+  return archiveCache.get(month);
 }
 
 export async function detectMode() {
@@ -79,7 +96,8 @@ export async function api(path, params) {
     const uid = decodeURIComponent(path.split("/").pop());
     const hit = snap.collapsed.find((r) => r.uid === uid) || snap.rows.find((r) => r.uid === uid);
     if (!hit) throw new Error("not found");
-    return { ...hit, related: [] };
+    const full = (await loadArchive(hit.month || String(hit.day).slice(0, 7))).find((r) => r.uid === uid);
+    return { ...hit, ...(full || {}), addresses: full?.addresses || hit.addresses || [], related: [] };
   }
   if (path === "/api/stats") return statsOf(filterRows(snap.collapsed, p), p);
   if (path === "/api/addresses") return listAddresses(filterRows(snap.collapsed, p), p);

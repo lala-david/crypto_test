@@ -132,7 +132,7 @@ def main() -> int:
         llm_cfg0 = dict(cfg.get("llm", {}))
         prov = build_provider(llm_cfg0, args.provider)
         log.info("=== 한국어 요약 시작 (LLM: %s) ===", prov.describe())
-        summ = run_summarize(store, prov, data_dir, limit=args.limit, max_tokens=min(1500, int(llm_cfg0.get("max_tokens", 8000))),
+        summ = run_summarize(store, prov, data_dir, limit=args.limit, max_tokens=min(2500, int(llm_cfg0.get("max_tokens", 8000))),
                              workers=max(1, int(llm_cfg0.get("workers", 2)) + 1), force=args.summarize_force)
         log.info("한국어 요약 결과: %s", json.dumps({k: v for k, v in summ.items() if k != "days"}, ensure_ascii=False))
         store.export_jsonl(); store.export_state()

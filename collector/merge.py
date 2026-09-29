@@ -80,11 +80,19 @@ def _days_apart(a: Optional[str], b: Optional[str]) -> Optional[int]:
     return abs((da - db).days) if da and db else None
 
 
+def _leaderboard(i: Incident) -> bool:
+    return "rekt_leaderboard" in (i.tags or [])
+
+
 def dates_compatible(a: Incident, b: Incident) -> bool:
     di = _days_apart(a.incident_date, b.incident_date)
     dp = _days_apart(a.published_at, b.published_at)
     if di is not None:
         if di <= 3:
+            return True
+        # Rekt 리더보드는 사건일이 기사 기준이라 다른 출처와 며칠씩 어긋난다(LuBian 12/20 ↔ DeFiLlama 12/28).
+        # 피해 대상 이름이 같은 카드끼리만 여기에 오므로 ±14일까지 같은 사건으로 본다.
+        if (_leaderboard(a) or _leaderboard(b)) and di <= 14:
             return True
         # 사건일이 서로 멀면 원칙적으로 다른 사건. 단 법집행/제재 카드는 모델이 '범행일'을 사건일로 잡는 경우가 있어
         # 게시일이 가까우면(또는 게시일을 몰라 비교가 불가하면) 같은 조치로 본다 (예: 기소 보도자료 vs 같은 날 뉴스)

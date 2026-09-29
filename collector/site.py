@@ -16,7 +16,7 @@ from collections import defaultdict
 from datetime import date, datetime, timedelta
 from typing import Dict, List, Optional
 
-from .merge import mark_followups, merge_incidents
+from .merge import consensus_amount, mark_followups, merge_incidents
 from .models import Incident
 
 
@@ -54,6 +54,20 @@ def export_site(store, docs_dir: str, recent_days: int = 90, judge=None, crimial
                 i.blacklist_hits = crimial.hits(i.addresses)
         merged_by_day[d] = merged
         history = history + merged
+
+    # 원 사건 + 후속 보도의 금액을 출처 합의로 정한다(service.refresh 와 같은 규칙) — 정적 스냅샷도 대시보드와 같은 값이 되게.
+    originals = {i.uid: i for lst in merged_by_day.values() for i in lst}
+    follows: Dict[str, List[Incident]] = defaultdict(list)
+    for lst in merged_by_day.values():
+        for i in lst:
+            uid = (i.followup_of or {}).get("uid")
+            if uid in originals:
+                follows[uid].append(i)
+    for uid, fl in follows.items():
+        o = originals[uid]
+        cons = consensus_amount([o] + fl)
+        if cons and cons[0] and cons[0] != o.amount_usd:
+            o.amount_usd, o.amount_text = cons[0], (cons[1] or o.amount_text)
 
     cutoff = (date.today() - timedelta(days=recent_days)).isoformat()
     recent, by_month = [], defaultdict(list)

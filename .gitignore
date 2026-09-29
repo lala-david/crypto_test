@@ -10,3 +10,7 @@ __pycache__/
 telegram_bot_token.txt
 teams_webhook.txt
 logs/
+
+# React 대시보드
+web/node_modules/
+web/dist/
