@@ -354,3 +354,6 @@ def test_defihacklabs_amount_and_chain_parsing():
     sol = '// Attack Tx : https://bscscan.com/tx/0xabc' + chr(10) + '    vm.createSelectFork("bsc", 30_000_000);'
     assert chains_from_sol(sol) == ["BSC"]
     assert chains_from_sol("// https://arbiscan.io/tx/0x1") == ["Arbitrum"] and chains_from_sol("nothing") == []
+    from collector.sources.defihacklabs import _SOL
+    assert _SOL.search("[X_exp.sol](../../src/test/2023-12/X_exp.sol)").group(1) == "src/test/2023-12/X_exp.sol"
+    assert _SOL.search("[Y_exp.sol](src/test/2026-09/Y_exp.sol)").group(1) == "src/test/2026-09/Y_exp.sol"

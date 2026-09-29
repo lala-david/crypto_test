@@ -14,7 +14,7 @@ WEB = "https://github.com/SunWeb3Sec/DeFiHackLabs/blob/main/"
 
 _ENTRY = re.compile(r"^### (\d{8}) (.+?) - (.+)$", re.M)
 _LOST = re.compile(r"^### Lost:\s*(.+)$", re.M)
-_SOL = re.compile(r"\]\((src/test/[^)]+\.sol)\)")
+_SOL = re.compile(r"\]\((?:\.\./)*(src/test/[^)]+\.sol)\)")   # 연도 아카이브는 ../../src/test/… 로 링크
 _ADDR = re.compile(r"0x[a-fA-F0-9]{40}")
 _TX = re.compile(r"0x[a-fA-F0-9]{64}")
 _FORK = re.compile(r'createSelectFork\(\s*"([A-Za-z0-9_-]+)"')
@@ -110,7 +110,7 @@ class DefiHackLabsSource(Source):
                         role = "attacker" if "attacker" in low or "exploiter" in low else ("victim" if "victim" in low or "vulnerable" in low else "unknown")
                         for a in _ADDR.findall(ln):
                             if len(a) == 42:
-                                addrs.append(Address(chain="ETH", address=a, role=role, note=re.sub(r"^//\s*", "", ln.split(":")[0]).strip()[:60]))
+                                addrs.append(Address(chain=(chains[0] if chains else "ETH"), address=a, role=role, note=re.sub(r"^//\s*", "", ln.split(":")[0]).strip()[:60]))
                         txs += [t.lower() for t in _TX.findall(ln)]
                 except Exception as e:
                     ctx.log.warning("defihacklabs PoC 로드 실패 %s: %s", sol_path, e)

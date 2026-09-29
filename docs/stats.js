@@ -2,7 +2,7 @@
 (() => {
   "use strict";
   const { $, $$, t, typeName, typeFull, roleName, esc, fmtInt, fmtPct, money, moneyFull, fmtDate, fmtMD, api, renderNav, renderFoot, applyI18n, bindChrome, rangeSeg, columns, typeColorHex, hbars, fillSelect, sw, chainName, errorBox } = KL;
-  const S = { days: "30", mode: "amount" };
+  const S = { days: new URLSearchParams(location.search).get("days") || "30", mode: "amount" };
   let meta = null, st = null;
 
   async function load() { st = await api("/api/stats", { days: S.days }); render(); }

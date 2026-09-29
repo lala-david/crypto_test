@@ -149,7 +149,7 @@ LLM 설정(`config.yaml > llm`): 기본 `ollama` (`http://192.168.150.225:11434`
 ```
 python run.py --backfill --sources defillama,defihacklabs --since 2020-01-01 --no-push
 ```
-- 구조화 소스(DeFiLlama hacks API 1,200여 건, DeFiHackLabs README + `past/<연도>/README.md` 740여 건)를 LLM 없이 카드로 저장합니다. 수집 시각을 **사건일**로 두어 '오늘 카드'에 섞이지 않고, 판정·주소 검증·브리핑·리포트·알림·푸시는 생략합니다. 이미 있는 항목(uid)은 건너뛰므로 다시 실행해도 안전합니다.
+- 구조화 소스(DeFiLlama hacks API 2020~ 1,199건, DeFiHackLabs README + `past/<연도>/README.md` 845건 — PoC .sol 에서 체인·공격자/피해 주소·공격 tx 를 함께 뽑음)를 LLM 없이 카드로 저장합니다. 2026-09-29 실행 결과 병합 후 약 1,630건, 피해액 약 $21B, 주소 약 3,000개. 수집 시각을 **사건일**로 두어 '오늘 카드'에 섞이지 않고, 판정·주소 검증·브리핑·리포트·알림·푸시는 생략합니다. 이미 있는 항목(uid)은 건너뛰므로 다시 실행해도 안전합니다.
 - 대시보드는 수집일(=사건일) 단위로 병합하고 후속 보도는 14일 창 안에서만 찾습니다(`service.FOLLOWUP_DAYS`). 통계 시계열은 기간이 60일을 넘으면 주별, 200일을 넘으면 월별로 묶습니다. 상단 카운터는 '전체 사건 수'입니다.
 - 백필 카드의 요약은 소스 필드(분류·수법·손실)로만 채워지며 한국어 요약은 없습니다. 상위 사건에 LLM 요약을 붙이려면 `python run.py --relabel-all --limit N` 류의 재처리를 별도로 돌립니다.
 
