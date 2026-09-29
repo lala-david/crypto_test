@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS runs (
   run_at TEXT, since TEXT, collected INTEGER, new_items INTEGER, enriched INTEGER, errors TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_inc_date ON incidents(incident_date);
+CREATE INDEX IF NOT EXISTS idx_inc_day ON incidents(substr(collected_at,1,10));
 CREATE INDEX IF NOT EXISTS idx_addr ON addresses(address);
 """
 

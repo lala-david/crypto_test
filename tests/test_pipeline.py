@@ -344,3 +344,13 @@ def test_backfill_stamp_sets_collected_day_and_relevance():
     assert inc2.relevant and inc2.collected_at.startswith("2022-03-01")   # 구조화 소스는 확정 사고
     assert year_archives(date(2020, 1, 1), date(2026, 9, 29)) == [2021, 2022, 2023, 2024, 2025]
     assert year_archives(date(2026, 9, 1), date(2026, 9, 29)) == []
+
+
+def test_defihacklabs_amount_and_chain_parsing():
+    from collector.sources.defihacklabs import _usd, chains_from_sol
+    assert _usd("~$56.9BNB") == 56.9            # 'B' of BNB is not billions
+    assert _usd("~$3.3M") == 3_300_000 and _usd("$120K") == 120_000 and _usd("~$4.4 Billion") == 4.4
+    assert _usd("1,000 BNB") is None
+    sol = '// Attack Tx : https://bscscan.com/tx/0xabc' + chr(10) + '    vm.createSelectFork("bsc", 30_000_000);'
+    assert chains_from_sol(sol) == ["BSC"]
+    assert chains_from_sol("// https://arbiscan.io/tx/0x1") == ["Arbitrum"] and chains_from_sol("nothing") == []

@@ -17,10 +17,34 @@ _LOST = re.compile(r"^### Lost:\s*(.+)$", re.M)
 _SOL = re.compile(r"\]\((src/test/[^)]+\.sol)\)")
 _ADDR = re.compile(r"0x[a-fA-F0-9]{40}")
 _TX = re.compile(r"0x[a-fA-F0-9]{64}")
+_FORK = re.compile(r'createSelectFork\(\s*"([A-Za-z0-9_-]+)"')
+_FORK_CHAIN = {"mainnet": "Ethereum", "eth": "Ethereum", "ethereum": "Ethereum", "bsc": "BSC", "bnb": "BSC", "arbitrum": "Arbitrum", "polygon": "Polygon", "matic": "Polygon", "base": "Base",
+               "optimism": "Optimism", "avalanche": "Avalanche", "avax": "Avalanche", "fantom": "Fantom", "gnosis": "Gnosis", "blast": "Blast", "linea": "Linea", "scroll": "Scroll", "mantle": "Mantle",
+               "zksync": "zkSync", "celo": "Celo", "moonriver": "Moonriver", "moonbeam": "Moonbeam", "cronos": "Cronos", "core": "Core", "opbnb": "opBNB", "sonic": "Sonic", "mode": "Mode", "sei": "Sei",
+               "berachain": "Berachain", "zora": "Zora", "manta": "Manta", "kava": "Kava", "metis": "Metis", "harmony": "Harmony", "aurora": "Aurora", "boba": "Boba", "fuse": "Fuse", "telos": "Telos",
+               "pulsechain": "PulseChain", "hyperevm": "HyperEVM", "unichain": "Unichain", "abstract": "Abstract", "ink": "Ink", "soneium": "Soneium", "worldchain": "World Chain", "ronin": "Ronin"}
+_EXPLORER_CHAIN = {"etherscan.io": "Ethereum", "bscscan.com": "BSC", "arbiscan.io": "Arbitrum", "polygonscan.com": "Polygon", "basescan.org": "Base", "optimistic.etherscan.io": "Optimism",
+                   "snowtrace.io": "Avalanche", "snowscan.xyz": "Avalanche", "ftmscan.com": "Fantom", "gnosisscan.io": "Gnosis", "blastscan.io": "Blast", "lineascan.build": "Linea", "scrollscan.com": "Scroll",
+                   "mantlescan.xyz": "Mantle", "cronoscan.com": "Cronos", "explorer.zksync.io": "zkSync", "celoscan.io": "Celo", "moonriver.moonscan.io": "Moonriver", "opbnbscan.com": "opBNB",
+                   "sonicscan.org": "Sonic", "seitrace.com": "Sei", "berascan.com": "Berachain", "kavascan.com": "Kava", "explorer.mantle.xyz": "Mantle", "hyperevmscan.io": "HyperEVM", "uniscan.xyz": "Unichain"}
+
+
+def chains_from_sol(sol: str) -> List[str]:
+    """PoC .sol 에서 체인 추정: createSelectFork("bsc") 또는 탐색기 도메인(bscscan.com …). 순서 유지, 중복 제거."""
+    out: List[str] = []
+    for m in _FORK.findall(sol or ""):
+        c = _FORK_CHAIN.get(m.lower())
+        if c and c not in out:
+            out.append(c)
+    if not out:
+        for dom, c in _EXPLORER_CHAIN.items():
+            if dom in (sol or "") and c not in out:
+                out.append(c)
+    return out
 
 
 def _usd(text: str):
-    m = re.search(r"\$\s*([\d,]+(?:\.\d+)?)\s*([KkMmBb])?", text or "")
+    m = re.search(r"\$\s*([\d,]+(?:\.\d+)?)\s*(?:([KkMmBb])(?![A-Za-z]))?", text or "")   # '$56.9BNB' 의 B 를 십억으로 읽지 않게
     if not m:
         return None
     v = float(m.group(1).replace(",", ""))
@@ -75,11 +99,12 @@ class DefiHackLabsSource(Source):
             lost_text = lost.group(1).strip() if lost else ""
             sol_m = _SOL.search(block)
             sol_path = sol_m.group(1) if sol_m else ""
-            header, addrs, txs = "", [], []
+            header, addrs, txs, chains = "", [], [], []
             if sol_path:
                 try:
                     sol = ctx.http.get_text(RAW + sol_path, cache_ttl_hours=24 * 7)
                     header = _header_comment(sol)
+                    chains = chains_from_sol(sol)
                     for ln in header.splitlines():
                         low = ln.lower()
                         role = "attacker" if "attacker" in low or "exploiter" in low else ("victim" if "victim" in low or "vulnerable" in low else "unknown")
@@ -89,7 +114,7 @@ class DefiHackLabsSource(Source):
                         txs += [t.lower() for t in _TX.findall(ln)]
                 except Exception as e:
                     ctx.log.warning("defihacklabs PoC 로드 실패 %s: %s", sol_path, e)
-            structured = {"name": name, "incident_date": day, "amount_text": lost_text, "amount_usd": _usd(lost_text),
+            structured = {"name": name, "incident_date": day, "amount_text": lost_text, "amount_usd": _usd(lost_text), "chains": chains,
                           "attack_method": tech, "incident_type": "hack_exploit",
                           "summary": f"DeFiHackLabs: {name} — {tech}. Lost: {lost_text}"}
             items.append(
