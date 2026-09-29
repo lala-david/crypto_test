@@ -217,6 +217,20 @@ def chains_from_text(text: str, kw_cfg: dict, limit: int = 3) -> List[str]:
     return out[:limit]
 
 
+PENDING_REASON = "LLM 미처리(공급자 실패) — 다음 실행에서 재시도"
+
+
+def finalize_unenriched(inc: Incident, item: RawItem, llm_expected: bool) -> bool:
+    """LLM 이 필요한 항목인데 LLM 이 실패해 규칙 기반으로만 만들어진 카드는 공개하지 않는다(relevant=False).
+    True 를 돌려주면 호출자가 항목을 pending_llm 으로 표시해 다음 실행에서 다시 처리한다. --no-llm 처럼 애초에 LLM 을 안 쓰는 실행은 해당 없음."""
+    if not llm_expected or not item.needs_llm or inc.enriched:
+        return False
+    inc.relevant = False
+    inc.relevance_reason = PENDING_REASON
+    inc.enrich_note = (inc.enrich_note + " · " if inc.enrich_note else "") + "pending_llm"
+    return True
+
+
 def build_incident(item: RawItem, out: Optional[EnrichOut], model: str, kw_cfg: dict, note: str = "",
                    ignore_addresses: Optional[Iterable[str]] = None) -> Incident:
     """LLM 결과(있으면) + 정규식 추출 + 소스 구조화 필드를 합쳐 Incident 생성."""
@@ -247,6 +261,10 @@ def build_incident(item: RawItem, out: Optional[EnrichOut], model: str, kw_cfg: 
         inc.relevant = out.relevant
         inc.relevance_reason = out.relevance_reason
         inc.incident_type = out.incident_type if out.incident_type in INCIDENT_TYPES else "other"
+        if inc.relevant and inc.incident_type == "other":
+            # 해킹·탈취·러그풀·피싱·사기·랜섬웨어·제재·수사 어느 유형에도 안 들어가면 '구체적 사건'이 아니다(일반 산업 뉴스·정책·제품 소식)
+            inc.relevant = False
+            inc.relevance_reason = ("유형 미분류(other): 구체적 가상자산 범죄 사건 아님 · " + (out.relevance_reason or ""))[:220]
         inc.project = out.project or s.get("name", "")
         inc.incident_date = out.incident_date or s.get("incident_date")
         inc.chains = out.chains or list(s.get("chains", []))

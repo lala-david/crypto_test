@@ -81,6 +81,10 @@ run.py  (매시간)
 - **사건 여부 판정** `python run.py --review`: 모든 카드에 대해 로컬 LLM 이 '원장에 올릴 새 사건인가'를 같은 기준(`prompts.REVIEW_SYSTEM`: new_attack / new_enforcement / sanctions / laundering_report 는 올림, exchange_self_report / court_procedure / retrospective / general_crime_no_crypto / market_or_opinion 은 제외)으로 판정합니다. 제외는 확신도 0.8 이상일 때만 적용하고, 금액이 피해액이 아니면(차단 실적·거래량) amount_usd 를 비웁니다. 기록은 `data/review_log.jsonl`. `--review-all` 은 사람·규칙이 제외한 카드만 다시 판정해 잘못 제외됐으면 복구합니다.
 - 하네스 안전장치: 원문이 없거나 사건을 다루지 않으면(JS 렌더링 목록 페이지 등) '관련 없음'·금액 삭제·유형 변경 같은 삭제성 판단은 받지 않고, $5B 이상이거나 '처리량·거래량' 성격의 금액은 피해액으로 받지 않습니다. 첫 실행(2026-09-18)에서 80장 중 25장 검증, 18장 수정(사건일 14, 금액 6, 체인 5), 하네스가 2건을 잘못 통과시켜 규칙을 보강했습니다.
 
+### LLM 이 죽었을 때 (pending_llm)
+- 매시간 실행에서 LLM 공급자가 실패하면(LAN Ollama 연결 불가 → OpenRouter 폴백 → 키 한도 403 등) LLM 이 필요한 항목은 **카드로 올리지 않습니다**. `relevant=False`, `enrich_note=pending_llm` 로 저장되고 `items.status='pending_llm'` 이라 다음 수집에서 신규로 다시 잡혀 재처리됩니다(`store.seen_uids` 가 pending 을 제외). `--no-llm` 처럼 애초에 LLM 을 쓰지 않는 실행만 규칙 기반 카드를 그대로 씁니다. 2026-09-29 09:48 실행이 이 경로를 타지 못해 제목 그대로의 '기타' 카드 12건이 올라간 사고가 계기입니다.
+- LLM 이 유형을 `other` 로 돌려준 카드는 구체적 가상자산 범죄 사건이 아니라고 보고 제외합니다(일반 산업 뉴스·정책·제품 소식). 유형 9종(해킹·개인키·러그풀·피싱·사기·랜섬웨어·제재·수사·세탁)만 원장에 남습니다.
+
 ### 무엇을 '신규 사건'으로 세나
 - 센다: 새 해킹·키 탈취·러그풀·피싱·사기·랜섬웨어 보도, 새 제재 지정, 새 기소·선고·압수·몰수, 자금세탁 분석 보고.
 - 세지 않는다(relevant=false): 거래소 자체 보안 보고(차단·동결 실적, 보험기금), 기존 사건의 공판 일정·보석 뉴스, 1년 이상 지난 사건의 회고 기사, 가상자산이 언급되지 않는 일반 범죄 보도자료(PPP 대출 사기 등). 프롬프트(`CARD_NOT_INCIDENT`)와 재검증 규칙(`stale_reference`, `relevance_suspect`) 양쪽에 있습니다.

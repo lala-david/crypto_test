@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from collector.addresses import extract_addresses, extract_tx_hashes, merge_addresses  # noqa: E402
-from collector.enrich import JSON_SCHEMA, AddressOut, EnrichOut, build_incident, guess_amount_usd  # noqa: E402
+from collector.enrich import JSON_SCHEMA, PENDING_REASON, AddressOut, EnrichOut, build_incident, finalize_unenriched, guess_amount_usd  # noqa: E402
 from collector.keywords import any_keyword, keyword_hit  # noqa: E402
 from collector.llm import parse_json_text  # noqa: E402
 from collector.models import Address, RawItem  # noqa: E402
@@ -278,3 +278,29 @@ def test_consensus_amount_prefers_majority_then_latest():
     assert consensus_amount(tie)[0] == 100                             # 동수 → 출처 우선순위(slowmist > defillama)
     tie2 = [inc("a", "rss:x", 100, "2026-09-01", "$100"), inc("b", "rss:y", 200, "2026-09-02", "$200")]
     assert consensus_amount(tie2)[0] == 200                            # 우선순위도 같으면 늦은 보도
+
+
+def test_unenriched_card_is_held_back_when_llm_expected():
+    """LLM 을 쓰는 실행에서 호출이 실패한 항목은 relevant=False + pending 으로 보류(다음 실행 재시도). --no-llm 실행은 규칙 기반 그대로."""
+    item = RawItem(source="rss:tokenpost", source_id="u2", url="https://x/news", title="비텐서, TAO 보상 전환 구상 공개",
+                   published_at="2026-09-29", text="가상자산 hack 관련 단어가 들어간 일반 뉴스")
+    inc = build_incident(item, None, "", {"crypto": ["가상자산"], "crime": ["hack"]})
+    assert inc.relevant and not inc.enriched
+    assert finalize_unenriched(inc, item, llm_expected=True) is True
+    assert inc.relevant is False and inc.relevance_reason == PENDING_REASON and "pending_llm" in inc.enrich_note
+    inc2 = build_incident(item, None, "", {"crypto": ["가상자산"], "crime": ["hack"]})
+    assert finalize_unenriched(inc2, item, llm_expected=False) is False and inc2.relevant
+    structured = RawItem(source="defillama", source_id="d1", url="https://defillama.com/hacks/x", title="X", published_at="2026-09-29",
+                         text="", needs_llm=False, structured={"name": "X", "incident_type": "hack_exploit", "amount_usd": 100.0})
+    inc3 = build_incident(structured, None, "", {})
+    assert finalize_unenriched(inc3, structured, llm_expected=True) is False and inc3.relevant
+
+
+def test_other_type_is_not_an_incident():
+    item = RawItem(source="rss:tokenpost", source_id="u3", url="https://x/n", title="스트라이프, AI 다중 계정 악용 40% 증가", published_at="2026-09-29", text="...")
+    out = EnrichOut(relevant=True, incident_type="other", project="Stripe", incident_date=None, chains=[], amount_usd=None, amount_text="",
+                    attack_method_ko="", attack_method_en="", background_ko="", summary_ko="", summary_en="", fund_flow_ko="", actors=[], addresses=[], tx_hashes=[])
+    inc = build_incident(item, out, "ollama:test", {})
+    assert inc.enriched and inc.relevant is False and "other" in inc.relevance_reason
+    out2 = out.model_copy(update={"incident_type": "hack_exploit"})
+    assert build_incident(item, out2, "ollama:test", {}).relevant is True

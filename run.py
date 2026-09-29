@@ -26,7 +26,7 @@ import yaml
 
 from collector.briefing import write_briefing
 from collector.crimial import CrimialHunter
-from collector.enrich import Enricher, build_incident
+from collector.enrich import Enricher, build_incident, finalize_unenriched
 from collector.http import Http
 from collector.llm import build_provider
 from collector.dedupe import LLMJudge
@@ -210,13 +210,19 @@ def main() -> int:
         return build_incident(item, out, enricher.model, kw, note=note, ignore_addresses=ignore_addrs)
 
     workers = max(1, int(llm_cfg.get("workers", 2))) if enricher.enabled else 4
+    llm_expected = provider is not None   # LLM 을 쓰는 실행인데 개별 호출이 실패하면 카드를 올리지 않고 다음 실행에서 재시도
+    n_pending = 0
     with ThreadPoolExecutor(max_workers=workers) as ex:
         for item, inc in zip(new_items, ex.map(process, new_items)):
-            store.mark_item(item, "enriched" if inc.enriched else "rule_based")
+            pending = finalize_unenriched(inc, item, llm_expected)
+            n_pending += int(pending)
+            store.mark_item(item, "pending_llm" if pending else ("enriched" if inc.enriched else "rule_based"))
             store.save_incident(inc)
             run_incidents.append(inc)
-            log.info("[%s] %s | relevant=%s enriched=%s addrs=%d", inc.source, inc.title[:60], inc.relevant,
-                     inc.enriched, len(inc.addresses))
+            log.info("[%s] %s | relevant=%s enriched=%s addrs=%d%s", inc.source, inc.title[:60], inc.relevant,
+                     inc.enriched, len(inc.addresses), " (pending_llm: 다음 실행에서 재시도)" if pending else "")
+    if n_pending:
+        log.warning("LLM 미처리 %d건 — 카드로 올리지 않음. 공급자 복구 후 다음 실행에서 다시 처리됩니다.", n_pending)
 
     # 3.5) 이번에 새로 만든 카드는 곧바로 '새 사건인가' 판정(로컬 LLM, 카드당 ~5초). 제외 판정은 확신도 0.8 이상만.
     if provider and run_incidents and not args.rebuild_day:

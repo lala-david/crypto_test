@@ -127,7 +127,8 @@ class Store:
 
     # ---- items ---------------------------------------------------------
     def seen_uids(self) -> Set[str]:
-        return {r[0] for r in self.conn.execute("SELECT uid FROM items")}
+        """이미 처리한 항목. pending_llm(LLM 실패로 보류)은 제외해 다음 수집에서 다시 처리되게 한다."""
+        return {r[0] for r in self.conn.execute("SELECT uid FROM items WHERE status IS NULL OR status != 'pending_llm'")}
 
     def mark_item(self, item: RawItem, status: str) -> None:
         self.conn.execute(
