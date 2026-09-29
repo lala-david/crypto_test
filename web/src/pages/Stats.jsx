@@ -53,7 +53,7 @@ function Rank({ icon, label, n, pct, right, color, sub, faint, muted, title }) {
 export default function Stats() {
   const { t, typeName, typeFull, roleName, fmtDate } = useI18n();
   const [sp] = useSearchParams();
-  const [days, setDays] = useState(sp.get("days") || "30");
+  const [days, setDays] = useState(sp.get("days") || "all");
   const [mode, setMode] = useState("amount");
   const [st, setSt] = useState(null);
 

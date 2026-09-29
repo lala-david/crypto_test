@@ -41,6 +41,14 @@ CHAIN_ALIAS = {
     "ethereum": "Ethereum", "bitcoin": "Bitcoin", "solana": "Solana", "polygon": "Polygon", "arbitrum": "Arbitrum", "optimism": "Optimism",
     "avalanche": "Avalanche", "base": "Base", "hyperevm": "HyperEVM", "hyperliquid": "HyperEVM", "cronos": "Cronos", "sonic": "Sonic", "linea": "Linea",
     "coinbase": "", "binance": "", "upbit": "", "bithumb": "", "okx": "", "kraken": "", "bybit": "", "bitget": "", "metamask": "", "ledger": "", "trezor": "",
+    # 같은 체인의 다른 표기(출처마다 다르게 쓴다) → 하나로 모은다. ""(빈 값)은 체인이 아니어서 버린다.
+    "binance smart chain": "BSC", "bnb chain": "BSC", "bnb smart chain": "BSC", "bnb": "BSC", "binance": "BSC",
+    "xrpl": "XRP Ledger", "ripple": "XRP Ledger", "etc": "Ethereum Classic", "doge": "Dogecoin", "dogecoin": "Dogecoin",
+    "heco": "HECO", "huobi eco chain": "HECO", "rsk": "Rootstock", "elrond": "MultiversX", "near": "NEAR",
+    "wemix": "WEMIX", "wemix3.0": "WEMIX", "zksync era": "zkSync", "zksync": "zkSync", "gnosis chain": "Gnosis",
+    "liquid network": "Liquid", "bitcoincash": "Bitcoin Cash", "bch": "Bitcoin Cash", "klaytn": "Kaia", "kaia": "Kaia",
+    "icp": "ICP", "internet computer": "ICP", "terra classic": "Terra Classic", "terra2": "Terra 2",
+    "multiple": "", "multi-chain": "", "multichain": "", "various": "", "n/a": "", "unknown chain": "",
     "monero": "Monero", "xmr": "Monero", "xrp": "XRP Ledger", "xrpl": "XRP Ledger", "ripple": "XRP Ledger", "xrp ledger": "XRP Ledger", "osmosis": "Osmosis", "nomic": "Nomic", "noble": "Noble", "axelar": "Axelar", "cosmos": "Cosmos", "starknet": "Starknet",
 }
 

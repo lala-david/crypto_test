@@ -31,7 +31,7 @@ const bucketize = (rows, days) => {
 export default function Overview() {
   const { t, typeName, roleName } = useI18n();
   const navigate = useNavigate();
-  const [days, setDays] = useState("90");
+  const [days, setDays] = useState("all");
   const [q, setQ] = useState("");
   const [sort, setSort] = useState({ key: "date", dir: "desc" });
   const [filters, setFilters] = useState({ type: "", chain: "" });

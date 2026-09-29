@@ -56,7 +56,7 @@ function AddrCell({ a }) {
 export default function Addresses() {
   const { t, roleName, kindName } = useI18n();
   const [sp, setSp] = useSearchParams();
-  const [days, setDays] = useState("30");
+  const [days, setDays] = useState("all");
   const [role, setRole] = useState("");
   const [filters, setFilters] = useState({ chain: "", kind: "" });
   const [sort, setSort] = useState({ key: "", dir: "" });

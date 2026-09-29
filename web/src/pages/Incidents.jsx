@@ -10,7 +10,7 @@ import { Pager, RangeSeg } from "../components/Controls.jsx";
 export default function Incidents() {
   const { t } = useI18n();
   const [sp, setSp] = useSearchParams();
-  const [days, setDays] = useState(sp.get("days") || "30");
+  const [days, setDays] = useState(sp.get("days") || "all");
   const [q, setQ] = useState(sp.get("q") || "");
   const [hide, setHide] = useState(false);
   const [sort, setSort] = useState({ key: "date", dir: "desc" });
@@ -43,7 +43,7 @@ export default function Incidents() {
 
   useEffect(() => {
     const next = {};
-    if (days !== "30") next.days = days;
+    if (days !== "all") next.days = days;
     if (q) next.q = q;
     if (filters.type) next.type = filters.type;
     if (filters.chain) next.chain = filters.chain;

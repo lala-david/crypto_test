@@ -17,20 +17,21 @@ from datetime import date, datetime, timedelta
 from typing import Dict, List, Optional
 
 from .merge import consensus_amount, mark_followups, merge_incidents
+from .service import norm_chain, norm_chains
 from .models import Incident
 
 
 def _inc_json(i: Incident, day: str) -> dict:
     return {
         "uid": i.uid, "day": day, "project": i.project or i.title, "title": i.title, "type": i.incident_type,
-        "incident_date": i.incident_date, "published_at": i.published_at, "chains": i.chains,
+        "incident_date": i.incident_date, "published_at": i.published_at, "chains": norm_chains(i.chains),
         "amount_usd": i.amount_usd, "amount_text": i.amount_text,
         "background_ko": i.background_ko, "background_en": i.background_en,
         "attack_method_ko": i.attack_method_ko, "attack_method_en": i.attack_method_en,
         "summary_ko": i.summary_ko, "summary_en": i.summary_en,
         "fund_flow_ko": i.fund_flow_ko, "fund_flow_en": i.fund_flow_en,
         "actors": i.actors, "tags": i.tags[:12],
-        "addresses": [{"chain": a.chain, "address": a.address, "role": a.role, "note": a.note} for a in i.addresses],
+        "addresses": [{"chain": norm_chain(a.chain) or a.chain, "address": a.address, "role": a.role, "note": a.note} for a in i.addresses],
         "tx_hashes": i.tx_hashes[:20], "url": i.url, "source": i.source,
         "sources": [{"source": i.source, "url": i.url, "title": i.title}] + [
             {"source": m.get("source"), "url": m.get("url"), "title": m.get("title")} for m in i.merged_from],
@@ -84,13 +85,13 @@ def export_site(store, docs_dir: str, recent_days: int = 90, judge=None, crimial
         for i in lst:
             slim.append({
                 "uid": i.uid, "day": d, "event_date": i.incident_date or d, "project": i.project or i.title,
-                "type": i.incident_type, "incident_date": i.incident_date, "chains": i.chains,
+                "type": i.incident_type, "incident_date": i.incident_date, "chains": norm_chains(i.chains),
                 "amount_usd": i.amount_usd, "amount_text": i.amount_text, "source": i.source,
                 "src_count": 1 + len(i.merged_from), "addr_count": len(i.addresses),
                 "blacklist_hits": len(i.blacklist_hits), "followup_of": i.followup_of, "month": d[:7],
             })
             for a in i.addresses:
-                addr_rows.append({"address": a.address, "chain": a.chain, "role": a.role, "note": a.note,
+                addr_rows.append({"address": a.address, "chain": norm_chain(a.chain) or a.chain, "role": a.role, "note": a.note,
                                   "uid": i.uid, "project": i.project or i.title, "type": i.incident_type,
                                   "day": d, "event_date": i.incident_date or d,
                                   "blacklist": bool((i.blacklist_hits or {}).get(a.address))})
