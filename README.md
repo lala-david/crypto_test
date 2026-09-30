@@ -144,7 +144,7 @@ python run.py --no-llm             :: 규칙 기반만
 python -m pytest -q tests          :: 단위 테스트
 ```
 
-LLM 설정(`config.yaml > llm`): 기본 `ollama` (`http://192.168.150.225:11434`, `gpt-oss:120b`, num_ctx 32K), 실패 시 `openrouter`
+LLM 설정(`config.yaml > llm`): 기본 `ollama` (주소·모델은 `.env` 의 `OLLAMA_BASE_URL`·`OLLAMA_MODEL`, 기본 `http://127.0.0.1:11434` / `gpt-oss:120b`, num_ctx 32K), 실패 시 `openrouter`
 (`OPENROUTER_API_KEY` 또는 `../vllm/openrouter.txt`). `prompt_style: few_shot | zero_shot`.
 비교(Tectonic 기사 1건): gpt-oss:120b 81s — 주소 역할 구분·자금흐름 정확 / qwen3-30b 37s — 역할 뭉뚱그림 / gemini-3.8-flash ~10s.
 
