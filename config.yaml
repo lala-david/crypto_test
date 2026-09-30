@@ -29,7 +29,7 @@ schedule:
 # LLM (사건 카드 한/영 + 일일 브리핑)
 llm:
   enabled: true
-  provider: ollama            # ollama | openrouter | claude   (run.py --provider 로 덮어쓰기 가능)
+  provider: ${LLM_PROVIDER:-ollama}            # ollama | openrouter | claude   (run.py --provider 로 덮어쓰기 가능)
   fallback_provider: openrouter   # 1순위 공급자 연결 실패 시
   prompt_style: few_shot      # few_shot(예시 2개 포함, 기본) | zero_shot(규칙만)
   max_chars: 60000            # 본문 전달 상한(문자)
@@ -39,8 +39,8 @@ llm:
   dedupe_max_calls: 20        # 실행 1회당 '같은 사건인가' LLM 판정 최대 호출 수 (결과는 캐시됨)
 
   ollama:                     # 사내 LAN Ollama 서버
-    base_url: http://192.168.150.225:11434
-    model: gpt-oss:120b       # 대안: qwen3-30b-rag:latest, gemma4:26b, gpt-oss:20b
+    base_url: ${OLLAMA_BASE_URL:-http://127.0.0.1:11434}
+    model: ${OLLAMA_MODEL:-gpt-oss:120b}       # 대안: qwen3-30b-rag:latest, gemma4:26b, gpt-oss:20b
     # dedupe_model: gpt-oss:20b   # 같은-사건 판정에 다른 모델을 쓰려면 지정 (qwen3-30b-rag 는 '같다'고 남발해서 제외)
     num_ctx: 32768
     think: false
@@ -50,7 +50,7 @@ llm:
     base_url: https://openrouter.ai/api/v1
     model: google/gemini-3.8-flash
     api_key_env: OPENROUTER_API_KEY
-    api_key_file: ../vllm/openrouter.txt
+    api_key_file: ${OPENROUTER_KEY_FILE:-}
     timeout: 300
 
   claude:                     # ANTHROPIC_API_KEY 필요
@@ -61,7 +61,7 @@ llm:
 # GitHub 전달: 실행 후 결과물을 commit & push (git init + remote 설정 후 push: true)
 github:
   push: true                # https://github.com/lala-david/crypto_test — 매 실행 후 변경분 commit & push
-  remote: origin
+  remote: ${GIT_REMOTE:-origin}
   paths:
     - reports
     - briefings
@@ -107,7 +107,7 @@ telegram:
 # crimial_hunter(scam-address-data) 연동: 기존 블랙리스트 대조 + 표준 스키마 CSV 내보내기
 crimial_hunter:
   enabled: true
-  repo_dir: ../experience/scam-address-data
+  repo_dir: ${CRIMIAL_REPO_DIR:-../experience/scam-address-data}
   lookup_files: [master_all.csv, sources/ofac_sanctions_all.csv, sources/gov_law_enforcement_all.csv]
   export_file: sources/news_collector.csv          # 저장소 안 경로 (build_master.py 목록에 추가하면 마스터 편입)
   export_copy: data/export/crimial_hunter_news_collector.csv
@@ -163,7 +163,7 @@ sources:
       fetch_article: false
     - name: sec_litigation      # SEC는 연락처가 든 UA 필요
       url: https://www.sec.gov/enforcement-litigation/litigation-releases/rss
-      user_agent: "crypto-incident-collector wnswns1946@kloint.team"
+      user_agent: "crypto-incident-collector ${CONTACT_EMAIL:-ops@example.com}"
       fetch_article: false
     - name: slowmist_medium
       url: https://medium.com/feed/@slowmist
@@ -456,4 +456,4 @@ addrcheck:
   rpc: {}
   # OKLink Onchain Data API (선택). 키 파일이 있으면 address-summary / entity-label 로 라벨을 보강한다.
   oklink_key_env: OKLINK_API_KEY
-  oklink_key_file: ../vllm/oklink.txt
+  oklink_key_file: ${OKLINK_KEY_FILE:-}

@@ -7,3 +7,9 @@ PyYAML>=6.0
 pydantic>=2.0
 anthropic>=0.85
 openai>=1.50
+
+# 대시보드 API 서버 / 아이콘·파비콘 생성 / 테스트
+starlette>=0.37
+uvicorn>=0.29
+Pillow>=10.0
+pytest>=8.0

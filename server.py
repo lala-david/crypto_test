@@ -30,6 +30,7 @@ from starlette.responses import HTMLResponse, JSONResponse
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
+from collector.config import load_config
 from collector.service import DataService
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -37,8 +38,7 @@ DOCS = os.path.join(ROOT, "docs")
 SITE = os.path.join(ROOT, "site")            # React 빌드 결과(web/ → vite build)
 USE_SITE = os.path.isdir(SITE) and os.path.isfile(os.path.join(SITE, "index.html"))
 
-with open(os.path.join(ROOT, "config.yaml"), encoding="utf-8") as f:
-    CFG = yaml.safe_load(f)
+CFG = load_config(os.path.join(ROOT, "config.yaml"), ROOT)
 svc = DataService(ROOT, CFG)
 
 LIGHT_DROP = {"background_ko", "background_en", "attack_method_en", "fund_flow_ko", "fund_flow_en", "tx_hashes", "blacklist_detail"}

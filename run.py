@@ -25,6 +25,7 @@ from typing import Dict, List
 import yaml
 
 from collector.briefing import write_briefing
+from collector.config import load_config
 from collector.crimial import CrimialHunter
 from collector.enrich import Enricher, backfill_stamp, build_incident, finalize_unenriched
 from collector.http import Http
@@ -90,8 +91,7 @@ def main() -> int:
             args.no_llm = True
         args.no_briefing = args.no_push = args.no_alert = True
 
-    with open(args.config, encoding="utf-8") as f:
-        cfg = yaml.safe_load(f)
+    cfg = load_config(args.config, ROOT)
 
     data_dir = os.path.join(ROOT, cfg.get("data_dir", "data"))
     report_dir = os.path.join(ROOT, cfg.get("report_dir", "reports"))

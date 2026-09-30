@@ -368,11 +368,10 @@ def build_notifiers(cfg: dict, root: str) -> List[BaseNotifier]:
 
 # ---------------------------------------------------------------------------
 def main() -> int:
-    import yaml
+    from .config import load_config
 
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    with open(os.path.join(root, "config.yaml"), encoding="utf-8") as f:
-        cfg = yaml.safe_load(f)
+    cfg = load_config(os.path.join(root, "config.yaml"), root)
     channel = sys.argv[sys.argv.index("--channel") + 1] if "--channel" in sys.argv else "teams"
     if "--setup" in sys.argv:
         n = TelegramNotifier({**(cfg.get("telegram") or {}), "enabled": True}, root)

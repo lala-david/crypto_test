@@ -8,6 +8,8 @@ Cointelegraph, 보안뉴스 등에서 가상자산 해킹·탈취·제재·기�
 **📌 브리핑 보기: [briefings/README.md](briefings/README.md)** (날짜별 인덱스) · 상세 리포트: `reports/YYYY-MM/YYYY-MM-DD.ko.md` / `.en.md`
 
 
+> **다른 서버에 올릴 때는 [SETUP.md](SETUP.md) 를 보세요.** 필요한 것(Python 3.10+, LLM 한 개), `.env` 에 채울 값, 데이터 복원, 실행·배포 방법이 정리돼 있습니다.
+
 ## 1. 소스 (2026-09-15 벤치마킹)
 
 | 소스 | 접근 방식 | 제공 정보 | 지갑 주소 | 주기 |

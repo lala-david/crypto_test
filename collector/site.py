@@ -21,6 +21,9 @@ from .service import norm_chain, norm_chains
 from .models import Incident
 
 
+_labels = lambda _addr: {}   # export_site 안에서 addrcheck 결과 함수로 교체된다
+
+
 def _inc_json(i: Incident, day: str) -> dict:
     return {
         "uid": i.uid, "day": day, "project": i.project or i.title, "title": i.title, "type": i.incident_type,
@@ -31,7 +34,7 @@ def _inc_json(i: Incident, day: str) -> dict:
         "summary_ko": i.summary_ko, "summary_en": i.summary_en,
         "fund_flow_ko": i.fund_flow_ko, "fund_flow_en": i.fund_flow_en,
         "actors": i.actors, "tags": i.tags[:12],
-        "addresses": [{"chain": norm_chain(a.chain) or a.chain, "address": a.address, "role": a.role, "note": a.note} for a in i.addresses],
+        "addresses": [{"chain": norm_chain(a.chain) or a.chain, "address": a.address, "role": a.role, "note": a.note, **_labels(a.address)} for a in i.addresses],
         "tx_hashes": i.tx_hashes[:20], "url": i.url, "source": i.source,
         "sources": [{"source": i.source, "url": i.url, "title": i.title}] + [
             {"source": m.get("source"), "url": m.get("url"), "title": m.get("title")} for m in i.merged_from],
@@ -79,6 +82,26 @@ def export_site(store, docs_dir: str, recent_days: int = 90, judge=None, crimial
             if d >= cutoff:
                 recent.append(rec)
     # 전체 기간 slim: 목록·통계·차트가 쓰는 필드만(상세는 월별 아카이브에서)
+    # addrcheck 결과(data/address_labels.json)를 붙여 정적 스냅샷에서도 종류·라벨이 보이게 한다
+    try:
+        from .addrcheck import AddrChecker, kind_text
+        with open(os.path.join(store.data_dir, "address_labels.json"), encoding="utf-8") as f:
+            addr_labels = json.load(f)
+    except Exception:
+        addr_labels, AddrChecker, kind_text = {}, None, None
+
+    def label_of(address: str) -> dict:
+        if not addr_labels or AddrChecker is None:
+            return {}
+        x = addr_labels.get(AddrChecker.key(address)) or {}
+        if not x:
+            return {}
+        return {"kind": x.get("kind") or "", "ctype": x.get("ctype") or "", "kind_text": kind_text(x),
+                "label": x.get("label") or "", "tx_count": x.get("tx_count"), "delegated": x.get("delegated") or "",
+                "scam": bool(x.get("scam")), "verified": bool(x.get("verified"))}
+
+    global _labels
+    _labels = label_of
     slim = []
     addr_rows = []
     for d, lst in merged_by_day.items():
@@ -94,7 +117,7 @@ def export_site(store, docs_dir: str, recent_days: int = 90, judge=None, crimial
                 addr_rows.append({"address": a.address, "chain": norm_chain(a.chain) or a.chain, "role": a.role, "note": a.note,
                                   "uid": i.uid, "project": i.project or i.title, "type": i.incident_type,
                                   "day": d, "event_date": i.incident_date or d,
-                                  "blacklist": bool((i.blacklist_hits or {}).get(a.address))})
+                                  "blacklist": bool((i.blacklist_hits or {}).get(a.address)), **label_of(a.address)})
     slim.sort(key=lambda r: (r["event_date"] or r["day"]), reverse=True)
     with open(os.path.join(data_dir, "all.json"), "w", encoding="utf-8") as f:
         json.dump(slim, f, ensure_ascii=False)

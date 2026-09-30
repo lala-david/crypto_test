@@ -14,3 +14,6 @@ logs/
 # React 대시보드
 web/node_modules/
 web/dist/
+
+# 서버별 설정(비밀 포함)
+.env
