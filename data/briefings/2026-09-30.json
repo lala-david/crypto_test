@@ -1,14 +1,14 @@
 {
- "headline_ko": "9월 30일 브리핑 · 신규 2건 · 피해 $17.1M · 후속 1건",
- "headline_en": "Sep 30 briefing · 2 new · loss $17.1M · 1 follow-ups",
- "briefing_ko": "- **[Cryptoaiml Ltd., Cryptoaiml Capital Foundation, TSAI Pro Ltd., TSAI Capital Foundation](https://www.tokenpost.kr/news/policy/415970)** · 체인 미상 · 사기 · **$15M** · 9.29 — 투자 전문가와 AI 신호를 사칭해 이상 편취, SEC가 소송 제기\n- **[Fake GIWA Bridge](https://defillama.com/hacks)** · Ethereum · 피싱 · **$2.1M** · 9.27 — 가짜 GIWA Bridge를 사칭한 피싱 사기로 손실 발생\n- **후속 1건** — [Bitget](https://www.tokenpost.kr/news/cryptocurrency/416017) (첫 보도 9.28)\n- **시사점** — 투자·AI·가짜 브리지 등 사칭 사회공학 사기가 다양한 플랫폼에서 연이어 발생하고 있다 계속.",
- "briefing_en": "- **[Cryptoaiml Ltd., Cryptoaiml Capital Foundation, TSAI Pro Ltd., TSAI Capital Foundation](https://www.tokenpost.kr/news/policy/415970)** · chain n/a · Scam · **$15M** · Sep 29 — They impersonated investment experts with AI signals, stole…\n- **[Fake GIWA Bridge](https://defillama.com/hacks)** · Ethereum · Phishing · **$2.1M** · Sep 27 — Impersonation phishing of a fake GIWA Bridge caused a…\n- **Follow-ups (1)** — [Bitget](https://www.tokenpost.kr/news/cryptocurrency/416017) (first 9.28)\n- **Takeaway** — Impersonation-based social engineering scams repeatedly target investors on various platforms, causing multi-million losses.",
+ "headline_ko": "9월 30일 브리핑 · 신규 3건 · 피해 $337.1M · 후속 1건",
+ "headline_en": "Sep 30 briefing · 3 new · loss $337.1M · 1 follow-ups",
+ "briefing_ko": "- **[Blockstream](https://www.blockmedia.co.kr/archives/1145762)** · Bitcoin · 해킹 · **$320M** · 9.29 — 네트워크 취약점으로 3억 탈취, 복구와 법적 대응 진행 중\n- **[Cryptoaiml Ltd., Cryptoaiml Capital Foundation, TSAI Pro Ltd., TSAI Capital Foundation](https://www.tokenpost.kr/news/policy/415970)** · 체인 미상 · 사기 · **$15M** · 9.29 — AI 신호와 투자자를 사칭해 고수익 약속, 가짜 플랫폼에 편취\n- **[Fake GIWA Bridge](https://defillama.com/hacks)** · Ethereum · 피싱 · **$2.1M** · 9.27 — 사칭·사회공학으로 Fake GIWA Bridge에서 탈취\n- **후속 1건** — [Bitget](https://www.tokenpost.kr/news/cryptocurrency/416017) (첫 보도 9.28)\n- **시사점** — 사칭·사회공학 사기가 여전히 다수 발생, 투자자 주의 강력히 꼭즉시 필수.",
+ "briefing_en": "- **[Blockstream](https://www.blockmedia.co.kr/archives/1145762)** · Bitcoin · Hack · **$320M** · Sep 29 — Exploited a network vulnerability to steal million…\n- **[Cryptoaiml Ltd., Cryptoaiml Capital Foundation, TSAI Pro Ltd., TSAI Capital Foundation](https://www.tokenpost.kr/news/policy/415970)** · chain n/a · Scam · **$15M** · Sep 29 — Posed as AI signal and investor, promised high returns…\n- **[Fake GIWA Bridge](https://defillama.com/hacks)** · Ethereum · Phishing · **$2.1M** · Sep 27 — Used impersonation and social engineering to steal million…\n- **Follow-ups (1)** — [Bitget](https://www.tokenpost.kr/news/cryptocurrency/416017) (first 9.28)\n- **Takeaway** — Impersonation and social engineering scams continue to dominate, urging heightened investor vigilance.",
  "counts": {
-  "new": 2,
+  "new": 3,
   "followups": 1,
-  "major": 2,
+  "major": 3,
   "minor": 0,
-  "loss_usd": 17080000.0,
+  "loss_usd": 337080000.0,
   "legal_usd": 0
  },
  "format": "structured-v2"
