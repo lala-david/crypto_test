@@ -71,7 +71,7 @@ python run.py --no-push       # git push 없이
 ### 대시보드 서버
 ```bash
 python server.py --port 8765            # http://<서버>:8765
-python server.py --port 8765 --host 0.0.0.0   # LAN/외부 공개
+python server.py --port 8765 --lan       # 0.0.0.0 바인딩(같은 네트워크·리버스 프록시에서 접속)
 ```
 - `site/`(React 빌드)가 있으면 그것을 서빙하고, 옛 바닐라 화면은 `/legacy` 에 남는다.
 - systemd 예시:
@@ -80,7 +80,7 @@ python server.py --port 8765 --host 0.0.0.0   # LAN/외부 공개
   Description=Incident Ledger API
   [Service]
   WorkingDirectory=/srv/news
-  ExecStart=/srv/news/.venv/bin/python server.py --port 8765 --host 0.0.0.0
+  ExecStart=/srv/news/.venv/bin/python server.py --port 8765 --lan
   Restart=always
   [Install]
   WantedBy=multi-user.target
